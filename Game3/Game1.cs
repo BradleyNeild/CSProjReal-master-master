@@ -231,7 +231,7 @@ namespace Game3
             {
                 SpawnCharacter(new Rectangle(475, 330, 0, 0));
                 ProcGen2.GenerateDungeon();
-                RoomShower.spawnRoom();
+                RoomShower.StartingThing();
                 started = true;
             }
 
@@ -317,13 +317,7 @@ namespace Game3
 
             if (Key.IsPressed(Keys.O))
             {
-                for (int i = 0; i < walls.Count; i++)
-                {
-                    if (walls[i].bounds.Intersects(new Rectangle(mouseState.X, mouseState.Y, 0, 0)))
-                    {
-                        walls.RemoveAt(i);
-                    }
-                }
+                RoomShower.SpawnRoom();
             }
 
             //if (Key.IsPressed(Keys.I))
@@ -449,29 +443,24 @@ namespace Game3
                     {
                         if (doors[d].direction == 2)
                         {
-                            RoomShower.nextRoomY -= 1;
-                            RoomShower.playerRoom = ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY];
+                            RoomShower.playerRoomY -= 1;
+                            
                         }
                         if (doors[d].direction == 3)
                         {
                             RoomShower.playerRoomX += 1;
-                            RoomShower.playerRoom = ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY];
 
                         }
                         if (doors[d].direction == 4)
                         {
                             RoomShower.playerRoomY += 1;
-                            RoomShower.playerRoom = ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY];
 
                         }
                         if (doors[d].direction == 5)
                         {
                             RoomShower.playerRoomX -= 1;
-                            RoomShower.playerRoom = ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY];
                         }
-                        walls.Clear();
-                        doors.Clear();
-                        RoomShower.spawnRoom();
+                        RoomShower.SpawnRoom();
 
                         characters[0].bounds = new Rectangle(475, 330, characters[0].bounds.Width, characters[0].bounds.Height);
                         break;
@@ -497,7 +486,6 @@ namespace Game3
                         break;
                 }
             }
-
             base.Update(gameTime);
         }
 
@@ -513,10 +501,11 @@ namespace Game3
             // TODO: Add your drawing code here
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             string coinCounterVal = coinCount.ToString();
+            string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
             //string roomNodeVal = currentRoom.number.ToString();
             spriteBatch.DrawString(debugTextFont, coinCounterVal, new Vector2(50, 50), Color.White);
             //spriteBatch.DrawString(debugTextFont, "Node:" + roomNodeVal, new Vector2(250, 250), Color.White);
-            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
+            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n" + nodeTrackerVal + "\n" + totalScore, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
             foreach (Coin coin in coins)
             {
                 coin.Draw(spriteBatch);

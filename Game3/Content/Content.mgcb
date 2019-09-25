@@ -265,13 +265,6 @@
 /processorParam:TextureFormat=Color
 /build:MagicMissile2.png
 
-#begin spritefont1.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:spritefont1.spritefont
-
 #begin Stick.png
 /importer:TextureImporter
 /processor:TextureProcessor

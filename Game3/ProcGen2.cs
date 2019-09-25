@@ -9,7 +9,7 @@ namespace Game3
     public class ProcGen2
     {
         public static Room[,] roomNodes = new Room[100, 100];
-        static List<Room> roomList = new List<Room>();
+        public static List<Room> roomList = new List<Room>();
 
         static int numRooms = 1;
 
@@ -69,11 +69,11 @@ namespace Game3
 
                     if (room.doorN && room.doorE && room.doorS && room.doorW)
                     {
-                        room.FullNeighbors = true;
+                        room.fullNeighbors = true;
                     }
                     else
                     {
-                        room.FullNeighbors = false;
+                        room.fullNeighbors = false;
                     }
                 }
 
@@ -132,11 +132,11 @@ namespace Game3
 
             if (checkedRoom.doorN && checkedRoom.doorE && checkedRoom.doorS && checkedRoom.doorW)
             {
-                checkedRoom.FullNeighbors = true;
+                checkedRoom.fullNeighbors = true;
             }
             else
             {
-                checkedRoom.FullNeighbors = false;
+                checkedRoom.fullNeighbors = false;
             }
         }
 
@@ -159,7 +159,7 @@ namespace Game3
 
         static void AddRoom(int addPosX, int addPosY)
         {
-            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false);
+            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, null);
             roomNodes[addPosX, addPosY] = roomToAdd;
             roomList.Add(roomToAdd);
             Console.WriteLine("Added Room at " + addPosX + "," + addPosY);

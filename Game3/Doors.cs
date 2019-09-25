@@ -18,8 +18,8 @@ namespace Game3
         public Doors(Rectangle doorBounds, Texture2D doorTexture, int doorDirection)
         {
             bounds = doorBounds;
-            bounds.Width = 45;
-            bounds.Height = 45;
+            bounds.Width = 47;
+            bounds.Height = 47;
             texture = doorTexture;
             direction = doorDirection;
         }

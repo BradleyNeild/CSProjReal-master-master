@@ -12,7 +12,7 @@ namespace Game3
     class RoomShower
     {
         static int roomOffset = 150;
-        public static Room playerRoom = ProcGen2.roomNodes[50, 50];
+        public static Room playerRoom;
         public static int playerRoomX = 50, playerRoomY = 50;
         public static Room nextRoom;
         public static int nextRoomX = 50, nextRoomY = 50;
@@ -30,6 +30,12 @@ namespace Game3
             {1,1,1,1,1,1,1,4,1,1,1,1,1,1,1},
         };
 
+        public static void ClearRoom()
+        {
+            Game1.walls.Clear();
+            Game1.doors.Clear();
+        }
+
         public static void CreateWall(int wallPosX, int wallPosY)
         {
             Game1.walls.Add(new Walls(new Rectangle(wallPosY * 45 + roomOffset, wallPosX * 45 + roomOffset, 0, 0), Game1.wallTexture));
@@ -37,25 +43,34 @@ namespace Game3
 
         public static void CreateDoor(int wallPosX, int wallPosY, int doorDirection)
         {
-            Game1.doors.Add(new Doors(new Rectangle(wallPosY * 45 + roomOffset, wallPosX * 45 + roomOffset, 0, 0), Game1.doorTexture, doorDirection));
-            Console.WriteLine("Door created");
+            Game1.doors.Add(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 1, wallPosX * 45 + roomOffset - 1, 0, 0), Game1.doorTexture, doorDirection));
+            Console.Write("Door created");
         }
 
-        public static void spawnRoom()
+        public static void StartingThing()
         {
-            if (playerRoom.doorN)
+            Room playerRoom = ProcGen2.roomNodes[50,50];
+        }
+
+        public static void SpawnRoom()
+        {
+            Console.WriteLine(playerRoomX.ToString() + playerRoomY.ToString());
+            playerRoom = ProcGen2.roomNodes[playerRoomX, playerRoomY];
+            Console.WriteLine(playerRoom.doorN.ToString() + playerRoom.doorE.ToString() + playerRoom.doorS.ToString() + playerRoom.doorW.ToString());
+            ClearRoom();
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorN)
             {
                 doorNums.Add(2);
             }
-            if (playerRoom.doorE)
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorE)
             {
                 doorNums.Add(3);
             }
-            if (playerRoom.doorS)
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorS)
             {
                 doorNums.Add(4);
             }
-            if (playerRoom.doorW)
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorW)
             {
                 doorNums.Add(5);
             }
@@ -83,6 +98,7 @@ namespace Game3
                     }
                 }
             }
+            doorNums.Clear();
         }
 
     }

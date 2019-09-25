@@ -12,8 +12,9 @@ namespace Game3
     
     public class Room
     {
-        public int Type, posX, posY;
-        public bool FullNeighbors, doorN, doorE, doorS, doorW;
+        public int type, posX, posY;
+        public bool fullNeighbors, doorN, doorE, doorS, doorW;
+        public List<Goblin> gobinsContained;
         //public enum RoomType
         //{
         //    Normal,
@@ -23,7 +24,7 @@ namespace Game3
         //public RoomType Type { get; private set; }
         public Room[] Neighbors = new Room[4];
 
-        public Room(int roomPosX, int roomPosY, bool roomDoorN, bool roomDoorE, bool roomDoorS, bool roomDoorW, bool roomFullNeighbors)
+        public Room(int roomPosX, int roomPosY, bool roomDoorN, bool roomDoorE, bool roomDoorS, bool roomDoorW, bool roomFullNeighbors, List<Goblin> roomGoblinsContained)
         {
             posX = roomPosX;
             posY = roomPosY;
@@ -31,7 +32,8 @@ namespace Game3
             doorE = roomDoorE;
             doorS = roomDoorS;
             doorW = roomDoorW;
-            FullNeighbors = roomFullNeighbors;
+            fullNeighbors = roomFullNeighbors;
+            gobinsContained = roomGoblinsContained;
         }
     }
 }
