@@ -159,7 +159,7 @@ namespace Game3
 
         static void AddRoom(int addPosX, int addPosY)
         {
-            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, null);
+            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, new List<Goblin>());
             roomNodes[addPosX, addPosY] = roomToAdd;
             roomList.Add(roomToAdd);
             Console.WriteLine("Added Room at " + addPosX + "," + addPosY);

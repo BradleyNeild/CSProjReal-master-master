@@ -35,7 +35,7 @@ namespace Game3
             {1},
         };
         Random rnd = new Random();
-        private int coinCount = 0, missileCount = 0, life = 2, maxlife = 2, heartContainers, sortTemp, totalFullness, maxMissiles = 3;
+        private int coinCount = 0, missileCount = 0, life, maxlife = 6, heartContainers, sortTemp, totalFullness, maxMissiles = 3;
         public static int cursorTileX, cursorTileY;
         bool started = false;
 
@@ -61,7 +61,14 @@ namespace Game3
             characters.Add(new Character(location, playerTexture, 5));
         }
 
-        private void SpawnGoblin()
+        public static void SpawnGoblin(Rectangle position)
+        {
+            var mouseState = Mouse.GetState();
+            goblins.Add(new Goblin(3, 3, (float)4.5, 1, enemyTexture, position));
+            Console.WriteLine("GOBLIN SPAWNED");
+        }
+
+        public static void SpawnGoblinAtMouse()
         {
             var mouseState = Mouse.GetState();
             goblins.Add(new Goblin(3, 3, (float)4.5, 1, enemyTexture, new Rectangle(mouseState.Position, new Point(30))));
@@ -140,24 +147,28 @@ namespace Game3
             }
         }
 
-        private void AddHeart(int fullness)
+        private void AddHeart(int fullness, int amount)
         {
-            foreach (Hearts heart in hearts)
+            for (int i = 0; i < amount; i++)
             {
-                heart.moveBounds(57);
+                foreach (Hearts heart in hearts)
+                {
+                    heart.moveBounds(57);
+                }
+                if (fullness == 2)
+                {
+                    hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureFull, fullness)));
+                }
+                else if (fullness == 1)
+                {
+                    hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureHalf, fullness)));
+                }
+                else
+                {
+                    hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureEmpty, fullness)));
+                }
             }
-            if (fullness == 2)
-            {
-                hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureFull, fullness)));
-            }
-            else if (fullness == 1)
-            {
-                hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureHalf, fullness)));
-            }
-            else
-            {
-                hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureEmpty, fullness)));
-            }
+            
 
         }
 
@@ -232,6 +243,8 @@ namespace Game3
                 SpawnCharacter(new Rectangle(475, 330, 0, 0));
                 ProcGen2.GenerateDungeon();
                 RoomShower.StartingThing();
+                RoomShower.SpawnRoom();
+                AddHeart(2, 3);
                 started = true;
             }
 
@@ -246,7 +259,7 @@ namespace Game3
             }
             if (hearts.Count < heartContainers)
             {
-                AddHeart(0);
+                AddHeart(0, 1);
             }
 
             totalFullness = 0;
@@ -312,7 +325,7 @@ namespace Game3
 
             if (Key.IsPressed(Keys.P))
             {
-                SpawnGoblin();
+                SpawnGoblinAtMouse();
             }
 
             if (Key.IsPressed(Keys.O))
@@ -436,33 +449,57 @@ namespace Game3
                         characters[i].bounds.Location -= characters[i].vector.ToPoint();
                         break;
                     }
+                    foreach (Coin coin in coins)
+                    {
+                        if (collision.CollisionCheck(coin.bounds, walls[w].bounds, "coin", "walls"))
+                        {
+                            coin.bounds.Location -= coin.vector.ToPoint();
+                        }
+
+                    }
                 }
+
+               
+
                 for (int d = 0; d < doors.Count; d++)
                 {
+                    foreach (Coin coin in coins)
+                    {
+                        if (collision.CollisionCheck(coin.bounds, doors[d].bounds, "coin", "door"))
+                        {
+                            coin.bounds.Location -= coin.vector.ToPoint();
+                        }
+                    }
+                    
                     if (collision.CollisionCheck(characters[i].bounds, doors[d].bounds, "character", "doors"))
                     {
                         if (doors[d].direction == 2)
                         {
                             RoomShower.playerRoomY -= 1;
-                            
+                            characters[0].bounds = new Rectangle(475, 475, characters[0].bounds.Width, characters[0].bounds.Height);
+
                         }
                         if (doors[d].direction == 3)
                         {
                             RoomShower.playerRoomX += 1;
+                            characters[0].bounds = new Rectangle(200, 330, characters[0].bounds.Width, characters[0].bounds.Height);
 
                         }
                         if (doors[d].direction == 4)
                         {
                             RoomShower.playerRoomY += 1;
+                            characters[0].bounds = new Rectangle(475, 200, characters[0].bounds.Width, characters[0].bounds.Height);
 
                         }
                         if (doors[d].direction == 5)
                         {
                             RoomShower.playerRoomX -= 1;
+                            characters[0].bounds = new Rectangle(744, 330, characters[0].bounds.Width, characters[0].bounds.Height);
                         }
+                        ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = goblins;
                         RoomShower.SpawnRoom();
-
-                        characters[0].bounds = new Rectangle(475, 330, characters[0].bounds.Width, characters[0].bounds.Height);
+                        goblins.Clear();
+                        coins.Clear();
                         break;
                     }
                 }
@@ -500,12 +537,12 @@ namespace Game3
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            string coinCounterVal = coinCount.ToString();
+            string coinCounterVal = "Coins: " + coinCount.ToString();
             string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
             //string roomNodeVal = currentRoom.number.ToString();
             spriteBatch.DrawString(debugTextFont, coinCounterVal, new Vector2(50, 50), Color.White);
             //spriteBatch.DrawString(debugTextFont, "Node:" + roomNodeVal, new Vector2(250, 250), Color.White);
-            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n" + nodeTrackerVal + "\n" + totalScore, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
+            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + characters[0].bounds.X + "y:" + characters[0].bounds.Y + "\n" + nodeTrackerVal + "\n" + totalScore, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
             foreach (Coin coin in coins)
             {
                 coin.Draw(spriteBatch);

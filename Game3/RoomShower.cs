@@ -44,7 +44,7 @@ namespace Game3
         public static void CreateDoor(int wallPosX, int wallPosY, int doorDirection)
         {
             Game1.doors.Add(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 1, wallPosX * 45 + roomOffset - 1, 0, 0), Game1.doorTexture, doorDirection));
-            Console.Write("Door created");
+            //Console.Write("Door created");
         }
 
         public static void StartingThing()
@@ -54,9 +54,9 @@ namespace Game3
 
         public static void SpawnRoom()
         {
-            Console.WriteLine(playerRoomX.ToString() + playerRoomY.ToString());
+            //Console.WriteLine(playerRoomX.ToString() + playerRoomY.ToString());
             playerRoom = ProcGen2.roomNodes[playerRoomX, playerRoomY];
-            Console.WriteLine(playerRoom.doorN.ToString() + playerRoom.doorE.ToString() + playerRoom.doorS.ToString() + playerRoom.doorW.ToString());
+            //Console.WriteLine(playerRoom.doorN.ToString() + playerRoom.doorE.ToString() + playerRoom.doorS.ToString() + playerRoom.doorW.ToString());
             ClearRoom();
             if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorN)
             {
@@ -92,12 +92,20 @@ namespace Game3
                             CreateDoor(i, x, doorDir);
                         }
                         else
-                        {
+                        { 
                             CreateWall(i, x);
                         }
                     }
                 }
             }
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained.Count > 0)
+            {
+                foreach (Goblin goblin in ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained)
+                {
+                    Game1.SpawnGoblin(goblin.bounds);
+                }
+            }
+            
             doorNums.Clear();
         }
 
