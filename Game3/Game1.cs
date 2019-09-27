@@ -64,15 +64,26 @@ namespace Game3
         public static void SpawnGoblin(Rectangle position)
         {
             var mouseState = Mouse.GetState();
-            goblins.Add(new Goblin(3, 3, (float)4.5, 1, enemyTexture, position));
+            goblins.Add(new Goblin(3, 3, (float)4.5, 1, enemyTexture, position, position));
             Console.WriteLine("GOBLIN SPAWNED");
         }
 
         public static void SpawnGoblinAtMouse()
         {
             var mouseState = Mouse.GetState();
-            goblins.Add(new Goblin(3, 3, (float)4.5, 1, enemyTexture, new Rectangle(mouseState.Position, new Point(30))));
+            goblins.Add(new Goblin(3, 3, (float)4.5, 1, enemyTexture, new Rectangle(mouseState.Position, new Point(30)), new Rectangle(mouseState.Position, new Point(30))));
             Console.WriteLine("GOBLIN SPAWNED");
+        }
+
+        public static void ResetGoblins()
+        {
+            foreach (Goblin goblin in goblins)
+            {
+                goblin.spawnTime = DateTime.Now;
+                goblin.frozen = true;
+                goblin.bounds.Location = goblin.spawnPoint.Location;
+                
+            }
         }
 
         private void RemoveCoin(int coinIndex)
@@ -391,6 +402,15 @@ namespace Game3
                     }
                 }
 
+                for (int d = 0; d < doors.Count; d++)
+                {
+                    if (collision.CollisionCheck(missiles[i].bounds, doors[d].bounds, "missile", "door"))
+                    {
+                        RemoveMissile(i);
+                        break;
+                    }
+                }
+
                 for (int m = 0; m < missiles.Count; m++)
                 {
                     if (collision.CollisionCheck(missiles[i].bounds, missiles[m].bounds, "missile", "missile"))
@@ -473,6 +493,11 @@ namespace Game3
                     
                     if (collision.CollisionCheck(characters[i].bounds, doors[d].bounds, "character", "doors"))
                     {
+                        ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = goblins;
+                        foreach (Goblin goblin in goblins)
+                        {
+                            Console.WriteLine("theres a goblin in goblins");
+                        }
                         if (doors[d].direction == 2)
                         {
                             RoomShower.playerRoomY -= 1;
@@ -496,9 +521,9 @@ namespace Game3
                             RoomShower.playerRoomX -= 1;
                             characters[0].bounds = new Rectangle(744, 330, characters[0].bounds.Width, characters[0].bounds.Height);
                         }
-                        ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = goblins;
+                        
                         RoomShower.SpawnRoom();
-                        goblins.Clear();
+                        missiles.Clear();
                         coins.Clear();
                         break;
                     }

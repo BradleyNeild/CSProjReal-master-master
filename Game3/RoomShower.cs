@@ -92,20 +92,18 @@ namespace Game3
                             CreateDoor(i, x, doorDir);
                         }
                         else
-                        { 
+                        {
                             CreateWall(i, x);
                         }
                     }
                 }
             }
-            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained.Count > 0)
+            Game1.goblins = ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained;
+            foreach (Goblin goblin in ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained)
             {
-                foreach (Goblin goblin in ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained)
-                {
-                    Game1.SpawnGoblin(goblin.bounds);
-                }
+                Console.WriteLine("theres a goblin stored");
             }
-            
+            Game1.ResetGoblins();
             doorNums.Clear();
         }
 
