@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace Game3
 {
-    class Hearts
+    public class Hearts
     {
         public Texture2D texture;
         public Rectangle bounds;

@@ -25,7 +25,7 @@ namespace Game3
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White);
+            spriteBatch.Draw(Game1.currentDoorTexture, destinationRectangle: bounds, color: Color.White);
         }
     }
 }

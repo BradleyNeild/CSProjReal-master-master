@@ -11,18 +11,17 @@ namespace Game3
         public Rectangle bounds;
         public Vector2 vector;
         public Texture2D texture;
-        public float speed;
+        public float speed = 4;
         public int health, maxHealth, power;
         public Rectangle spawnPoint;
         public DateTime spawnTime = DateTime.Now;
         public float waitTime = 0.5f;
         public bool frozen = true;
-        public Goblin(int enemyHealth, int enemyMaxHealth, float enemySpeed, int enemyPower, Texture2D enemyTexture, Rectangle enemyBounds, Rectangle enemySpawnPoint)
+        public Goblin(int enemyHealth, int enemyMaxHealth, int enemyPower, Texture2D enemyTexture, Rectangle enemyBounds, Rectangle enemySpawnPoint)
         {
             bounds = enemyBounds;
             health = enemyHealth;
             maxHealth = enemyMaxHealth;
-            speed = enemySpeed;
             power = enemyPower;
             texture = enemyTexture;
             spawnPoint = enemySpawnPoint;

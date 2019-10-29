@@ -79,7 +79,7 @@ namespace Game3
             if (vector != Vector2.Zero)
             {
                 vector.Normalize();
-                vector *= 4;
+                vector *= 8;
                 bounds.Location += vector.ToPoint();
             }
             direction = (float)Math.Atan2(vector.Y, vector.X);

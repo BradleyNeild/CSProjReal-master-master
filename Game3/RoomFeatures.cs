@@ -8,16 +8,42 @@ namespace Game3
 {
     class RoomFeatures
     {
-        public List<Goblin> goblinSpawns;
 
 
-        public RoomFeatures(List<Goblin> roomGoblinSpawns)
+
+        public RoomFeatures()
         {
-            int randType = Game1.random.Next(5);
-            if (randType == 0)
-            {
 
+        }
+
+        private void GenerateFeatures()
+        {
+
+        }
+
+        private void SpawnShop(Room room)
+        {
+
+        }
+
+        public static List<Goblin> GenerateGoblins(int number)
+        {
+            List<Goblin> goblinSpawns = new List<Goblin>();
+            if (number == 0)
+            {
+                goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(197, 197, 1, 1)));
+                goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(747, 197, 1, 1)));
             }
+            if (number == 1)
+            {
+                goblinSpawns.Add(new Goblin(3, 3, 1, Game1.enemyTexture, new Rectangle(0, 0, 40, 40), new Rectangle(495, 350, 1, 1)));
+            }
+            if (number == 2)
+            {
+                
+            }
+            return goblinSpawns;
+
         }
     }
 }

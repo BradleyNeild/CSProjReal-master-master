@@ -10,8 +10,46 @@ namespace Game3
     {
         public static Room[,] roomNodes = new Room[100, 100];
         public static List<Room> roomList = new List<Room>();
+        
 
         static int numRooms = 1;
+
+
+
+        public static void SpawnShop()
+        {
+            List<Room> validRooms = new List<Room>();
+            foreach (Room room in roomNodes)
+            {
+                int doorCount = 0;
+                if (room != null)
+                {
+                    if (room.posX != 50 && room.posY != 50)
+                    {
+
+
+                        if (room.doorN)
+                            doorCount++;
+                        if (room.doorE)
+                            doorCount++;
+                        if (room.doorS)
+                            doorCount++;
+                        if (room.doorW)
+                            doorCount++;
+                        if (doorCount == 2)
+                        {
+                            validRooms.Add(room);
+                        }
+                    }
+                }
+            }
+            Room randomRoom = validRooms[Game1.random.Next(validRooms.Count)];
+            roomNodes[randomRoom.posX, randomRoom.posY].gobinsContained.Clear();
+            roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
+            roomNodes[randomRoom.posX, randomRoom.posY].isShop = true;
+            Console.WriteLine("jigjpigjegjepige");
+
+        }
 
         static void CheckRooms()
         {
@@ -157,12 +195,27 @@ namespace Game3
             return roomNodes[tempRoom.posX, tempRoom.posY];
         }
 
-        static void AddRoom(int addPosX, int addPosY)
+        public static void DebugMap(int playerPosX, int playerPosY)
         {
-            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, new List<Goblin>());
+            CheckRooms();
+        }
+
+
+
+        static void AddRoom(int addPosX, int addPosY, bool enemies)
+        {
+            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, new List<Goblin>(), false);
+            if (enemies)
+            {
+                roomToAdd.gobinsContained = RoomFeatures.GenerateGoblins(Game1.random.Next(3));
+            }
+
+
+
+
             roomNodes[addPosX, addPosY] = roomToAdd;
             roomList.Add(roomToAdd);
-            Console.WriteLine("Added Room at " + addPosX + "," + addPosY);
+            //Console.WriteLine("Added Room at " + addPosX + "," + addPosY);
             numRooms += 1;
             CheckRooms();
         }
@@ -173,7 +226,8 @@ namespace Game3
             bool maxroomsOK = false;
             do
             {
-                maxRooms = Game1.random.Next(16, 30);
+                maxRooms = 400;
+                //maxRooms = Game1.random.Next(40, 60);
                 if (maxRooms % 4 == 0)
                 {
                     maxroomsOK = true;
@@ -191,11 +245,11 @@ namespace Game3
             int newRoomX, newRoomY, pointer1X, pointer1Y;
             Room roomPointer1;
             string debugRoomStr = "";
-            AddRoom(50, 50);
-            AddRoom(49, 50);
-            AddRoom(50, 49);
-            AddRoom(51, 50);
-            AddRoom(50, 51);
+            AddRoom(50, 50, false);
+            AddRoom(49, 50, true);
+            AddRoom(50, 49, true);
+            AddRoom(51, 50, true);
+            AddRoom(50, 51, true);
             fourPaths.Add(roomList[1]);
             fourPaths.Add(roomList[2]);
             fourPaths.Add(roomList[3]);
@@ -209,7 +263,7 @@ namespace Game3
                 for (int x = 0; x < roomsPerPath; x++)
                 {
                     goodRandom = false;
-                    
+
                     if (CheckRoomIsNull(roomPointer1.posX, roomPointer1.posY - 1))
                     {
                         canGoN = true;
@@ -289,30 +343,12 @@ namespace Game3
                             break;
                         }
                     }
-                    AddRoom(newRoomX, newRoomY);
+                    AddRoom(newRoomX, newRoomY, true);
                     roomPointer1 = roomNodes[newRoomX, newRoomY];
-                    Console.Write(roomList.Count);
+                    CheckRooms();
                 }
             }
-
-            for (int i = 0; i < roomNodes.GetUpperBound(0); i++)
-            {
-                for (int x = 0; x < roomNodes.GetUpperBound(1); x++)
-                {
-                    if (roomNodes[i, x] == null)
-                    {
-                        debugRoomStr += " ";
-                    }
-
-                    else
-                    {
-                        debugRoomStr += "#";
-                    }
-                }
-                debugRoomStr += "\n";
-            }
-            Console.WriteLine(debugRoomStr);
-            CheckRooms();
+            SpawnShop();
         }
     }
 }

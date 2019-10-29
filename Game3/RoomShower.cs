@@ -43,19 +43,21 @@ namespace Game3
 
         public static void CreateDoor(int wallPosX, int wallPosY, int doorDirection)
         {
-            Game1.doors.Add(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 1, wallPosX * 45 + roomOffset - 1, 0, 0), Game1.doorTexture, doorDirection));
+            Game1.doors.Add(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 1, wallPosX * 45 + roomOffset - 1, 0, 0), Game1.currentDoorTexture, doorDirection));
             //Console.Write("Door created");
         }
 
         public static void StartingThing()
         {
             Room playerRoom = ProcGen2.roomNodes[50,50];
+            
         }
 
         public static void SpawnRoom()
         {
             //Console.WriteLine(playerRoomX.ToString() + playerRoomY.ToString());
             playerRoom = ProcGen2.roomNodes[playerRoomX, playerRoomY];
+            ProcGen2.roomNodes[playerRoomX, playerRoomY].isExplored = true;
             //Console.WriteLine(playerRoom.doorN.ToString() + playerRoom.doorE.ToString() + playerRoom.doorS.ToString() + playerRoom.doorW.ToString());
             ClearRoom();
             if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorN)
@@ -99,10 +101,19 @@ namespace Game3
                 }
             }
             Game1.goblins = ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained;
-            foreach (Goblin goblin in ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained)
+            if (playerRoom.isShop)
             {
-                Console.WriteLine("theres a goblin stored");
+
             }
+            if (Ghost.currentRoom == ProcGen2.roomNodes[playerRoomX, playerRoomY])
+            {
+                Game1.ghosts.Add(new Ghost(Game1.ghostTexture, 0, 5, 5));
+            }
+            //foreach (Goblin goblin in ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained)
+            //{
+            //    Console.WriteLine("theres a goblin stored");
+            //}
+            Minimap.MinimapDebug();
             Game1.ResetGoblins();
             doorNums.Clear();
         }

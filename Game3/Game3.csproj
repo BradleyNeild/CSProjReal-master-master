@@ -44,17 +44,24 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Buttons.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Coin.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Doors.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Ghost.cs" />
+    <Compile Include="GhostRoom.cs" />
     <Compile Include="Goblin.cs" />
     <Compile Include="KeyboardOneTap.cs" />
     <Compile Include="Hearts.cs" />
     <Compile Include="MagicMissile.cs" />
+    <Compile Include="Minimap.cs" />
+    <Compile Include="MinimapRoom.cs" />
     <Compile Include="MouseOneTap.cs" />
+    <Compile Include="Path.cs" />
+    <Compile Include="Pickup.cs" />
     <Compile Include="ProcGen.cs" />
     <Compile Include="ProcGen2.cs" />
     <Compile Include="Program.cs" />
@@ -62,6 +69,7 @@
     <Compile Include="RoomFeatures.cs" />
     <Compile Include="Rooms.cs" />
     <Compile Include="RoomShower.cs" />
+    <Compile Include="Items.cs" />
     <Compile Include="Walls.cs" />
   </ItemGroup>
   <ItemGroup>
