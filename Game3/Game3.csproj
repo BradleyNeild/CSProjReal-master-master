@@ -44,6 +44,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Boss.cs" />
     <Compile Include="Buttons.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Coin.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Rooms.cs" />
     <Compile Include="RoomShower.cs" />
     <Compile Include="Items.cs" />
+    <Compile Include="Shadow.cs" />
     <Compile Include="Walls.cs" />
   </ItemGroup>
   <ItemGroup>

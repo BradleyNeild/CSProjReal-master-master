@@ -18,7 +18,7 @@ namespace Game3
         public static Random random = new Random();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Texture2D mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
+        public static Texture2D shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
         public static SpriteFont debugTextFont, roomNodeFont;
         KeyboardOneTap Key;
         Collision collision = new Collision();
@@ -32,6 +32,7 @@ namespace Game3
         public static List<Goblin> goblins = new List<Goblin>();
         public static List<Ghost> ghosts = new List<Ghost>();
         public static List<Pickup> pickups = new List<Pickup>();
+        public static List<Shadow> shadows = new List<Shadow>();
         public static List<MinimapRoom> minirooms = new List<MinimapRoom>();
         Array input = Keyboard.GetState().GetPressedKeys();
         public static Doors previousDoor;
@@ -94,8 +95,10 @@ namespace Game3
 
         public static void ResetGoblins()
         {
+            characters[0].aggroed.Clear();
             foreach (Goblin goblin in goblins)
             {
+                goblin.aggroed = false;
                 goblin.spawnTime = DateTime.Now;
                 goblin.frozen = true;
                 goblin.bounds.Location = goblin.spawnPoint.Location;
@@ -115,6 +118,7 @@ namespace Game3
 
         private void RemoveGoblin(int goblinIndex)
         {
+            characters[0].aggroed.Remove(goblins[goblinIndex]);
             goblins.RemoveAt(goblinIndex);
         }
 
@@ -182,7 +186,7 @@ namespace Game3
             {
                 foreach (Hearts heart in hearts)
                 {
-                    heart.moveBounds(57);
+                    heart.MoveBounds(57);
                 }
                 if (fullness == 2)
                 {
@@ -256,6 +260,7 @@ namespace Game3
             skullTexture = Content.Load<Texture2D>("skull");
             questionTexture = Content.Load<Texture2D>("questionmark");
             mainmenuTexture = Content.Load<Texture2D>("mainmenutemp");
+            shadowTexture = Content.Load<Texture2D>("shadow");
             // TODO: use this.Content to load your game content here
         }
 
@@ -499,6 +504,10 @@ namespace Game3
                     {
                         RemoveMissile(i);
                         goblins[g].health -= 1;
+                        if (!goblins[g].aggroed)
+                        {
+                            goblins[g].aggroed = true;
+                        }
                         if (goblins[g].health <= 0)
                         {
                             CreateCoin(random.Next(2, 6), new Rectangle(goblins[g].bounds.Location.X, goblins[g].bounds.Location.Y, 0, 0));
@@ -657,7 +666,7 @@ namespace Game3
             // TODO: Add your drawing code here
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             string coinCounterVal = "Coins: " + coinCount.ToString();
-            string instructions = "Click to shoot\nWASD to move\nPress Tab to toggle Minimap";
+            string instructions = "WASD to move\nClick to shoot\nPress Tab to toggle Minimap";
             string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
             //string roomNodeVal = currentRoom.number.ToString();
              foreach (Coin coin in coins)
@@ -714,7 +723,6 @@ namespace Game3
 
             if (gameOver && playPressed)
             {
-
                 spriteBatch.Draw(wallTexture, new Rectangle(0, 0, 5000, 5000), Color.Black);
                 spriteBatch.DrawString(debugTextFont, "Game Over", new Vector2(500, 350), Color.Red, 0f, new Vector2(0, 0), 3f, SpriteEffects.None, 0f);
             }

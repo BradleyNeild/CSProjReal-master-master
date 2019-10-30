@@ -16,7 +16,7 @@ namespace Game3
         Vector2 Vector;
         public int fullness;
         
-        public void moveBounds(int distance)
+        public void MoveBounds(int distance)
         {
             bounds.X += distance;
         }

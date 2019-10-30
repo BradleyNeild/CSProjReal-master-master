@@ -47,6 +47,12 @@ namespace Game3
                 overlaySize = new Vector2(11, 16);
                 overlayColor = Color.White;
             }
+            else if (ProcGen2.roomNodes[rPosX, rPosY].isBoss)
+            {
+                overlay = Game1.skullTexture;
+                overlaySize = new Vector2(16, 16);
+                overlayColor = Color.White;
+            }
             else
             {
                 overlayColor = Color.Transparent;

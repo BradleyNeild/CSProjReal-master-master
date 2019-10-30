@@ -14,7 +14,38 @@ namespace Game3
 
         static int numRooms = 1;
 
-
+        public static void SpawnBossRoom()
+        {
+            List<Room> validRooms = new List<Room>();
+            foreach (Room room in roomNodes)
+            {
+                int doorCount = 0;
+                if (room != null)
+                {
+                    if (room.posX != 50 && room.posY != 50 && !room.isShop)
+                    {
+                        if (room.doorN)
+                            doorCount++;
+                        if (room.doorE)
+                            doorCount++;
+                        if (room.doorS)
+                            doorCount++;
+                        if (room.doorW)
+                            doorCount++;
+                        if (doorCount == 2)
+                        {
+                            validRooms.Add(room);
+                        }
+                    }
+                }
+            }
+            Room randomRoom = validRooms[Game1.random.Next(validRooms.Count)];
+            roomNodes[randomRoom.posX, randomRoom.posY].gobinsContained.Clear();
+            roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
+            roomNodes[randomRoom.posX, randomRoom.posY].isBoss = true;
+            roomNodes[randomRoom.posX, randomRoom.posY].bossesContained.Add(new Boss(50, 50));
+            Console.WriteLine("jigjpigjegjepige");
+        }
 
         public static void SpawnShop()
         {
@@ -24,7 +55,7 @@ namespace Game3
                 int doorCount = 0;
                 if (room != null)
                 {
-                    if (room.posX != 50 && room.posY != 50)
+                    if (room.posX != 50 && room.posY != 50 && !room.isBoss)
                     {
 
 
@@ -349,6 +380,7 @@ namespace Game3
                 }
             }
             SpawnShop();
+            SpawnBossRoom();
         }
     }
 }

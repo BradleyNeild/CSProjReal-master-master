@@ -8,6 +8,7 @@ namespace Game3
 {
     public class Character
     {
+        public int maxAggroed = 2;
         public Rectangle bounds;
         public int moveSpeed;
         private Texture2D texture;
@@ -17,6 +18,7 @@ namespace Game3
         public float totalXP;
         bool showLevelUp = false;
         DateTime showTime;
+        public List<Goblin> aggroed = new List<Goblin>();
         public List<float> levelBrackets = new List<float>()
         {
             

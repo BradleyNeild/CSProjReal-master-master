@@ -66,28 +66,6 @@ namespace Game3
             }
             string debugString = "Highest X = " + highestX.ToString() + " Lowest X = " + lowestX.ToString() + " Highest Y = " + highestY.ToString() + " Lowest Y = " + lowestY.ToString();
             Console.WriteLine(debugString);
-            
-           
-
-
-            //Console.WriteLine("minirooms = " + minimaproomint);
-
-            //offsetX = 0;
-            //offsetY = 300;
-            //for (int y = 0; y < minimapRooms.GetUpperBound(1); y++)
-            //{
-            //    offsetX = 0;
-            //    offsetY += 16;
-            //    for (int x = 0; x < minimapRooms.GetUpperBound(0); x++)
-            //    {
-            //        offsetX += 16;
-            //        if (minimapRooms[x, y] != null)
-            //        {
-            //            Game1.minirooms.Add(new MinimapRoom(texture, offsetX, offsetY, x, y));
-            //        }
-
-            //    }
-            //}
         }
         public void Draw(SpriteBatch spriteBatch)
         {

@@ -33,6 +33,8 @@ namespace Game3
             {
                 goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(197, 197, 1, 1)));
                 goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(747, 197, 1, 1)));
+                goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(250, 197, 1, 1)));
+                goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(197, 250, 1, 1)));
             }
             if (number == 1)
             {
