@@ -25,6 +25,7 @@ namespace Game3
         MouseOneTap mouseOneTap = new MouseOneTap();
         List<Coin> coins = new List<Coin>();
         public static List<Character> characters = new List<Character>();
+        public static List<LOSDot> LOSDots = new List<LOSDot>();
         List<MagicMissile> missiles = new List<MagicMissile>();
         public static List<Hearts> hearts = new List<Hearts>();
         public static List<Walls> walls = new List<Walls>();
@@ -437,6 +438,20 @@ namespace Game3
             for (var i = 0; i < goblins.Count; i++)
             {
                 goblins[i].Update(gameTime);
+                for (int w = 0; w < walls.Count; w++)
+                {
+                    if (collision.CollisionCheck(goblins[i].bounds, walls[w].bounds, "goblin", "wall"))
+                    {
+                        if (goblins[i].aggroed)
+                        {
+                            goblins[i].bounds.Location -= goblins[i].vector.ToPoint();
+                        }
+                        else
+                            goblins[i].bounds.Location -= goblins[i].roamingVector.ToPoint();
+
+                        break;
+                    }
+                }
                 for (int c = 0; c < characters.Count; c++)
                 {
                     if (collision.CollisionCheck(goblins[i].bounds, characters[c].bounds, "goblin", "character"))
@@ -445,6 +460,7 @@ namespace Game3
                         break;
                     }
                 }
+
             }
 
 

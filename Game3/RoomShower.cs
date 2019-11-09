@@ -11,19 +11,19 @@ namespace Game3
 {
     class RoomShower
     {
-        static int roomOffset = 150;
+        public static int roomOffset = 150;
         public static Room playerRoom;
         public static int playerRoomX = 50, playerRoomY = 50;
         public static Room nextRoom;
         public static int nextRoomX = 50, nextRoomY = 50;
         public static List<int> doorNums = new List<int>();
-        static int[,] wall2DArray = new int[9, 15]
+        public static int[,] wall2DArray = new int[9, 15]
         {
             {1,1,1,1,1,1,1,2,1,1,1,1,1,1,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {5,0,0,0,0,0,0,0,0,0,0,0,0,0,3},
+            {5,0,1,0,0,0,0,0,0,0,0,0,0,0,3},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -43,7 +43,7 @@ namespace Game3
 
         public static void CreateDoor(int wallPosX, int wallPosY, int doorDirection)
         {
-            Game1.doors.Add(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 1, wallPosX * 45 + roomOffset - 1, 0, 0), Game1.currentDoorTexture, doorDirection));
+            Game1.doors.Add(new Doors(new Rectangle(wallPosY * 45 + roomOffset, wallPosX * 45 + roomOffset, 0, 0), Game1.currentDoorTexture, doorDirection));
             //Console.Write("Door created");
         }
 

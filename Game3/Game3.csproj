@@ -57,11 +57,14 @@
     <Compile Include="Goblin.cs" />
     <Compile Include="KeyboardOneTap.cs" />
     <Compile Include="Hearts.cs" />
+    <Compile Include="LOSDot.cs" />
     <Compile Include="MagicMissile.cs" />
     <Compile Include="Minimap.cs" />
     <Compile Include="MinimapRoom.cs" />
     <Compile Include="MouseOneTap.cs" />
     <Compile Include="Path.cs" />
+    <Compile Include="Pathfinding\Node.cs" />
+    <Compile Include="Pathfinding\PathFinding.cs" />
     <Compile Include="Pickup.cs" />
     <Compile Include="ProcGen.cs" />
     <Compile Include="ProcGen2.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="RoomShower.cs" />
     <Compile Include="Items.cs" />
     <Compile Include="Shadow.cs" />
+    <Compile Include="Timer\Timer.cs" />
     <Compile Include="Walls.cs" />
   </ItemGroup>
   <ItemGroup>
