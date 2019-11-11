@@ -6,13 +6,11 @@ using System.Collections.Generic;
 
 namespace Game3
 {
-    public class Goblin
+    public class Goblin:BaseObject
     {
 
         public Timer MoveTimer = new Timer(0.3f);
         public Color color = Color.White;
-        public Rectangle bounds;
-        public Vector2 vector;
         public Texture2D texture;
         public Point CurrentTargetTile = Point.Zero;
         public Point PreviousTile = Point.Zero;
@@ -31,6 +29,8 @@ namespace Game3
         public bool MoveComplete = true;
         List<Point> path = null;
         int lastSecond = 99999;
+        public static int noAggroed = 0;
+        public const int maxAggroed = 3;
         public Goblin(int enemyHealth, int enemyMaxHealth, int enemyPower, Texture2D enemyTexture, Rectangle enemyBounds, Rectangle enemySpawnPoint)
         {
             bounds = enemyBounds;
@@ -43,7 +43,7 @@ namespace Game3
 
         private bool AggrosUnderMax()
         {
-            if (Game1.characters[0].aggroed.Count <= Game1.characters[0].maxAggroed)
+            if (noAggroed < maxAggroed)
             {
                 return true;
             }
@@ -53,25 +53,6 @@ namespace Game3
             }
         }
 
-        private void CheckAggros()
-        {
-            bool found = false;
-            int i = 0;
-
-            do
-            {
-                if (Game1.characters[0].aggroed[i] != null)
-                {
-                    Game1.characters[0].aggroed[i].DeAggro();
-                    found = true;
-                }
-                i++;
-            }
-            while (!found);
-
-
-
-        }
 
         private void MoveTo(Point destination)
         {
@@ -80,22 +61,22 @@ namespace Game3
 
         private void Aggro()
         {
-            Console.WriteLine("Aggroed");
-            Game1.characters[0].aggroed.Add(this);
+            //Console.WriteLine("Aggroed");
+            noAggroed++;
             aggroed = true;
 
         }
 
         private void DeAggro()
         {
-            Console.WriteLine("Deaggroed");
+            //Console.WriteLine("Deaggroed");
             aggroed = false;
-            Game1.characters[0].aggroed.Remove(this);
+            noAggroed--;
         }
 
 
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             MoveTimer.Update(gameTime);
             if (aggroed)
@@ -114,10 +95,11 @@ namespace Game3
             {
                 if (!frozen)
                 {
-                    if(PathFinding.ConvertThing(Game1.characters[0].bounds.Location) != CurrentTargetTile)
+                    Character character = (Character)parent.SearchFirst<Character>();
+                    if (PathFinding.ConvertThing(character.bounds.Location) != CurrentTargetTile)
                     {
                         //Console.WriteLine("uoaer");
-                        CurrentTargetTile = PathFinding.ConvertThing(Game1.characters[0].bounds.Location);
+                        CurrentTargetTile = PathFinding.ConvertThing(character.bounds.Location);
                         Point boundLocationTile = PathFinding.ConvertThing(bounds.Location);
                         path = PathFinding.FindPath(boundLocationTile, CurrentTargetTile);
                         PreviousTile = bounds.Location;
@@ -195,10 +177,26 @@ namespace Game3
                 }
             }
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, destinationRectangle: bounds, color: color);
         }
+
+        public override void OnCreate()
+        {
+
+        }
+
+        public override void OnDestroy()
+        {
+
+        }
+
+        public override void OnInteract(BaseObject caller)
+        {
+
+        }
+
     }
 }
 

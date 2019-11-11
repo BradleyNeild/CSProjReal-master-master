@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Game3
 {
-    public class Ghost
+    public class Ghost:BaseObject
     {
         public Texture2D texture;
         public int type, power, health, maxHealth;
@@ -15,7 +15,6 @@ namespace Game3
         static Room[,] dupedArray = ProcGen2.roomNodes;
         static List<Room> tentativeRooms = new List<Room>();
         static List<Path> paths = new List<Path>();
-        Rectangle bounds = new Rectangle(500, 350, 40, 40);
         static DateTime lastMoved;
 
         public Ghost(Texture2D enemyTexture, int ghostType, int ghostHealth, int ghostMaxHealth)
@@ -48,7 +47,7 @@ namespace Game3
 
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (DateTime.Now.AddSeconds(-10) > lastMoved)
             {
@@ -56,9 +55,25 @@ namespace Game3
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, bounds, Color.White);
         }
+
+        public override void OnCreate()
+        {
+
+        }
+
+        public override void OnDestroy()
+        {
+
+        }
+
+        public override void OnInteract(BaseObject caller)
+        {
+
+        }
+
     }
 }

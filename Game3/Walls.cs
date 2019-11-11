@@ -9,10 +9,9 @@ using System.Diagnostics;
 
 namespace Game3
 {
-    public class Walls
+    public class Walls:BaseObject
     {
         public Texture2D texture;
-        public Rectangle bounds;
 
         public Walls(Rectangle wallBounds, Texture2D wallTexture)
         {
@@ -21,9 +20,29 @@ namespace Game3
             bounds.Height = 45;
             texture = wallTexture;
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White);
+        }
+
+        public override void OnCreate()
+        {
+            
+        }
+
+        public override void OnDestroy()
+        {
+            
+        }
+
+        public override void OnInteract(BaseObject caller)
+        {
+
+        }
+
+        public override void Update(GameTime gt)
+        {
+            
         }
     }
 }

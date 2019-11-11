@@ -6,12 +6,11 @@ using System.Collections.Generic;
 
 namespace Game3
 {
-    public class Pickup
+    public class Pickup:BaseObject
     {
         string name;
         public int effID;
         Texture2D texture;
-        public Rectangle bounds;
 
         public Pickup(string pickupName, int effectID, Texture2D pickupTexture, Rectangle pickupBounds)
         {
@@ -21,18 +20,38 @@ namespace Game3
             bounds = pickupBounds;
         }
 
-        public static void Effect(int effectID)
+        public void Effect(int effectID)
         {
             if (effectID == 0)
             {
                 Ghost.SpawnSelf();
-                Game1.AddHeart(0, 1);
+                parent.SearchFirst<Character>().maxLife += 2;
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White);
+        }
+
+        public override void OnCreate()
+        {
+
+        }
+
+        public override void OnDestroy()
+        {
+
+        }
+
+        public override void OnInteract(BaseObject caller)
+        {
+
+        }
+
+        public override void Update(GameTime gt)
+        {
+
         }
     }
 }

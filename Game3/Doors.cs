@@ -9,23 +9,42 @@ using System.Diagnostics;
 
 namespace Game3
 {
-    public class Doors
+    public class Doors:BaseObject
     {
         public Texture2D texture;
-        public Rectangle bounds;
         public int direction;
 
         public Doors(Rectangle doorBounds, Texture2D doorTexture, int doorDirection)
         {
             bounds = doorBounds;
-            bounds.Width = 47;
-            bounds.Height = 47;
+            bounds.Width = 49;
+            bounds.Height = 49;
             texture = doorTexture;
             direction = doorDirection;
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Game1.currentDoorTexture, destinationRectangle: bounds, color: Color.White);
+        }
+
+        public override void OnCreate()
+        {
+
+        }
+
+        public override void OnDestroy()
+        {
+
+        }
+
+        public override void OnInteract(BaseObject caller)
+        {
+
+        }
+
+        public override void Update(GameTime gt)
+        {
+
         }
     }
 }

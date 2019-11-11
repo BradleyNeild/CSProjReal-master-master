@@ -10,14 +10,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game3
 {
-    class MagicMissile
+    class MagicMissile:BaseObject
     {
         Texture2D texture;
-        public Rectangle bounds;
-        public Vector2 vector, mousePos;
+        public Vector2 mousePos;
         float mouseGapX, mouseGapY, direction;
         public int ID, power;
         public DateTime spawnTime;
+        public static int noMissiles;
+        public static int maxMissiles;
 
         private void MoveMissileCursor(Vector2 vector)
         {
@@ -60,14 +61,14 @@ namespace Game3
             power = missilePower;
             spawnTime = missileSpawnTime;
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White, rotation: direction, origin: new Vector2(texture.Width / 2, texture.Height / 2));
         }
 
 
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
             var mouseState = Mouse.GetState();
@@ -115,5 +116,20 @@ namespace Game3
             //    vector = Vector2.Zero;
             //}
         }
+        public override void OnCreate()
+        {
+
+        }
+
+        public override void OnDestroy()
+        {
+
+        }
+
+        public override void OnInteract(BaseObject caller)
+        {
+
+        }
+
     }
 }

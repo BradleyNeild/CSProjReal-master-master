@@ -76,7 +76,7 @@ namespace Game3
                 }
 
 
-                float ManhattDist(Point p1, Point p2)
+                float EuclideanDist(Point p1, Point p2)
                 {
                     return (float)Math.Sqrt(Math.Pow(p1.X - p2.X,2) + Math.Pow(p1.Y - p2.Y, 2));
                 }
@@ -109,14 +109,14 @@ namespace Game3
                     }
                     closedList.Add(current);
                     openList.Remove(current);
-                    CreateNode(current.location + new Point(0, -1), current.heuristic + ManhattDist(current.location,end), current);
-                    CreateNode(current.location + new Point(1, 0), current.heuristic + ManhattDist(current.location, end), current);
-                    CreateNode(current.location + new Point(0, 1), current.heuristic + ManhattDist(current.location, end), current);
-                    CreateNode(current.location + new Point(-1, 0), current.heuristic + ManhattDist(current.location, end), current);
-                    CreateNode(current.location + new Point(-1, -1), current.heuristic + ManhattDist(current.location, end), current);
-                    CreateNode(current.location + new Point(1, -1), current.heuristic + ManhattDist(current.location, end), current);
-                    CreateNode(current.location + new Point(1, 1), current.heuristic + ManhattDist(current.location, end), current);
-                    CreateNode(current.location + new Point(-1, 1), current.heuristic + ManhattDist(current.location, end), current);
+                    CreateNode(current.location + new Point(0, -1), current.heuristic + EuclideanDist(current.location,end), current);
+                    CreateNode(current.location + new Point(1, 0), current.heuristic + EuclideanDist(current.location, end), current);
+                    CreateNode(current.location + new Point(0, 1), current.heuristic + EuclideanDist(current.location, end), current);
+                    CreateNode(current.location + new Point(-1, 0), current.heuristic + EuclideanDist(current.location, end), current);
+                    CreateNode(current.location + new Point(-1, -1), current.heuristic + EuclideanDist(current.location, end), current);
+                    CreateNode(current.location + new Point(1, -1), current.heuristic + EuclideanDist(current.location, end), current);
+                    CreateNode(current.location + new Point(1, 1), current.heuristic + EuclideanDist(current.location, end), current);
+                    CreateNode(current.location + new Point(-1, 1), current.heuristic + EuclideanDist(current.location, end), current);
 
                 }
                 while (openList.Count > 0 && current.location != end);

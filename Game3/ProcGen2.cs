@@ -44,7 +44,7 @@ namespace Game3
             roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
             roomNodes[randomRoom.posX, randomRoom.posY].isBoss = true;
             roomNodes[randomRoom.posX, randomRoom.posY].bossesContained.Add(new Boss(50, 50));
-            Console.WriteLine("jigjpigjegjepige");
+            //Console.WriteLine("jigjpigjegjepige");
         }
 
         public static void SpawnShop()
@@ -78,7 +78,7 @@ namespace Game3
             roomNodes[randomRoom.posX, randomRoom.posY].gobinsContained.Clear();
             roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
             roomNodes[randomRoom.posX, randomRoom.posY].isShop = true;
-            Console.WriteLine("jigjpigjegjepige");
+            //Console.WriteLine("jigjpigjegjepige");
 
         }
 

@@ -32,18 +32,18 @@ namespace Game3
 
         public static void ClearRoom()
         {
-            Game1.walls.Clear();
-            Game1.doors.Clear();
+            Game1.objectHandler.RemoveObject<Walls>();
+            Game1.objectHandler.RemoveObject<Doors>();
         }
 
         public static void CreateWall(int wallPosX, int wallPosY)
         {
-            Game1.walls.Add(new Walls(new Rectangle(wallPosY * 45 + roomOffset, wallPosX * 45 + roomOffset, 0, 0), Game1.wallTexture));
+            Game1.objectHandler.AddObject(new Walls(new Rectangle(wallPosY * 45 + roomOffset, wallPosX * 45 + roomOffset, 0, 0), Game1.wallTexture));
         }
 
         public static void CreateDoor(int wallPosX, int wallPosY, int doorDirection)
         {
-            Game1.doors.Add(new Doors(new Rectangle(wallPosY * 45 + roomOffset, wallPosX * 45 + roomOffset, 0, 0), Game1.currentDoorTexture, doorDirection));
+            Game1.objectHandler.AddObject(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 3, wallPosX * 45 + roomOffset - 3, 0, 0), Game1.currentDoorTexture, doorDirection));
             //Console.Write("Door created");
         }
 
@@ -100,14 +100,15 @@ namespace Game3
                     }
                 }
             }
-            Game1.goblins = ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained;
+            Game1.objectHandler.AddObjects(ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained);
+            
             if (playerRoom.isShop)
             {
 
             }
             if (Ghost.currentRoom == ProcGen2.roomNodes[playerRoomX, playerRoomY])
             {
-                Game1.ghosts.Add(new Ghost(Game1.ghostTexture, 0, 5, 5));
+                Game1.objectHandler.AddObject(new Ghost(Game1.ghostTexture, 0, 5, 5));
             }
             //foreach (Goblin goblin in ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained)
             //{

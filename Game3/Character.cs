@@ -6,24 +6,24 @@ using System.Collections.Generic;
 
 namespace Game3
 {
-    public class Character
+    public class Character:BaseObject
     {
-        public int maxAggroed = 2;
-        public Rectangle bounds;
+        public int life, maxLife;
         public int moveSpeed;
         private Texture2D texture;
-        public Vector2 vector;
         List<Hearts> hearts = new List<Hearts>();
         public int level;
         public float totalXP;
         bool showLevelUp = false;
         DateTime showTime;
-        public List<Goblin> aggroed = new List<Goblin>();
+        
         public List<float> levelBrackets = new List<float>()
         {
             
         
         };
+
+
 
         public void GenerateBrackets()
         {
@@ -45,7 +45,25 @@ namespace Game3
             moveSpeed = playerMoveSpeed;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void OnInteract(BaseObject caller)
+        {
+            if (caller is Goblin)
+            {
+
+            }
+        }
+
+        public override void OnCreate()
+        {
+            
+        }
+
+        public override void OnDestroy()
+        {
+            
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White);
             if (showLevelUp)
@@ -65,14 +83,14 @@ namespace Game3
 
         public void LevelUp()
         {
-            Game1.AddHeart(2, 1);
+           // Game1.AddHeart(2, 1);
             totalXP = levelBrackets[level];
             level++;
             showTime = DateTime.Now;
         }
 
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (DateTime.Now > showTime.AddSeconds(3))
             {

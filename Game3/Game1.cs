@@ -13,8 +13,9 @@ namespace Game3
     {
         bool showMiniMap = false;
         int screenX = 1400, screenY = 787;
-        bool canDie = false;
+        bool canDie = true;
         bool gameOver = false;
+        Timer hitTimer = new Timer(1f);
         public static Random random = new Random();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -23,29 +24,17 @@ namespace Game3
         KeyboardOneTap Key;
         Collision collision = new Collision();
         MouseOneTap mouseOneTap = new MouseOneTap();
-        List<Coin> coins = new List<Coin>();
-        public static List<Character> characters = new List<Character>();
-        public static List<LOSDot> LOSDots = new List<LOSDot>();
-        List<MagicMissile> missiles = new List<MagicMissile>();
-        public static List<Hearts> hearts = new List<Hearts>();
-        public static List<Walls> walls = new List<Walls>();
-        public static List<Doors> doors = new List<Doors>();
-        public static List<Goblin> goblins = new List<Goblin>();
-        public static List<Ghost> ghosts = new List<Ghost>();
-        public static List<Pickup> pickups = new List<Pickup>();
-        public static List<Shadow> shadows = new List<Shadow>();
+        public static ObjectHandler objectHandler = new ObjectHandler();
         public static List<MinimapRoom> minirooms = new List<MinimapRoom>();
         Array input = Keyboard.GetState().GetPressedKeys();
         public static Doors previousDoor;
-        DateTime hitTime, shootTime;
+        //DateTime hitTime;
         int[,] wall2DArray = new int[1, 1]
         {
             {1},
         };
-        Random rnd = new Random();
-        private int coinCount = 0, missileCount = 0, life, maxlife = 6, heartContainers, sortTemp, totalFullness, maxMissiles;
+        //private int coinCount = 0, missileCount = 0, life, maxlife = 6, heartContainers, sortTemp, totalFullness, maxMissiles;
         public static int cursorTileX, cursorTileY;
-        float attackCooldown;
         bool started = false;
         bool playPressed = false;
         public Game1()
@@ -56,8 +45,10 @@ namespace Game3
 
         private void GiveXP(int amount)
         {
-            characters[0].totalXP += amount;
-            characters[0].CheckLevel();
+            Character character = (Character)objectHandler.SearchFirst<Character>();
+
+            character.totalXP += amount;
+            character.CheckLevel();
         }
 
 
@@ -65,38 +56,39 @@ namespace Game3
         {
             for (int i = 0; i < amount; i++)
             {
-                coins.Add(new Coin(location, coinTexture));
+                objectHandler.AddObject(new Coin(location, coinTexture));
             }
         }
 
         private void SpawnCharacter(Rectangle location)
         {
             var mouseState = Mouse.GetState();
-            characters.Add(new Character(location, playerTexture, 5));
+            objectHandler.AddObject(new Character(location, playerTexture, 5));
         }
 
         public static void SpawnCursedHeart(Rectangle position)
         {
-            pickups.Add(new Pickup("Cursed Heart", 0, cursedHeartTexture, position));
+            objectHandler.AddObject(new Pickup("Cursed Heart", 0, cursedHeartTexture, position));
         }
 
         public static void SpawnGoblin(Rectangle position)
         {
             var mouseState = Mouse.GetState();
-            goblins.Add(new Goblin(3, 3, 1, enemyTexture, position, position));
-            Console.WriteLine("GOBLIN SPAWNED");
+            objectHandler.AddObject(new Goblin(3, 3, 1, enemyTexture, position, position));
+            //Console.WriteLine("GOBLIN SPAWNED");
         }
 
         public static void SpawnGoblinAtMouse()
         {
             var mouseState = Mouse.GetState();
-            goblins.Add(new Goblin(3, 3, 1, enemyTexture, new Rectangle(mouseState.Position, new Point(30)), new Rectangle(mouseState.Position, new Point(30))));
-            Console.WriteLine("GOBLIN SPAWNED");
+            objectHandler.AddObject(new Goblin(3, 3, 1, enemyTexture, new Rectangle(mouseState.Position, new Point(30)), new Rectangle(mouseState.Position, new Point(30))));
+            //Console.WriteLine("GOBLIN SPAWNED");
         }
 
         public static void ResetGoblins()
         {
-            characters[0].aggroed.Clear();
+            Goblin.noAggroed = 0;
+            List<Goblin> goblins = objectHandler.SearchArray<Goblin>();
             foreach (Goblin goblin in goblins)
             {
                 goblin.aggroed = false;
@@ -107,113 +99,33 @@ namespace Game3
             }
         }
 
-        private void RemoveCoin(int coinIndex)
+        private void RemoveCoin(Coin coin)
         {
-            coins.RemoveAt(coinIndex);
+            objectHandler.RemoveObject(coin);
         }
 
-        private void RemoveMissile(int missileIndex)
+        private void RemoveMissile(MagicMissile missile)
         {
-            missiles.RemoveAt(missileIndex);
+            objectHandler.RemoveObject(missile);
         }
 
-        private void RemoveGoblin(int goblinIndex)
+        private void RemoveGoblin(Goblin goblin)
         {
-            characters[0].aggroed.Remove(goblins[goblinIndex]);
-            goblins.RemoveAt(goblinIndex);
+            Goblin.noAggroed--;
+            objectHandler.RemoveObject(goblin);
         }
 
         private void SpawnMissile(Vector2 position)
         {
-            if (missiles.Count < maxMissiles && DateTime.Now > shootTime.AddSeconds(attackCooldown))
+            if (MagicMissile.noMissiles < MagicMissile.maxMissiles)
             {
-                shootTime = DateTime.Now;
-                missiles.Add(new MagicMissile(new Rectangle((int)position.X, (int)position.Y, 1, 1), missileTexture, missileCount, 1, DateTime.Now));
-                missileCount++;
+                objectHandler.AddObject(new MagicMissile(new Rectangle((int)position.X, (int)position.Y, 1, 1), missileTexture, MagicMissile.noMissiles, 1, DateTime.Now));
+                MagicMissile.noMissiles++;
             }
 
         }
 
-        private void DamagePlayer(int damage)
-        {
-            if (DateTime.Now > hitTime.AddSeconds(1))
-            {
-                for (int i = 0; i < heartContainers; i++)
-                {
-                    if (hearts[i].fullness == 2)
-                    {
-                        hearts[i].fullness -= damage;
-                        hitTime = DateTime.Now;
-                        break;
-                    }
-                    else if (hearts[i].fullness == 1)
-                    {
-                        hearts[i].fullness -= damage;
-                        hitTime = DateTime.Now;
-                        break;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-            }
-
-        }
-        private void HealPlayer(int healing)
-        {
-            for (int i = heartContainers - 1; i >= 0; i--)
-            {
-                if (hearts[i].fullness == 0)
-                {
-                    hearts[i].fullness += healing;
-                    break;
-                }
-                else if (hearts[i].fullness == 1)
-                {
-                    hearts[i].fullness += healing;
-                    break;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-        }
-
-        public static void AddHeart(int fullness, int amount)
-        {
-            for (int i = 0; i < amount; i++)
-            {
-                foreach (Hearts heart in hearts)
-                {
-                    heart.MoveBounds(57);
-                }
-                if (fullness == 2)
-                {
-                    hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureFull, fullness)));
-                }
-                else if (fullness == 1)
-                {
-                    hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureHalf, fullness)));
-                }
-                else
-                {
-                    hearts.Insert((hearts.Count), (new Hearts(new Rectangle(0, 0, 0, 0), heartTextureEmpty, fullness)));
-                }
-            }
-
-
-        }
-
-        private void RemoveHeart(int heartsToRemove)
-        {
-            for (int i = 0; i < heartsToRemove; i++)
-            {
-                maxlife -= 2;
-                hearts.RemoveAt(0);
-            }
-        }
+ 
 
 
 
@@ -296,8 +208,8 @@ namespace Game3
                 Minimap.MinimapDebug();
                 RoomShower.StartingThing();
                 RoomShower.SpawnRoom();
-                characters[0].GenerateBrackets();
-                AddHeart(2, 3);
+                objectHandler.SearchFirst<Character>().GenerateBrackets();
+                //AddHeart(2, 3);
                 canDie = true;
                 started = true;
             }
@@ -309,8 +221,8 @@ namespace Game3
             {
                 gameOver = false;
             }
-            maxMissiles = characters[0].level + 3;
-            attackCooldown = 0.25f / (characters[0].level + 1);
+            MagicMissile.maxMissiles = objectHandler.SearchFirst<Character>().level + 3;
+            //attackCooldown = 0.25f / (characters[0].level + 1);
             if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained.Count == 0)
             {
                 currentDoorTexture = doorTexture;
@@ -318,80 +230,18 @@ namespace Game3
             else
                 currentDoorTexture = wallTexture;
 
-            //health
-            if (maxlife % 2 == 0)
-            {
-                heartContainers = maxlife / 2;
-            }
-            else
-            {
-                heartContainers = (maxlife - 1) / 2;
-            }
-            if (hearts.Count < heartContainers)
-            {
-                AddHeart(0, 1);
-            }
 
-            totalFullness = 0;
-            foreach (Hearts heart in hearts)
-            {
-                totalFullness += heart.fullness;
-            }
-            if (life != totalFullness)
-            {
-                life = totalFullness;
-            }
-
-
-            //bubble sorting health
-            for (int i = 0; i < hearts.Count - 1; i++)
-            {
-                if (hearts[i].fullness > hearts[i + 1].fullness)
-                {
-                    sortTemp = hearts[i].fullness;
-                    hearts[i].fullness = hearts[i + 1].fullness;
-                    hearts[i + 1].fullness = sortTemp;
-                }
-                else if (hearts[i].fullness == hearts[i + 1].fullness && hearts[i].fullness == 1)
-                {
-                    hearts[i].fullness = 2;
-                    hearts[i + 1].fullness = 0;
-
-                }
-            }
 
             //input
             var mouseState = Mouse.GetState();
             Key.Update(gameTime);
             mouseOneTap.Update(gameTime);
-            if (mouseOneTap.IsRightPressed())
-            {
-                maxlife += 2;
-                Console.WriteLine("life = " + life);
-                Console.WriteLine("maxlife = " + maxlife);
-            }
             if (mouseOneTap.IsLeftPressed())
             {
-                SpawnMissile(new Vector2(characters[0].bounds.X, characters[0].bounds.Y));
+                SpawnMissile(objectHandler.SearchFirst<Character>().bounds.Center.ToVector2());
             }
 
 
-
-
-            if (Key.IsPressed(Keys.H))
-            {
-                RemoveHeart(1);
-            }
-
-            if (Key.IsPressed(Keys.K))
-            {
-                DamagePlayer(1);
-            }
-
-            if (Key.IsPressed(Keys.J))
-            {
-                HealPlayer(1);
-            }
 
             if (Key.IsPressed(Keys.P))
             {
@@ -424,10 +274,7 @@ namespace Game3
 
 
             // TODO: Add your update logic here
-            foreach (Coin coin in coins)
-            {
-                coin.Update(gameTime);
-            }
+
 
             foreach (MinimapRoom miniRoom in minirooms)
             {
@@ -435,238 +282,219 @@ namespace Game3
             }
 
 
-            for (var i = 0; i < goblins.Count; i++)
-            {
-                goblins[i].Update(gameTime);
-                for (int w = 0; w < walls.Count; w++)
-                {
-                    if (collision.CollisionCheck(goblins[i].bounds, walls[w].bounds, "goblin", "wall"))
-                    {
-                        if (goblins[i].aggroed)
-                        {
-                            goblins[i].bounds.Location -= goblins[i].vector.ToPoint();
-                        }
-                        else
-                            goblins[i].bounds.Location -= goblins[i].roamingVector.ToPoint();
+            //for (var i = 0; i < goblins.Count; i++)
+            //{
+            //    goblins[i].Update(gameTime);
+            //    for (int w = 0; w < walls.Count; w++)
+            //    {
+            //        if (collision.CollisionCheck(goblins[i].bounds, walls[w].bounds, "goblin", "wall"))
+            //        {
+            //            if (goblins[i].aggroed)
+            //            {
+            //                goblins[i].bounds.Location -= goblins[i].vector.ToPoint();
+            //            }
+            //            else
+            //                goblins[i].bounds.Location -= goblins[i].roamingVector.ToPoint();
 
-                        break;
-                    }
-                }
-                for (int c = 0; c < characters.Count; c++)
-                {
-                    if (collision.CollisionCheck(goblins[i].bounds, characters[c].bounds, "goblin", "character"))
-                    {
-                        DamagePlayer(goblins[i].power);
-                        break;
-                    }
-                }
+            //            break;
+            //        }
+            //    }
+            //    for (int c = 0; c < characters.Count; c++)
+            //    {
+            //        if (collision.CollisionCheck(goblins[i].bounds, characters[c].bounds, "goblin", "character"))
+            //        {
+            //            DamagePlayer(goblins[i].power);
+            //            break;
+            //        }
+            //    }
 
-            }
-
-
-
-            for (var i = 0; i < missiles.Count; i++)
-            {
-                missiles[i].Update(gameTime);
-                if (DateTime.Now > missiles[i].spawnTime.AddSeconds(3))
-                {
-                    RemoveMissile(i);
-                }
-            }
-            for (var i = 0; i < missiles.Count; i++)
-            {
-                for (int w = 0; w < walls.Count; w++)
-                {
-                    if (collision.CollisionCheck(missiles[i].bounds, walls[w].bounds, "missile", "wall"))
-                    {
-                        RemoveMissile(i);
-                        break;
-                    }
-                }
-            }
-            for (var i = 0; i < missiles.Count; i++)
-            {
-
-                for (int d = 0; d < doors.Count; d++)
-                {
-                    if (collision.CollisionCheck(missiles[i].bounds, doors[d].bounds, "missile", "door"))
-                    {
-                        RemoveMissile(i);
-                        break;
-                    }
-                }
-            }
-            for (var i = 0; i < missiles.Count; i++)
-            {
-
-                for (int m = 0; m < missiles.Count; m++)
-                {
-                    if (collision.CollisionCheck(missiles[i].bounds, missiles[m].bounds, "missile", "missile"))
-                    {
-                        if (missiles[m].ID > missiles[i].ID)
-                        {
-                            RemoveMissile(i);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            for (var i = 0; i < missiles.Count; i++)
-            {
-                for (int g = 0; g < goblins.Count; g++)
-                {
-                    if (collision.CollisionCheck(missiles[i].bounds, goblins[g].bounds, "missile", "goblin"))
-                    {
-                        RemoveMissile(i);
-                        goblins[g].health -= 1;
-                        if (!goblins[g].aggroed)
-                        {
-                            goblins[g].aggroed = true;
-                        }
-                        if (goblins[g].health <= 0)
-                        {
-                            CreateCoin(random.Next(2, 6), new Rectangle(goblins[g].bounds.Location.X, goblins[g].bounds.Location.Y, 0, 0));
-                            RemoveGoblin(g);
-
-                            GiveXP(400);
-                        }
-                        break;
-                    }
-                }
+            //}
 
 
 
-            }
+            //for (var i = 0; i < missiles.Count; i++)
+            //{
+            //    missiles[i].Update(gameTime);
+            //    if (DateTime.Now > missiles[i].spawnTime.AddSeconds(3))
+            //    {
+            //        RemoveMissile(i);
+            //    }
+            //}
+            //for (var i = 0; i < missiles.Count; i++)
+            //{
+            //    for (int w = 0; w < walls.Count; w++)
+            //    {
+            //        if (collision.CollisionCheck(missiles[i].bounds, walls[w].bounds, "missile", "wall"))
+            //        {
+            //            RemoveMissile(i);
+            //            break;
+            //        }
+            //    }
+            //}
+            //for (var i = 0; i < missiles.Count; i++)
+            //{
 
-            for (var i = 0; i < characters.Count; i++)
-            {
-                characters[i].Update(gameTime);
+            //    for (int d = 0; d < doors.Count; d++)
+            //    {
+            //        if (collision.CollisionCheck(missiles[i].bounds, doors[d].bounds, "missile", "door"))
+            //        {
+            //            RemoveMissile(i);
+            //            break;
+            //        }
+            //    }
+            //}
+            //for (var i = 0; i < missiles.Count; i++)
+            //{
 
-                foreach (Pickup pickup in pickups)
-                {
-                    if (collision.CollisionCheck(characters[i].bounds, pickup.bounds, "character", "pickup"))
-                    {
-                        Pickup.Effect(pickup.effID);
-                        pickups.Remove(pickup);
-                        break;
-                    }
-                }
+            //    for (int m = 0; m < missiles.Count; m++)
+            //    {
+            //        if (collision.CollisionCheck(missiles[i].bounds, missiles[m].bounds, "missile", "missile"))
+            //        {
+            //            if (missiles[m].ID > missiles[i].ID)
+            //            {
+            //                RemoveMissile(i);
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
 
-                for (var c = 0; c < coins.Count; c++)
-                {
-                    if (collision.CollisionCheck(characters[i].bounds, coins[c].bounds, "character", "coin"))
-                    {
-                        RemoveCoin(c);
-                        coinCount++;
-                        GiveXP(100);
-                    }
-                }
-                //for (int m = 0; m < missiles.Count; m++)
-                //{
-                //    if (collision.CollisionCheck(characters[i].bounds, missiles[m].bounds, "character", "missile"))
-                //    {
-                //        RemoveMissile(m);
-                //        DamagePlayer(1);
-                //    }
-                //}
-                for (int w = 0; w < walls.Count; w++)
-                {
-                    if (collision.CollisionCheck(characters[i].bounds, walls[w].bounds, "character", "walls"))
-                    {
-                        characters[i].bounds.Location -= characters[i].vector.ToPoint();
-                        break;
-                    }
-                    foreach (Coin coin in coins)
-                    {
-                        if (collision.CollisionCheck(coin.bounds, walls[w].bounds, "coin", "walls"))
-                        {
-                            coin.bounds.Location -= coin.vector.ToPoint();
-                        }
+            //for (var i = 0; i < missiles.Count; i++)
+            //{
+            //    for (int g = 0; g < goblins.Count; g++)
+            //    {
+            //        if (collision.CollisionCheck(missiles[i].bounds, goblins[g].bounds, "missile", "goblin"))
+            //        {
+            //            RemoveMissile(i);
+            //            goblins[g].health -= 1;
+            //            if (!goblins[g].aggroed)
+            //            {
+            //                goblins[g].aggroed = true;
+            //            }
+            //            if (goblins[g].health <= 0)
+            //            {
+            //                CreateCoin(random.Next(2, 6), new Rectangle(goblins[g].bounds.Location.X, goblins[g].bounds.Location.Y, 0, 0));
+            //                RemoveGoblin(g);
 
-                    }
-                }
-
-
-
-                for (int d = 0; d < doors.Count; d++)
-                {
-                    foreach (Coin coin in coins)
-                    {
-                        if (collision.CollisionCheck(coin.bounds, doors[d].bounds, "coin", "door"))
-                        {
-                            coin.bounds.Location -= coin.vector.ToPoint();
-                        }
-                    }
-
-                    //if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained.Count == 0)
-                    if (collision.CollisionCheck(characters[i].bounds, doors[d].bounds, "character", "doors"))
-                    {
-                        if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained.Count == 0)
-                        {
+            //                GiveXP(400);
+            //            }
+            //            break;
+            //        }
+            //    }
 
 
-                            ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = goblins;
-                            foreach (Goblin goblin in goblins)
-                            {
-                                Console.WriteLine("theres a goblin in goblins");
-                            }
-                            if (doors[d].direction == 2)
-                            {
-                                RoomShower.playerRoomY -= 1;
-                                characters[0].bounds = new Rectangle(475, 475, characters[0].bounds.Width, characters[0].bounds.Height);
 
-                            }
-                            if (doors[d].direction == 3)
-                            {
-                                RoomShower.playerRoomX += 1;
-                                characters[0].bounds = new Rectangle(200, 330, characters[0].bounds.Width, characters[0].bounds.Height);
+            //}
 
-                            }
-                            if (doors[d].direction == 4)
-                            {
-                                RoomShower.playerRoomY += 1;
-                                characters[0].bounds = new Rectangle(475, 200, characters[0].bounds.Width, characters[0].bounds.Height);
+            //for (var i = 0; i < characters.Count; i++)
+            //{
+            //    characters[i].Update(gameTime);
 
-                            }
-                            if (doors[d].direction == 5)
-                            {
-                                RoomShower.playerRoomX -= 1;
-                                characters[0].bounds = new Rectangle(744, 330, characters[0].bounds.Width, characters[0].bounds.Height);
-                            }
+            //    foreach (Pickup pickup in pickups)
+            //    {
+            //        if (collision.CollisionCheck(characters[i].bounds, pickup.bounds, "character", "pickup"))
+            //        {
+            //            Pickup.Effect(pickup.effID);
+            //            pickups.Remove(pickup);
+            //            break;
+            //        }
+            //    }
 
-                            RoomShower.SpawnRoom();
-                            missiles.Clear();
-                            coins.Clear();
-                            break;
-                        }
-                        else
-                        {
-                            characters[i].bounds.Location -= characters[i].vector.ToPoint();
-                            break;
-                        }
-                    }
-                }
-            }
+            //    for (var c = 0; c < coins.Count; c++)
+            //    {
+            //        if (collision.CollisionCheck(characters[i].bounds, coins[c].bounds, "character", "coin"))
+            //        {
+            //            RemoveCoin(c);
+            //            coinCount++;
+            //            GiveXP(100);
+            //        }
+            //    }
+            //    //for (int m = 0; m < missiles.Count; m++)
+            //    //{
+            //    //    if (collision.CollisionCheck(characters[i].bounds, missiles[m].bounds, "character", "missile"))
+            //    //    {
+            //    //        RemoveMissile(m);
+            //    //        DamagePlayer(1);
+            //    //    }
+            //    //}
+            //    for (int w = 0; w < walls.Count; w++)
+            //    {
+            //        if (collision.CollisionCheck(characters[i].bounds, walls[w].bounds, "character", "walls"))
+            //        {
+            //            characters[i].bounds.Location -= characters[i].vector.ToPoint();
+            //            break;
+            //        }
+            //        foreach (Coin coin in coins)
+            //        {
+            //            if (collision.CollisionCheck(coin.bounds, walls[w].bounds, "coin", "walls"))
+            //            {
+            //                coin.bounds.Location -= coin.vector.ToPoint();
+            //            }
 
-            foreach (Hearts heart in hearts)
-            {
-                switch (heart.fullness)
-                {
-                    case 0:
-                        heart.texture = heartTextureEmpty;
-                        break;
-                    case 1:
-                        heart.texture = heartTextureHalf;
-                        break;
-                    case 2:
-                        heart.texture = heartTextureFull;
-                        break;
-                    default:
-                        Console.WriteLine("fullness out of range");
-                        break;
-                }
-            }
+            //        }
+            //    }
+
+
+
+            //    for (int d = 0; d < doors.Count; d++)
+            //    {
+            //        foreach (Coin coin in coins)
+            //        {
+            //            if (collision.CollisionCheck(coin.bounds, doors[d].bounds, "coin", "door"))
+            //            {
+            //                coin.bounds.Location -= coin.vector.ToPoint();
+            //            }
+            //        }
+
+            //        //if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained.Count == 0)
+            //        if (collision.CollisionCheck(characters[i].bounds, doors[d].bounds, "character", "doors"))
+            //        {
+            //            if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained.Count == 0)
+            //            {
+
+
+            //                ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = goblins;
+            //                foreach (Goblin goblin in goblins)
+            //                {
+            //                    Console.WriteLine("theres a goblin in goblins");
+            //                }
+            //                if (doors[d].direction == 2)
+            //                {
+            //                    RoomShower.playerRoomY -= 1;
+            //                    characters[0].bounds = new Rectangle(475, 475, characters[0].bounds.Width, characters[0].bounds.Height);
+
+            //                }
+            //                if (doors[d].direction == 3)
+            //                {
+            //                    RoomShower.playerRoomX += 1;
+            //                    characters[0].bounds = new Rectangle(200, 330, characters[0].bounds.Width, characters[0].bounds.Height);
+
+            //                }
+            //                if (doors[d].direction == 4)
+            //                {
+            //                    RoomShower.playerRoomY += 1;
+            //                    characters[0].bounds = new Rectangle(475, 200, characters[0].bounds.Width, characters[0].bounds.Height);
+
+            //                }
+            //                if (doors[d].direction == 5)
+            //                {
+            //                    RoomShower.playerRoomX -= 1;
+            //                    characters[0].bounds = new Rectangle(744, 330, characters[0].bounds.Width, characters[0].bounds.Height);
+            //                }
+
+            //                RoomShower.SpawnRoom();
+            //                missiles.Clear();
+            //                coins.Clear();
+            //                break;
+            //            }
+            //            else
+            //            {
+            //                characters[i].bounds.Location -= characters[i].vector.ToPoint();
+            //                break;
+            //            }
+            //        }
+            //    }
+            //}
             base.Update(gameTime);
         }
 
@@ -685,44 +513,10 @@ namespace Game3
             string instructions = "WASD to move\nClick to shoot\nPress Tab to toggle Minimap";
             string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
             //string roomNodeVal = currentRoom.number.ToString();
-             foreach (Coin coin in coins)
-            {
-                coin.Draw(spriteBatch);
-                //Console.WriteLine(coin.ToString());
-            }
-            
-            foreach (Ghost ghost in ghosts)
-            {
-                ghost.Draw(spriteBatch);
-            }
-            foreach (Character character in characters)
-            {
-                character.Draw(spriteBatch);
-            }
-            foreach (MagicMissile missile in missiles)
-            {
-                missile.Draw(spriteBatch);
-            }
-            foreach (Hearts heart in hearts)
-            {
-                heart.Draw(spriteBatch);
-            }
-            foreach (Walls wall in walls)
-            {
-                wall.Draw(spriteBatch);
-            }
-            foreach (Doors door in doors)
-            {
-                door.Draw(spriteBatch);
-            }
-            foreach (Goblin goblin in goblins)
-            {
-                goblin.Draw(spriteBatch);
-            }
-            foreach (Pickup pickup in pickups)
-            {
-                pickup.Draw(spriteBatch);
-            }
+
+            objectHandler.Draw(spriteBatch);
+
+            //GMIUOPDERJGU9IPERGU9PRWEHU9PREHGU9EWRHUGPERWHUGWREUOGWUPOGHWRUGWHUGHUOWGHUOREGUOPWEHGUPOEHGUOIPW4RGUJOPWNJOGNPOWJ[UIGFNPUOENFUGOPJNIOJ[VNWPOUJVNWIESOVN[OEWNV[
             if (showMiniMap)
             {
                 foreach (MinimapRoom miniroom in minirooms)
@@ -730,10 +524,9 @@ namespace Game3
                     miniroom.Draw(spriteBatch);
                 }
             }
-
             spriteBatch.DrawString(debugTextFont, coinCounterVal, new Vector2(50, 50), Color.White);
             spriteBatch.DrawString(debugTextFont, instructions, new Vector2(0, 100), Color.White);
-            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + characters[0].bounds.X + "y:" + characters[0].bounds.Y + "\n" + nodeTrackerVal + "\n" + characters[0].totalXP, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
+            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + objectHandler.SearchFirst<Character>().bounds.X + "y:" + objectHandler.SearchFirst<Character>().bounds.Y + "\n" + nodeTrackerVal + "\n" + objectHandler.SearchFirst<Character>().totalXP, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
 
 
 

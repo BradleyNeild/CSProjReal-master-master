@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace Game3
 {
-    class Coin
+    class Coin:BaseObject
     {
 
         Texture2D texture;
@@ -81,7 +81,7 @@ namespace Game3
             Bounces = Game1.random.Next(2, 5);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             Point DrawPos = bounds.Location + new Point(0, (int)YOff);
             Point DrawBounds = bounds.Size;
@@ -89,7 +89,7 @@ namespace Game3
             spriteBatch.Draw(texture, destinationRectangle: new Rectangle(DrawPos, DrawBounds), Color.White);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (!FinishedBounce)
             {
@@ -128,6 +128,20 @@ namespace Game3
 
                 YOff = BounceVelocity * (-MathHelper.Lerp(-3, BounceHeight, LerpValue));
             }
+        }
+        public override void OnCreate()
+        {
+
+        }
+
+        public override void OnDestroy()
+        {
+
+        }
+
+        public override void OnInteract(BaseObject caller)
+        {
+
         }
     }
 }
