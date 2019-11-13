@@ -14,7 +14,6 @@ namespace Game3
         public static int roomOffset = 150;
         public static Room playerRoom;
         public static int playerRoomX = 50, playerRoomY = 50;
-        public static Room nextRoom;
         public static int nextRoomX = 50, nextRoomY = 50;
         public static List<int> doorNums = new List<int>();
         public static int[,] wall2DArray = new int[9, 15]
@@ -43,7 +42,7 @@ namespace Game3
 
         public static void CreateDoor(int wallPosX, int wallPosY, int doorDirection)
         {
-            Game1.objectHandler.AddObject(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 3, wallPosX * 45 + roomOffset - 3, 0, 0), Game1.currentDoorTexture, doorDirection));
+            Game1.objectHandler.AddObject(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 3, wallPosX * 45 + roomOffset - 3, 0, 0), doorDirection));
             //Console.Write("Door created");
         }
 

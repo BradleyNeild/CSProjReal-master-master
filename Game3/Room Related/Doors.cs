@@ -14,12 +14,12 @@ namespace Game3
         public Texture2D texture;
         public int direction;
 
-        public Doors(Rectangle doorBounds, Texture2D doorTexture, int doorDirection)
+        public Doors(Rectangle doorBounds, int doorDirection)
         {
             bounds = doorBounds;
             bounds.Width = 49;
             bounds.Height = 49;
-            texture = doorTexture;
+            texture = Game1.doorTexture;
             direction = doorDirection;
         }
         public override void Draw(SpriteBatch spriteBatch)

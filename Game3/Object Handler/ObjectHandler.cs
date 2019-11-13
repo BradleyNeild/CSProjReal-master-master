@@ -62,8 +62,11 @@ namespace Game3
         {
             if (inObject != null)
             {
+
                 inObject.parent = this;
+                inObject.OnCreate();
                 objects.Add(inObject);
+                
             }
         }
 
@@ -74,6 +77,7 @@ namespace Game3
                 for (int i = 0; i < inObjects.Count; i++)
                 {
                     inObjects[i].parent = this;
+                    inObjects[i].OnCreate();
                     objects.Add(inObjects[i]);
                 }
                 

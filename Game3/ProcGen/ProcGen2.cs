@@ -43,7 +43,7 @@ namespace Game3
             roomNodes[randomRoom.posX, randomRoom.posY].gobinsContained.Clear();
             roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
             roomNodes[randomRoom.posX, randomRoom.posY].isBoss = true;
-            roomNodes[randomRoom.posX, randomRoom.posY].bossesContained.Add(new Boss(50, 50));
+            //roomNodes[randomRoom.posX, randomRoom.posY].bossesContained.Add(new Boss(50, 50));
             //Console.WriteLine("jigjpigjegjepige");
         }
 
@@ -275,7 +275,6 @@ namespace Game3
             int possibleDirections = 0;
             int newRoomX, newRoomY, pointer1X, pointer1Y;
             Room roomPointer1;
-            string debugRoomStr = "";
             AddRoom(50, 50, false);
             AddRoom(49, 50, true);
             AddRoom(50, 49, true);

@@ -16,7 +16,6 @@ namespace Game3
         public bool fullNeighbors, doorN, doorE, doorS, doorW;
         public bool isShop;
         public List<Goblin> gobinsContained = new List<Goblin>();
-        public List<Boss> bossesContained = new List<Boss>();
         public int cost = Game1.random.Next(10);
         public int totalCost = int.MaxValue;
         public bool dijsktraVisited = false;

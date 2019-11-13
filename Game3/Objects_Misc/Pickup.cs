@@ -25,7 +25,7 @@ namespace Game3
             if (effectID == 0)
             {
                 Ghost.SpawnSelf();
-                parent.SearchFirst<Character>().maxLife += 2;
+                parent.SearchFirst<Character>().maxHearts += 2;
             }
         }
 

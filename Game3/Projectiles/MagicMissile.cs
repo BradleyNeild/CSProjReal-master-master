@@ -14,7 +14,7 @@ namespace Game3
     {
         Texture2D texture;
         public Vector2 mousePos;
-        float mouseGapX, mouseGapY, direction;
+        float direction;
         public int ID, power;
         public DateTime spawnTime;
         public static int noMissiles;
@@ -63,7 +63,9 @@ namespace Game3
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
+            #pragma warning disable CS0618 // Type or member is obsolete
             spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White, rotation: direction, origin: new Vector2(texture.Width / 2, texture.Height / 2));
+            #pragma warning restore CS0618 // Type or member is obsolete
         }
 
 
@@ -118,18 +120,20 @@ namespace Game3
         }
         public override void OnCreate()
         {
-
+            noMissiles++;
         }
 
         public override void OnDestroy()
         {
-
+            noMissiles--;
         }
 
         public override void OnInteract(BaseObject caller)
         {
-
+            if (caller is MagicMissile || caller is Walls || caller is Doors)
+            {
+                destroy = true;
+            }
         }
-
     }
 }

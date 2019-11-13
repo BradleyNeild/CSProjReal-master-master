@@ -9,30 +9,24 @@ using System.Diagnostics;
 
 namespace Game3
 {
-    public class Hearts
+    public class Heart
     {
         public Texture2D texture;
         public Rectangle bounds;
-        Vector2 Vector;
-        public int fullness;
-        
-        public void MoveBounds(int distance)
+        public Heart(Rectangle heartBounds, Texture2D heartTexture)
         {
-            bounds.X += distance;
+            bounds = heartBounds;
+            texture = heartTexture;
         }
 
-        public Hearts(Rectangle HeartBounds, Texture2D heartTexture, int heartFullness)
-        {
-            bounds = HeartBounds;
-            bounds.Width = 54;
-            bounds.Height = 54;
-            texture = heartTexture;
-            fullness = heartFullness;
-        }
         public void Draw(SpriteBatch spriteBatch)
         {
-            Vector2 origin = new Vector2(bounds.X / 2, bounds.Y / 2);
             spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White);
         }
+        public void Update(GameTime gt)
+        {
+            
+        }
+
     }
 }

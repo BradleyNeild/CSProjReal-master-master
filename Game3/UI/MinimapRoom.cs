@@ -11,7 +11,6 @@ namespace Game3
 
         Texture2D texture = Game1.miniRoomTexture;
         Texture2D overlay = Game1.questionTexture;
-        int offsetY = 0, offsetX = 0;
         int posX, posY, rPosX, rPosY;
         Color textureColor = Color.White;
         Color overlayColor = Color.Transparent;

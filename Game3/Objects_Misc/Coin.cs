@@ -13,8 +13,6 @@ namespace Game3
     {
 
         Texture2D texture;
-        public Rectangle bounds;
-        public Vector2 vector;
         bool Bounce;
         bool FinishedBounce;
         int Bounces;
@@ -35,12 +33,21 @@ namespace Game3
             return Str;
         }
 
-        public Coin(Rectangle coinBounds, Texture2D coinTexture)
+        public static void CreateCoin(ObjectHandler objectHandler, Point position, int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                objectHandler.AddObject(new Coin(new Rectangle(position, Point.Zero)));
+            }
+            
+        }
+
+        public Coin(Rectangle coinBounds)
         {
             bounds = coinBounds;
             bounds.Width = 16;
             bounds.Height = 22;
-            texture = coinTexture;
+            texture = Game1.coinTexture;
 
 
             if (Game1.random.Next(0, 2) == 0)
@@ -141,7 +148,12 @@ namespace Game3
 
         public override void OnInteract(BaseObject caller)
         {
-
+            if (caller is Doors || caller is Walls)
+            {
+                bounds.X += (int)-vector.X;
+                bounds.Y += (int)-vector.Y;
+                vector = -vector;
+            }
         }
     }
 }

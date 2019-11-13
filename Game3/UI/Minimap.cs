@@ -11,7 +11,6 @@ namespace Game3
         public static int lowestX = 10000, lowestY = 10000, highestX = 0, highestY = 0;
         public static List<MinimapRoom> minimapRooms = new List<MinimapRoom>();
         static Texture2D texture = Game1.wallTexture;
-        static int offsetY = 0, offsetX = 0;
         static int minimaproomint;
 
         public static void MinimapDebug()

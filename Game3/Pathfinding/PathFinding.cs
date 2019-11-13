@@ -13,7 +13,7 @@ namespace Game3
 
         public static Point ConvertThing(Point input)
         {
-            Point output = new Point((input.X - RoomShower.roomOffset)/45, (input.Y - RoomShower.roomOffset)/45);
+            Point output = new Point((int)Math.Floor((float)(input.X - RoomShower.roomOffset)/45), (int)Math.Floor((float)(input.Y - RoomShower.roomOffset)/45));
             return output;
         }
 
@@ -21,6 +21,16 @@ namespace Game3
         {
             if (start != end)
             {
+                int[,] Weights = (int[,])RoomShower.wall2DArray.Clone();
+
+                List<Enemy> Enemys = Game1.objectHandler.SearchArray<Enemy>();
+                foreach(Enemy i in Enemys)
+                {
+                    Point TilePos = ConvertThing(i.bounds.Center);
+                    Weights[TilePos.Y, TilePos.X] = 1;
+                }
+
+
                 Node current = null;
                 List<Node> openList = new List<Node>();
                 openList.Add(new Node(start, 0, null));
@@ -88,7 +98,7 @@ namespace Game3
                     if ((nodeLocation.X >= 0) && (nodeLocation.X < 15) && (nodeLocation.Y >= 0) && (nodeLocation.Y < 9))
                     {
                         //Console.WriteLine(RoomShower.wall2DArray[nodeLocation.Y, nodeLocation.X]);
-                        if (RoomShower.wall2DArray[nodeLocation.Y, nodeLocation.X] == 0)
+                        if ((RoomShower.wall2DArray[nodeLocation.Y, nodeLocation.X] == 0))
                         {
                             Node newNode = new Node(nodeLocation, nodeHeuristic, nodeParent);
                             if (!CheckNodeLists(newNode))
@@ -113,10 +123,10 @@ namespace Game3
                     CreateNode(current.location + new Point(1, 0), current.heuristic + EuclideanDist(current.location, end), current);
                     CreateNode(current.location + new Point(0, 1), current.heuristic + EuclideanDist(current.location, end), current);
                     CreateNode(current.location + new Point(-1, 0), current.heuristic + EuclideanDist(current.location, end), current);
-                    CreateNode(current.location + new Point(-1, -1), current.heuristic + EuclideanDist(current.location, end), current);
-                    CreateNode(current.location + new Point(1, -1), current.heuristic + EuclideanDist(current.location, end), current);
-                    CreateNode(current.location + new Point(1, 1), current.heuristic + EuclideanDist(current.location, end), current);
-                    CreateNode(current.location + new Point(-1, 1), current.heuristic + EuclideanDist(current.location, end), current);
+                    //CreateNode(current.location + new Point(-1, -1), current.heuristic + EuclideanDist(current.location, end), current);
+                    //CreateNode(current.location + new Point(1, -1), current.heuristic + EuclideanDist(current.location, end), current);
+                    //CreateNode(current.location + new Point(1, 1), current.heuristic + EuclideanDist(current.location, end), current);
+                    //CreateNode(current.location + new Point(-1, 1), current.heuristic + EuclideanDist(current.location, end), current);
 
                 }
                 while (openList.Count > 0 && current.location != end);
