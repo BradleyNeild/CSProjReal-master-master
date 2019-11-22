@@ -14,7 +14,7 @@ namespace Game3
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, destinationRectangle: bounds, rotation: direction);
+            sb.Draw(texture, destinationRectangle: bounds, rotation: direction, origin: new Vector2(1, 0));
         }
 
         public override void OnClick()

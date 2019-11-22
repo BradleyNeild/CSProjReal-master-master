@@ -8,7 +8,7 @@ namespace Game3
 {
     public class MinimapRoom
     {
-
+        int offsetX = 300;
         Texture2D texture = Game1.miniRoomTexture;
         Texture2D overlay = Game1.questionTexture;
         int posX, posY, rPosX, rPosY;
@@ -33,12 +33,12 @@ namespace Game3
             {
                 textureColor = Color.White;
             }
-            if(ProcGen2.roomNodes[rPosX, rPosY].objectsContained.Count > 0 || !ProcGen2.roomNodes[rPosX, rPosY].isExplored)
+
+            if (ProcGen2.roomNodes[rPosX, rPosY].objectsContained.Count > 0 || !ProcGen2.roomNodes[rPosX, rPosY].isExplored)
             {
                 overlay = Game1.questionTexture;
                 overlayColor = Color.White;
             }
-
             else if (ProcGen2.roomNodes[rPosX, rPosY].isShop)
                 {
                 overlay = Game1.coinTexture;
@@ -59,8 +59,8 @@ namespace Game3
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Rectangle(posX * 16, posY * 16 + 250, 16, 16), textureColor);
-            spriteBatch.Draw(overlay, new Rectangle(posX * 16, posY * 16 + 250, (int)overlaySize.X, (int)overlaySize.Y), overlayColor);
+            spriteBatch.Draw(texture, destinationRectangle: new Rectangle(posX * 16 + offsetX, posY * 16 + 250, 16, 16), color: textureColor, layerDepth: 0.1f);
+            spriteBatch.Draw(overlay, destinationRectangle: new Rectangle(posX * 16 + offsetX, posY * 16 + 250, (int)overlaySize.X, (int)overlaySize.Y), color: overlayColor, layerDepth: 0f);
         }
 
 

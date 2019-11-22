@@ -9,42 +9,38 @@ using System.Diagnostics;
 
 namespace Game3
 {
-    public class Doors:BaseObject
+    public class FloorTile:BaseObject
     {
-        public Texture2D texture;
-        public int direction;
-
-        public Doors(Rectangle doorBounds, int doorDirection)
+        Texture2D texture = Game1.floorTexture;
+        public FloorTile(Rectangle tileBounds)
         {
-            bounds = doorBounds;
-            bounds.Width = 49;
-            bounds.Height = 49;
-            texture = Game1.doorTexture;
-            direction = doorDirection;
+            bounds = tileBounds;
         }
-        public override void Draw(SpriteBatch spriteBatch)
+
+        public override void Draw(SpriteBatch sb)
         {
-            spriteBatch.Draw(Game1.currentDoorTexture, destinationRectangle: new Rectangle(bounds.X+3, bounds.Y+3, 45, 45), color: Color.White);
+            sb.Draw(texture, destinationRectangle: bounds, layerDepth: 1f);
         }
 
         public override void OnCreate()
         {
-
+            bounds.Width = 45;
+            bounds.Height = 45;
         }
 
         public override void OnDestroy()
         {
-
+            
         }
 
         public override void OnInteract(BaseObject caller)
         {
-
+            
         }
 
         public override void Update(GameTime gt)
         {
-
+            
         }
     }
 }

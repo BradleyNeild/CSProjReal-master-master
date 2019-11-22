@@ -11,6 +11,7 @@ namespace Game3
     /// </summary>
     public class Game1 : Game
     {
+        bool started2 = false;
         public static int coinCount = 0;
         bool showMiniMap = false;
         public const int screenX = 1400, screenY = 787;
@@ -19,7 +20,7 @@ namespace Game3
         public static Random random = new Random();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Texture2D wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
+        public static Texture2D floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
         public static SpriteFont debugTextFont, roomNodeFont;
         KeyboardOneTap Key;
         Collision collision = new Collision();
@@ -133,7 +134,7 @@ namespace Game3
             graphics.PreferredBackBufferHeight = screenY;
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-            wallTexture = Content.Load<Texture2D>("wallV2");
+            wallTexture = Content.Load<Texture2D>("prettyWall");
             enemyTexture = Content.Load<Texture2D>("Baddie");
             heartTextureFull = Content.Load<Texture2D>("fullheartv2");
             heartTextureHalf = Content.Load<Texture2D>("halfheartv2");
@@ -142,7 +143,7 @@ namespace Game3
             coinTexture = Content.Load<Texture2D>("coin");
             debugTextFont = Content.Load<SpriteFont>("spritefont1");
             missileTexture = Content.Load<Texture2D>("magicmissile2");
-            doorTexture = Content.Load<Texture2D>("door2");
+            doorTexture = Content.Load<Texture2D>("prettyDoor");
             ghostTexture = Content.Load<Texture2D>("ghost");
             happyGhostTexture = Content.Load<Texture2D>("happyghost");
             sadGhostTexture = Content.Load<Texture2D>("ghost");
@@ -155,6 +156,7 @@ namespace Game3
             whitePixelTexture = Content.Load<Texture2D>("whitepixel");
             balloonTexture = Content.Load<Texture2D>("balloon");
             wandTexture = Content.Load<Texture2D>("wand");
+            floorTexture = Content.Load<Texture2D>("floorTile");
             // TODO: use this.Content to load your game content here
         }
 
@@ -189,6 +191,7 @@ namespace Game3
                 Minimap.MinimapDebug();
                 RoomShower.StartingThing();
                 RoomShower.SpawnRoom();
+                TileHandler.GenerateTiles();
                 objectHandler.AddObject(new Wand());
                 
                 //character.GenerateBrackets();
@@ -500,20 +503,25 @@ namespace Game3
         protected override void Draw(GameTime gameTime)
         {
             var mouseState = Mouse.GetState();
-            GraphicsDevice.Clear(Color.SaddleBrown);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp);
             string coinCounterVal = "Coins: " + coinCount.ToString();
             string instructions = "WASD to move\nClick to shoot\nPress Tab to toggle Minimap";
             string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
 
-            objectHandler.Draw(spriteBatch);
+            if (!showMiniMap)
+            {
+                objectHandler.Draw(spriteBatch);
+            }
+            
             heartManager.Draw(spriteBatch);
 
             //GMIUOPDERJGU9IPERGU9PRWEHU9PREHGU9EWRHUGPERWHUGWREUOGWUPOGHWRUGWHUGHUOWGHUOREGUOPWEHGUPOEHGUOIPW4RGUJOPWNJOGNPOWJ[UIGFNPUOENFUGOPJNIOJ[VNWPOUJVNWIESOVN[OEWNV[
             if (showMiniMap)
             {
+                spriteBatch.Draw(whitePixelTexture, destinationRectangle: new Rectangle(0, 0, 10000, 100000), color: Color.Gray,layerDepth: 1);
                 foreach (MinimapRoom miniroom in minirooms)
                 {
                     miniroom.Draw(spriteBatch);
