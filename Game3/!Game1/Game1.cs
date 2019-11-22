@@ -189,6 +189,7 @@ namespace Game3
                 Minimap.MinimapDebug();
                 RoomShower.StartingThing();
                 RoomShower.SpawnRoom();
+                objectHandler.AddObject(new Wand());
                 
                 //character.GenerateBrackets();
                 //AddHeart(2, 3);
@@ -218,6 +219,12 @@ namespace Game3
             var mouseState = Mouse.GetState();
             Key.Update(gameTime);
             mouseOneTap.Update(gameTime);
+
+            if (mouseOneTap.IsLeftPressed())
+            {
+                Weapon currentWeapon = objectHandler.SearchFirst<Weapon>();
+                currentWeapon.OnClick();
+            }
 
             if (mouseOneTap.IsRightPressed())
             {
@@ -513,7 +520,7 @@ namespace Game3
                 }
             }
             spriteBatch.DrawString(debugTextFont, coinCounterVal + "\n" + instructions + "\n" + (1f / gameTime.ElapsedGameTime.TotalSeconds), new Vector2(0, 150), Color.White);
-            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + objectHandler.SearchFirst<Character>().bounds.X + "y:" + objectHandler.SearchFirst<Character>().bounds.Y + "\n" + nodeTrackerVal + "\n" + Character.totalXP, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
+            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + objectHandler.SearchFirst<Character>().bounds.X + "y:" + objectHandler.SearchFirst<Character>().bounds.Y + "\n" + nodeTrackerVal + "\n" + Character.totalXP + "\n" + objectHandler.SearchFirst<Wand>().direction, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
 
 
 

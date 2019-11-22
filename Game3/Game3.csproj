@@ -56,8 +56,8 @@
     <Compile Include="Objects_Misc\Character.cs" />
     <Compile Include="Objects_Misc\Coin.cs" />
     <Compile Include="Polymorphism Guys\Object Handlers\WeaponHandler.cs" />
-    <Compile Include="Polymorphism Guys\Weapons\Wand.cs" />
-    <Compile Include="Polymorphism Guys\Weapons\Weapon.cs" />
+    <Compile Include="Weapons\Wand.cs" />
+    <Compile Include="Polymorphism Guys\Weapon.cs" />
     <Compile Include="UI\Heart.cs" />
     <Compile Include="Useless\Collision.cs" />
     <Compile Include="Room Related\Doors.cs" />

@@ -9,10 +9,12 @@ namespace Game3
     public class Wand : Weapon
     {
         bool start = false;
+        Character character;
+        public float direction;
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, destinationRectangle: bounds);
+            sb.Draw(texture, destinationRectangle: bounds, rotation: direction);
         }
 
         public override void OnClick()
@@ -21,7 +23,7 @@ namespace Game3
             var mouseState = Mouse.GetState();
             if (MagicMissile.noMissiles < MagicMissile.maxMissiles)
             {
-                Game1.objectHandler.AddObject(new MagicMissile(new Rectangle(mouseState.Position, Point.Zero), 1));
+                Game1.objectHandler.AddObject(new MagicMissile(new Rectangle(bounds.Location, Point.Zero), 1));
             }
         }
 
@@ -30,6 +32,10 @@ namespace Game3
             dmgPerShot = 1;
             cooldown = new Timer(0f);
             texture = Game1.wandTexture;
+            character = Game1.objectHandler.SearchFirst<Character>();
+            bounds = character.bounds;
+            bounds.Width = 6;
+            bounds.Height = 32;
         }
 
         public override void OnDestroy()
@@ -49,15 +55,10 @@ namespace Game3
 
         public override void Update(GameTime gt)
         {
-            if (mouseOneTap.IsLeftPressed())
-            {
-                OnClick();
-            }
-            if (mouseOneTap.IsRightPressed())
-            {
-                OnRightClick();
-            }
-
+            var mouseState = Mouse.GetState();
+            Vector2 vector = new Vector2(mouseState.X, mouseState.Y) - character.bounds.Center.ToVector2();
+            direction = (float)Math.Atan2(vector.Y, vector.X) - 1.5f;
+            bounds.Location = character.bounds.Center;
         }
     }
 }
