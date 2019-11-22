@@ -19,26 +19,23 @@ namespace Game3
         public static Random random = new Random();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Texture2D shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
+        public static Texture2D wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
         public static SpriteFont debugTextFont, roomNodeFont;
         KeyboardOneTap Key;
         Collision collision = new Collision();
         MouseOneTap mouseOneTap = new MouseOneTap();
         public static ObjectHandler objectHandler = new ObjectHandler();
+        public static ParticleHandler particleHandler = new ParticleHandler();
         public static HeartManager heartManager = new HeartManager();
         Character character;
         public static List<MinimapRoom> minirooms = new List<MinimapRoom>();
         Array input = Keyboard.GetState().GetPressedKeys();
         public static Doors previousDoor;
         //DateTime hitTime;
-        int[,] wall2DArray = new int[1, 1]
-        {
-            {1},
-        };
         //private int coinCount = 0, missileCount = 0, life, maxlife = 6, heartContainers, sortTemp, totalFullness, maxMissiles;
         public static int cursorTileX, cursorTileY;
         bool started = false;
-        bool playPressed = false;
+        bool playPressed = true;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -59,11 +56,6 @@ namespace Game3
         {
             var mouseState = Mouse.GetState();
             objectHandler.AddObject(new Character());
-        }
-
-        public static void SpawnCursedHeart(Rectangle position)
-        {
-            objectHandler.AddObject(new Pickup("Cursed Heart", 0, cursedHeartTexture, position));
         }
 
         public static void SpawnGoblin(Rectangle position)
@@ -109,14 +101,7 @@ namespace Game3
             objectHandler.RemoveObject(goblin);
         }
 
-        private void SpawnMissile(Vector2 position)
-        {
-            if (MagicMissile.noMissiles < MagicMissile.maxMissiles)
-            {
-                objectHandler.AddObject(new MagicMissile(new Rectangle((int)position.X, (int)position.Y, 1, 1), missileTexture, MagicMissile.noMissiles, 1, DateTime.Now));
-            }
-
-        }
+        
 
  
 
@@ -167,6 +152,9 @@ namespace Game3
             questionTexture = Content.Load<Texture2D>("questionmark");
             mainmenuTexture = Content.Load<Texture2D>("mainmenutemp");
             shadowTexture = Content.Load<Texture2D>("shadow");
+            whitePixelTexture = Content.Load<Texture2D>("whitepixel");
+            balloonTexture = Content.Load<Texture2D>("balloon");
+            wandTexture = Content.Load<Texture2D>("wand");
             // TODO: use this.Content to load your game content here
         }
 
@@ -206,7 +194,7 @@ namespace Game3
                 //AddHeart(2, 3);
                 started = true;
             }
-            if (character.life <= 0)
+            if (Character.life <= 0)
             {
                 gameOver = true;
             }
@@ -230,30 +218,26 @@ namespace Game3
             var mouseState = Mouse.GetState();
             Key.Update(gameTime);
             mouseOneTap.Update(gameTime);
-            if (mouseOneTap.IsLeftPressed())
-            {
-                SpawnMissile(objectHandler.SearchFirst<Character>().bounds.Center.ToVector2());
-            }
 
             if (mouseOneTap.IsRightPressed())
             {
-                objectHandler.SearchFirst<Character>().maxHearts++;
+                Character.maxHearts++;
             }
 
             if (Key.IsPressed(Keys.J))
             {
-                objectHandler.SearchFirst<Character>().life++;
+                objectHandler.SearchFirst<Character>().Heal(1);
             }
 
 
             if (Key.IsPressed(Keys.P))
             {
-                Ghost.SpawnSelf();
+                Balloon.CreateBalloon(mouseState.Position);
             }
 
             if (Key.IsPressed(Keys.O))
             {
-                SpawnCursedHeart(new Rectangle(500, 350, 40, 40));
+                objectHandler.AddObject(new Goblin(1, 1, 1, enemyTexture, new Rectangle(mouseState.Position, Point.Zero), new Rectangle(mouseState.Position, Point.Zero)));
             }
 
             if (Key.IsPressed(Keys.Tab))

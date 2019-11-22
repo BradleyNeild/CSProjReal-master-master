@@ -18,8 +18,19 @@ namespace Game3
             vector.Normalize();
         }
 
+        private void CheckPath()
+        {
+            Character character = Game1.objectHandler.SearchFirst<Character>();
+            if (PathFinding.FindPath(PathFinding.ConvertThing(parent.slave.bounds.Center), PathFinding.ConvertThing(character.bounds.Center)) != null)
+            {
+                parent.Push(new MeleeAttack());
+            }
+          
+        }
+
         public override void Update(GameTime gt)
         {
+            CheckPath();
             timer.Update(gt);
             if (timer.Triggered)
             {
@@ -35,6 +46,7 @@ namespace Game3
                 parent.slave.bounds.Location += vector.ToPoint();
                 parent.slave.vector = vector;
             }
+
         }
     }
 }

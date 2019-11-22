@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace Game3
 {
+
     public class ProcGen2
     {
         public static Room[,] roomNodes = new Room[100, 100];
@@ -40,7 +41,7 @@ namespace Game3
                 }
             }
             Room randomRoom = validRooms[Game1.random.Next(validRooms.Count)];
-            roomNodes[randomRoom.posX, randomRoom.posY].gobinsContained.Clear();
+            roomNodes[randomRoom.posX, randomRoom.posY].objectsContained.Clear();
             roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
             roomNodes[randomRoom.posX, randomRoom.posY].isBoss = true;
             //roomNodes[randomRoom.posX, randomRoom.posY].bossesContained.Add(new Boss(50, 50));
@@ -75,7 +76,7 @@ namespace Game3
                 }
             }
             Room randomRoom = validRooms[Game1.random.Next(validRooms.Count)];
-            roomNodes[randomRoom.posX, randomRoom.posY].gobinsContained.Clear();
+            roomNodes[randomRoom.posX, randomRoom.posY].objectsContained.Clear();
             roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
             roomNodes[randomRoom.posX, randomRoom.posY].isShop = true;
             //Console.WriteLine("jigjpigjegjepige");
@@ -238,7 +239,9 @@ namespace Game3
             Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, new List<Goblin>(), false);
             if (enemies)
             {
-                roomToAdd.gobinsContained = RoomFeatures.GenerateGoblins(Game1.random.Next(3));
+                List<Goblin> goblins = new List<Goblin>();
+                goblins = RoomFeatures.GenerateGoblins(Game1.random.Next(3));
+                roomToAdd.objectsContained.AddRange(goblins);
             }
 
 

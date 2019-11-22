@@ -26,6 +26,7 @@ namespace Game3
 
         }
 
+
         public static List<Goblin> GenerateGoblins(int number)
         {
             List<Goblin> goblinSpawns = new List<Goblin>();

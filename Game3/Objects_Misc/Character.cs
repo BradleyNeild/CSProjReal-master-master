@@ -9,9 +9,10 @@ namespace Game3
     public class Character : BaseObject
     {
         public Timer iFrames = new Timer(1f);
-        public int life = 6, maxHearts = 3;
+        public static int life = 6, maxHearts = 3;
         public int moveSpeed = 4;
         private Texture2D texture = Game1.playerTexture;
+        public static Weapon weaponHeld;
         public int level;
         public static float totalXP;
         bool showLevelUp = false;
@@ -20,7 +21,7 @@ namespace Game3
 
         public void Damage(int damage)
         {
-            Console.WriteLine("jerwighuoergnjpoerngoehup9otnjkdtgihpejgip");
+            //Console.WriteLine("jerwighuoergnjpoerngoehup9otnjkdtgihpejgip");
             if (iFrames.Triggered)
             {
                 life -= damage;
@@ -30,7 +31,11 @@ namespace Game3
 
         public void Heal(int heal)
         {
-            life += heal;
+            if (life < maxHearts*2)
+            {
+                life += heal;
+            }
+            
         }
 
         public List<float> levelBrackets = new List<float>()
@@ -47,7 +52,7 @@ namespace Game3
             for (int i = 0; i < 100; i++)
             {
                 levelBrackets.Add(num);
-                num = num * 2 * 1.1f;
+                num = num * 2 + 125;
             }
         }
 
@@ -73,10 +78,14 @@ namespace Game3
                 Goblin goblinQuestionmark = parent.SearchFirst<Goblin>();
                 if (goblinQuestionmark == null)
                 {
-                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = parent.SearchArray<Goblin>();
+                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Goblin>());
+                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Coin>());
+                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Balloon>());
+
+
                     foreach (Goblin goblin in parent.SearchArray<Goblin>())
                     {
-                        Console.WriteLine("theres a goblin in goblins");
+                        //Console.WriteLine("theres a goblin in goblins");
                     }
                     if (((Doors)caller).direction == 2)
                     {
@@ -105,6 +114,8 @@ namespace Game3
                     RoomShower.SpawnRoom();
                     parent.RemoveObject<MagicMissile>();
                     parent.RemoveObject<Coin>();
+                    parent.RemoveObject<Particle>();
+                    parent.RemoveObject<Balloon>();
                 }
                 else
                 {
@@ -158,6 +169,7 @@ namespace Game3
 
         public override void Update(GameTime gameTime)
         {
+   
             iFrames.Update(gameTime);
             if (DateTime.Now > showTime.AddSeconds(3))
             {

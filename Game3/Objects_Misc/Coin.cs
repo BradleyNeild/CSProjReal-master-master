@@ -11,7 +11,6 @@ namespace Game3
 {
     class Coin:BaseObject
     {
-
         Texture2D texture;
         bool Bounce;
         bool FinishedBounce;

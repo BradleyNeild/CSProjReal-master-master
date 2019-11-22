@@ -23,9 +23,9 @@ namespace Game3
         {
             hearts.Clear();
             Character character = Game1.objectHandler.SearchFirst<Character>();
-            int lifeTracker = character.life;
+            int lifeTracker = Character.life;
             Rectangle currentBound = new Rectangle(0, 0, 52, 52);
-            for (int i = 0; i < character.maxHearts; i++)
+            for (int i = 0; i < Character.maxHearts; i++)
             {
                 if (lifeTracker >= 2)
                 {

@@ -33,8 +33,7 @@ namespace Game3
             {
                 textureColor = Color.White;
             }
-
-            if(ProcGen2.roomNodes[rPosX, rPosY].gobinsContained.Count > 0 || !ProcGen2.roomNodes[rPosX, rPosY].isExplored)
+            if(ProcGen2.roomNodes[rPosX, rPosY].objectsContained.Count > 0 || !ProcGen2.roomNodes[rPosX, rPosY].isExplored)
             {
                 overlay = Game1.questionTexture;
                 overlayColor = Color.White;

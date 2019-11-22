@@ -12,20 +12,21 @@ namespace Game3
         public int effID;
         Texture2D texture;
 
-        public Pickup(string pickupName, int effectID, Texture2D pickupTexture, Rectangle pickupBounds)
+        public Pickup(string pickupName, int effectID, Texture2D pickupTexture, Point pickupPosition)
         {
             name = pickupName;
             effID = effectID;
             texture = pickupTexture;
-            bounds = pickupBounds;
+            bounds.Location = pickupPosition;
+            bounds.Width = 40;
+            bounds.Height = 40;
         }
 
         public void Effect(int effectID)
         {
             if (effectID == 0)
             {
-                Ghost.SpawnSelf();
-                parent.SearchFirst<Character>().maxHearts += 2;
+                Character.maxHearts++;
             }
         }
 
@@ -46,7 +47,11 @@ namespace Game3
 
         public override void OnInteract(BaseObject caller)
         {
-
+            if (caller is Character)
+            {
+                Effect(effID);
+                destroy = true;
+            }
         }
 
         public override void Update(GameTime gt)

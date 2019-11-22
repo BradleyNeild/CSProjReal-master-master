@@ -9,21 +9,21 @@ namespace Game3
     public class Goblin : Enemy
     {
         AIHandler ai;
-        ObjectHandler objectHandler = new ObjectHandler();
         
         public Color color = Color.White;
         public Texture2D texture;
         
         public float speed = 2;
         public float unaggroedSpeed = 2;
-        public int health, maxHealth, power;
+        public float health, maxHealth;
+        public int power;
         public Rectangle spawnPoint;
         public bool frozen = true;
         public bool aggroed = false;
 
         public static int numAggroed = 0;
         public const int maxAggroed = 3;
-        public Goblin(int enemyHealth, int enemyMaxHealth, int enemyPower, Texture2D enemyTexture, Rectangle enemyBounds, Rectangle enemySpawnPoint)
+        public Goblin(float enemyHealth, float enemyMaxHealth, int enemyPower, Texture2D enemyTexture, Rectangle enemyBounds, Rectangle enemySpawnPoint)
         {
             bounds = enemyBounds;
             health = enemyHealth;
@@ -51,16 +51,16 @@ namespace Game3
 
         }
 
-        private void Aggro()
+        public void Aggro()
         {
-            Console.WriteLine("iowtruwhuowihiowio3jripogi0g");
+            //Console.WriteLine("iowtruwhuowihiowio3jripogi0g");
             ai.Push(new MeleeAttack());
             numAggroed++;
             aggroed = true;
 
         }
 
-        private void DeAggro()
+        public void DeAggro()
         {
             //Console.WriteLine("Deaggroed");
             aggroed = false;
@@ -94,18 +94,15 @@ namespace Game3
 
         public override void OnDestroy()
         {
+            Game1.particleHandler.CreateParticles(20, 3, bounds.Center, Color.Red, 1f);
             Coin.CreateCoin(parent, bounds.Location, Game1.random.Next(2, 4));
             Character.totalXP += 300;
+            ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.Remove(this);
         }
 
         public override void OnInteract(BaseObject caller)
         {
-            if (caller is Walls)
-            {
-                bounds.X += -(int)vector.X;
-                bounds.Y += -(int)vector.Y;
-            }
-            else if (caller is Doors)
+            if (caller is Walls || caller is Doors || caller is Goblin)
             {
                 bounds.X += -(int)vector.X;
                 bounds.Y += -(int)vector.Y;

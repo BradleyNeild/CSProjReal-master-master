@@ -22,12 +22,14 @@ namespace Game3
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {5,0,1,0,0,0,0,0,0,0,0,0,0,0,3},
+            {5,0,0,0,0,0,0,0,0,0,0,0,0,0,3},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,1,1,1,1,1,1,4,1,1,1,1,1,1,1},
         };
+
+
 
         public static void ClearRoom()
         {
@@ -99,7 +101,7 @@ namespace Game3
                     }
                 }
             }
-            Game1.objectHandler.AddObjects(ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained);
+            Game1.objectHandler.AddObjects(ProcGen2.roomNodes[playerRoomX, playerRoomY].objectsContained);
             
             if (playerRoom.isShop)
             {

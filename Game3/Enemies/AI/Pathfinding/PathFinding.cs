@@ -98,7 +98,7 @@ namespace Game3
                     if ((nodeLocation.X >= 0) && (nodeLocation.X < 15) && (nodeLocation.Y >= 0) && (nodeLocation.Y < 9))
                     {
                         //Console.WriteLine(RoomShower.wall2DArray[nodeLocation.Y, nodeLocation.X]);
-                        if ((RoomShower.wall2DArray[nodeLocation.Y, nodeLocation.X] == 0))
+                        if (RoomShower.wall2DArray[nodeLocation.Y, nodeLocation.X] == 0)
                         {
                             Node newNode = new Node(nodeLocation, nodeHeuristic, nodeParent);
                             if (!CheckNodeLists(newNode))

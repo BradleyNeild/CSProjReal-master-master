@@ -39,7 +39,7 @@ namespace Game3
             Room roomToSpawnIn = openRooms[Game1.random.Next(openRooms.Count)];
             currentRoom = roomToSpawnIn;
             lastMoved = DateTime.Now;
-            Console.WriteLine("Ghost spawned in" + currentRoom.posX + currentRoom.posY);
+            //Console.WriteLine("Ghost spawned in" + currentRoom.posX + currentRoom.posY);
         }
 
         private static void MoveTowardsPlayer()

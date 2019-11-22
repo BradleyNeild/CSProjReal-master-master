@@ -19,14 +19,16 @@ namespace Game3
             
         }
 
+
+
         public override void Update(GameTime gt)
         {
             Character character = Game1.objectHandler.SearchFirst<Character>();
             
-            if (PathFinding.ConvertThing(character.bounds.Location) != CurrentTargetTile)
+            if (PathFinding.ConvertThing(character.bounds.Center) != CurrentTargetTile)
             {
-                CurrentTargetTile = PathFinding.ConvertThing(character.bounds.Location);
-                Point boundLocationTile = PathFinding.ConvertThing(parent.slave.bounds.Location);
+                CurrentTargetTile = PathFinding.ConvertThing(character.bounds.Center);
+                Point boundLocationTile = PathFinding.ConvertThing(parent.slave.bounds.Center);
                 path = PathFinding.FindPath(boundLocationTile, CurrentTargetTile);
             }
             else

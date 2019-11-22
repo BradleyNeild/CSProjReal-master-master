@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game3
 {
-    class MouseOneTap
+    public class MouseOneTap
     {
         MouseState lastClick;
         MouseState currentClick;

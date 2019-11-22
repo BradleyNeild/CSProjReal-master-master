@@ -49,9 +49,15 @@
     <Compile Include="Enemies\AI\MeleeAttack.cs" />
     <Compile Include="Enemies\AI\Roaming.cs" />
     <Compile Include="Enemies\AI\TileMovingAI.cs" />
+    <Compile Include="Polymorphism Guys\Object Handlers\ParticleHandler.cs" />
+    <Compile Include="Objects_Misc\Balloon.cs" />
+    <Compile Include="Objects_Misc\Particle.cs" />
     <Compile Include="Polymorphism Guys\BaseObject.cs" />
     <Compile Include="Objects_Misc\Character.cs" />
     <Compile Include="Objects_Misc\Coin.cs" />
+    <Compile Include="Polymorphism Guys\Object Handlers\WeaponHandler.cs" />
+    <Compile Include="Polymorphism Guys\Weapons\Wand.cs" />
+    <Compile Include="Polymorphism Guys\Weapons\Weapon.cs" />
     <Compile Include="UI\Heart.cs" />
     <Compile Include="Useless\Collision.cs" />
     <Compile Include="Room Related\Doors.cs" />
@@ -65,10 +71,10 @@
     <Compile Include="UI\Minimap.cs" />
     <Compile Include="UI\MinimapRoom.cs" />
     <Compile Include="Input Stuff\MouseOneTap.cs" />
-    <Compile Include="Object Handler\ObjectHandler.cs" />
-    <Compile Include="Pathfinding\Path.cs" />
-    <Compile Include="Pathfinding\Node.cs" />
-    <Compile Include="Pathfinding\PathFinding.cs" />
+    <Compile Include="Polymorphism Guys\Object Handlers\ObjectHandler.cs" />
+    <Compile Include="Enemies\AI\Pathfinding\Path.cs" />
+    <Compile Include="Enemies\AI\Pathfinding\Node.cs" />
+    <Compile Include="Enemies\AI\Pathfinding\PathFinding.cs" />
     <Compile Include="Objects_Misc\Pickup.cs" />
     <Compile Include="ProcGen\ProcGen2.cs" />
     <Compile Include="Useless\Program.cs" />
@@ -76,7 +82,6 @@
     <Compile Include="Room Related\RoomFeatures.cs" />
     <Compile Include="Room Related\Rooms.cs" />
     <Compile Include="Room Related\RoomShower.cs" />
-    <Compile Include="Useless\Items.cs" />
     <Compile Include="Timer\Timer.cs" />
     <Compile Include="Room Related\Walls.cs" />
   </ItemGroup>

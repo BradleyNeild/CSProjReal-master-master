@@ -15,8 +15,8 @@ namespace Game3
         Texture2D texture;
         public Vector2 mousePos;
         float direction;
-        public int ID, power;
-        public DateTime spawnTime;
+        public int power;
+        public Timer deathTimer = new Timer(2f);
         public static int noMissiles;
         public static int maxMissiles;
 
@@ -39,27 +39,13 @@ namespace Game3
             //Console.WriteLine("vector done" + vector);
         }
 
-        public void IncrementID(int IDRemoved, bool Decrement)
-        {
-            if (ID > IDRemoved)
-            {
-                if (Decrement)
-                {
-                    ID--;
-                }
-                else ID++;
-            }
-        }
-
-        public MagicMissile(Rectangle missileBounds, Texture2D missileTexture, int missileID, int missilePower, DateTime missileSpawnTime)
+        public MagicMissile(Rectangle missileBounds, int missilePower)
         {
             bounds = missileBounds;
             bounds.Width = 36;
             bounds.Height = 9;
-            texture = missileTexture;
-            ID = missileID;
+            texture = Game1.missileTexture;
             power = missilePower;
-            spawnTime = missileSpawnTime;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -72,7 +58,11 @@ namespace Game3
 
         public override void Update(GameTime gameTime)
         {
-
+            deathTimer.Update(gameTime);
+            if (deathTimer.Triggered)
+            {
+                destroy = true;
+            }
             var mouseState = Mouse.GetState();
             mousePos = new Vector2(mouseState.X, mouseState.Y);
             //Console.WriteLine("mousepos = " + mousePos);
