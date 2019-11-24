@@ -12,7 +12,8 @@ namespace Game3
         public Timer cooldown;
         public Texture2D texture;
         public MouseOneTap mouseOneTap = new MouseOneTap();
-
+        public Character character = Game1.objectHandler.SearchFirst<Character>();
+        public float direction;
 
         public abstract void OnClick();
 

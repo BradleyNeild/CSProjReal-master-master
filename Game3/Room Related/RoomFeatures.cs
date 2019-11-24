@@ -27,25 +27,28 @@ namespace Game3
         }
 
 
-        public static List<Goblin> GenerateGoblins(int number)
+        public static List<Slime> GenerateSlimes()
         {
-            List<Goblin> goblinSpawns = new List<Goblin>();
+            int number = Game1.random.Next(2);
+            List<Slime> slimeSpawns = new List<Slime>();
             if (number == 0)
             {
-                goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(197, 197, 1, 1)));
-                goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(747, 197, 1, 1)));
-                goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(250, 197, 1, 1)));
-                goblinSpawns.Add(new Goblin(2, 2, 1, Game1.enemyTexture, new Rectangle(0, 0, 30, 30), new Rectangle(197, 250, 1, 1)));
+                slimeSpawns.Add(new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), new Point(197, 197), 0, null, true));
+                slimeSpawns.Add(new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), new Point(250, 197), 0, null, true));
+                slimeSpawns.Add(new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), new Point(197, 250), 0, null, true));
+                slimeSpawns.Add(new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), new Point(747, 250), 0, null, true));
+                slimeSpawns.Add(new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), new Point(747, 197), 0, null, true));
+                slimeSpawns.Add(new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), new Point(675, 197), 0, null, true));
             }
             if (number == 1)
             {
-                goblinSpawns.Add(new Goblin(3, 3, 1, Game1.enemyTexture, new Rectangle(0, 0, 40, 40), new Rectangle(495, 350, 1, 1)));
+                slimeSpawns.Add(new Slime(5, 5, 1, new Rectangle(0, 0, 64, 64), new Point(440, 310), Game1.random.Next(3,5), new Slime(1, 1, 1, new Rectangle(0, 0, 32, 32), Point.Zero, 0, null, false), true));
             }
             if (number == 2)
             {
                 
             }
-            return goblinSpawns;
+            return slimeSpawns;
 
         }
     }

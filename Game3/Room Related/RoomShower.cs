@@ -111,12 +111,8 @@ namespace Game3
             {
                 Game1.objectHandler.AddObject(new Ghost(Game1.ghostTexture, 0, 5, 5));
             }
-            //foreach (Goblin goblin in ProcGen2.roomNodes[playerRoomX, playerRoomY].gobinsContained)
-            //{
-            //    Console.WriteLine("theres a goblin stored");
-            //}
             Minimap.MinimapDebug();
-            Game1.ResetGoblins();
+            Game1.ResetSlimes();
             doorNums.Clear();
         }
 

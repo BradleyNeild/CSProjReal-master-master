@@ -54,19 +54,22 @@
     <Compile Include="Object Handlers\ParticleHandler.cs" />
     <Compile Include="Objects_Misc\Balloon.cs" />
     <Compile Include="Objects_Misc\Particle.cs" />
-    <Compile Include="Polymorphism Guys\BaseObject.cs" />
+    <Compile Include="Objects_Misc\BaseObject.cs" />
     <Compile Include="Objects_Misc\Character.cs" />
     <Compile Include="Objects_Misc\Coin.cs" />
     <Compile Include="Object Handlers\WeaponHandler.cs" />
+    <Compile Include="Projectiles\Confetti.cs" />
+    <Compile Include="Projectiles\Projectile.cs" />
+    <Compile Include="Weapons\RainbowVuvuzela.cs" />
     <Compile Include="Weapons\Wand.cs" />
-    <Compile Include="Polymorphism Guys\Weapon.cs" />
+    <Compile Include="Weapons\Weapon.cs" />
     <Compile Include="UI\Heart.cs" />
     <Compile Include="Useless\Collision.cs" />
     <Compile Include="Room Related\Doors.cs" />
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="!Game1\Game1.cs" />
     <Compile Include="Enemies\Ghost.cs" />
-    <Compile Include="Enemies\Goblin.cs" />
+    <Compile Include="Enemies\Slime\Slime.cs" />
     <Compile Include="Input Stuff\KeyboardOneTap.cs" />
     <Compile Include="UI\HeartManager.cs" />
     <Compile Include="Projectiles\MagicMissile.cs" />
@@ -74,9 +77,9 @@
     <Compile Include="UI\MinimapRoom.cs" />
     <Compile Include="Input Stuff\MouseOneTap.cs" />
     <Compile Include="Object Handlers\ObjectHandler.cs" />
-    <Compile Include="Enemies\AI\Pathfinding\Path.cs" />
-    <Compile Include="Enemies\AI\Pathfinding\Node.cs" />
-    <Compile Include="Enemies\AI\Pathfinding\PathFinding.cs" />
+    <Compile Include="Pathfinding\Path.cs" />
+    <Compile Include="Pathfinding\Node.cs" />
+    <Compile Include="Pathfinding\PathFinding.cs" />
     <Compile Include="Objects_Misc\Pickup.cs" />
     <Compile Include="Room Related\ProcGen2.cs" />
     <Compile Include="Useless\Program.cs" />
@@ -98,7 +101,9 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Enemies\Ogre\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

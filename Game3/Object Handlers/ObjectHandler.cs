@@ -52,7 +52,7 @@ namespace Game3
             {
                 if (objects[i] is T)
                 {
-                    outList.Add(objects[i] as T);
+                        outList.Add(objects[i] as T); 
                 }
             }
             return outList;

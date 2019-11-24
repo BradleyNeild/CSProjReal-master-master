@@ -433,6 +433,30 @@
 /processorParam:TextureFormat=Color
 /build:questionmark.png
 
+#begin rainbowVuvuzela.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:rainbowVuvuzela.png
+
+#begin rainbowVuvuzelaScaled.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:rainbowVuvuzelaScaled.png
+
 #begin shadow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -456,6 +480,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:skull.png
+
+#begin slimeSprites.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:slimeSprites.png
 
 #begin spritefont1.spritefont
 /importer:FontDescriptionImporter
@@ -523,4 +559,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:whitepixel.png
+
+#begin wizard.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:wizard.png
 

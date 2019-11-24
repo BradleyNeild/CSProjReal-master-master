@@ -8,10 +8,12 @@ namespace Game3
 {
     public class Character : BaseObject
     {
+        SpriteEffects spriteEffect = SpriteEffects.None;
+        public bool flipSprite = false;
         public Timer iFrames = new Timer(1f);
         public static int life = 6, maxHearts = 3;
         public int moveSpeed = 4;
-        private Texture2D texture = Game1.playerTexture;
+        private Texture2D texture = Game1.wizardTexture;
         public static Weapon weaponHeld;
         public int level;
         public static float totalXP;
@@ -31,11 +33,11 @@ namespace Game3
 
         public void Heal(int heal)
         {
-            if (life < maxHearts*2)
+            if (life < maxHearts * 2)
             {
                 life += heal;
             }
-            
+
         }
 
         public List<float> levelBrackets = new List<float>()
@@ -59,12 +61,12 @@ namespace Game3
 
         public Character()
         {
-            bounds = new Rectangle(475, 330, 32, 32);
+            bounds = new Rectangle(475, 330, 28, 48);
         }
 
         public override void OnInteract(BaseObject caller)
         {
-            if (caller is Goblin)
+            if (caller is Slime)
             {
                 Damage(1);
             }
@@ -74,23 +76,24 @@ namespace Game3
                 bounds.Y += -(int)vector.Y;
             }
             else if (caller is Doors)
-            { 
-                Goblin goblinQuestionmark = parent.SearchFirst<Goblin>();
+            {
+                Slime goblinQuestionmark = parent.SearchFirst<Slime>();
                 if (goblinQuestionmark == null)
                 {
-                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Goblin>());
+                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Slime>());
                     ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Coin>());
                     ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Balloon>());
+                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Pickup>());
 
 
-                    foreach (Goblin goblin in parent.SearchArray<Goblin>())
+                    foreach (Slime goblin in parent.SearchArray<Slime>())
                     {
                         //Console.WriteLine("theres a goblin in goblins");
                     }
                     if (((Doors)caller).direction == 2)
                     {
                         RoomShower.playerRoomY -= 1;
-                        bounds = new Rectangle(475, 475, bounds.Width, bounds.Height);
+                        bounds = new Rectangle(475, 458, bounds.Width, bounds.Height);
 
                     }
                     if (((Doors)caller).direction == 3)
@@ -112,7 +115,8 @@ namespace Game3
                     }
 
                     RoomShower.SpawnRoom();
-                    parent.RemoveObject<MagicMissile>();
+                    parent.RemoveObject<Projectile>();
+                    parent.RemoveObject<Pickup>();
                     parent.RemoveObject<Coin>();
                     parent.RemoveObject<Particle>();
                     parent.RemoveObject<Balloon>();
@@ -142,7 +146,7 @@ namespace Game3
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White);
+            spriteBatch.Draw(texture, destinationRectangle: bounds, null, Color.White, 0f, Vector2.Zero, spriteEffect, 0f);
             if (showLevelUp)
             {
                 spriteBatch.DrawString(Game1.debugTextFont, "Level Up!", new Vector2(bounds.X - 5, bounds.Y - 15), Color.White);
@@ -169,7 +173,8 @@ namespace Game3
 
         public override void Update(GameTime gameTime)
         {
-   
+
+
             iFrames.Update(gameTime);
             if (DateTime.Now > showTime.AddSeconds(3))
             {
@@ -196,11 +201,13 @@ namespace Game3
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 vector.X = -1;
+                flipSprite = true;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 vector.X = 1;
+                flipSprite = false;
             }
 
             if (!Keyboard.GetState().IsKeyDown(Keys.A) && !Keyboard.GetState().IsKeyDown(Keys.D))
@@ -214,6 +221,15 @@ namespace Game3
                 vector.Normalize();
                 vector *= moveSpeed;
                 bounds.Location += vector.ToPoint();
+            }
+
+            if (flipSprite)
+            {
+                spriteEffect = SpriteEffects.FlipHorizontally;
+            }
+            else
+            {
+                spriteEffect = SpriteEffects.None;
             }
 
         }

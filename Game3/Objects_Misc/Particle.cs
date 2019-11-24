@@ -21,8 +21,9 @@ namespace Game3
             texture = particleTexture;
             color = particleColor;
             bounds = particleBounds;
-            bounds.Width = 10;
-            bounds.Height = 10;
+            int randSize = Game1.random.Next(7, 10);
+            bounds.Width = randSize;
+            bounds.Height = randSize;
             vector = particleVector;
             lifeTime = particleLifeTime;
             yFloor = bounds.Y + 30;

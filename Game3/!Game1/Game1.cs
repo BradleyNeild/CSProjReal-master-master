@@ -11,7 +11,7 @@ namespace Game3
     /// </summary>
     public class Game1 : Game
     {
-        bool started2 = false;
+        bool debugStats = false;
         public static int coinCount = 0;
         bool showMiniMap = false;
         public const int screenX = 1400, screenY = 787;
@@ -20,7 +20,7 @@ namespace Game3
         public static Random random = new Random();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Texture2D floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
+        public static Texture2D wizardTexture, rainbowVuvuzelaTexture, slimeSprites, floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
         public static SpriteFont debugTextFont, roomNodeFont;
         KeyboardOneTap Key;
         Collision collision = new Collision();
@@ -28,6 +28,7 @@ namespace Game3
         public static ObjectHandler objectHandler = new ObjectHandler();
         public static ParticleHandler particleHandler = new ParticleHandler();
         public static HeartManager heartManager = new HeartManager();
+        public static WeaponHandler weaponHandler = new WeaponHandler();
         Character character;
         public static List<MinimapRoom> minirooms = new List<MinimapRoom>();
         Array input = Keyboard.GetState().GetPressedKeys();
@@ -59,29 +60,15 @@ namespace Game3
             objectHandler.AddObject(new Character());
         }
 
-        public static void SpawnGoblin(Rectangle position)
+        public static void ResetSlimes()
         {
-            var mouseState = Mouse.GetState();
-            objectHandler.AddObject(new Goblin(3, 3, 1, enemyTexture, position, position));
-            //Console.WriteLine("GOBLIN SPAWNED");
-        }
-
-        public static void SpawnGoblinAtMouse()
-        {
-            var mouseState = Mouse.GetState();
-            objectHandler.AddObject(new Goblin(3, 3, 1, enemyTexture, new Rectangle(mouseState.Position, new Point(30)), new Rectangle(mouseState.Position, new Point(30))));
-            //Console.WriteLine("GOBLIN SPAWNED");
-        }
-
-        public static void ResetGoblins()
-        {
-            Goblin.numAggroed = 0;
-            List<Goblin> goblins = objectHandler.SearchArray<Goblin>();
-            foreach (Goblin goblin in goblins)
+            Slime.numAggroed = 0;
+            List<Slime> slimes = objectHandler.SearchArray<Slime>();
+            foreach (Slime slime in slimes)
             {
-                goblin.aggroed = false;
-                goblin.frozen = true;
-                goblin.bounds.Location = goblin.spawnPoint.Location;
+                slime.aggroed = false;
+                slime.frozen = true;
+                slime.bounds.Location = slime.spawnPoint;
 
             }
         }
@@ -96,15 +83,15 @@ namespace Game3
             objectHandler.RemoveObject(missile);
         }
 
-        private void RemoveGoblin(Goblin goblin)
+        private void RemoveSlime(Slime slime)
         {
-            Goblin.numAggroed--;
-            objectHandler.RemoveObject(goblin);
+            Slime.numAggroed--;
+            objectHandler.RemoveObject(slime);
         }
 
-        
 
- 
+
+
 
 
 
@@ -157,6 +144,9 @@ namespace Game3
             balloonTexture = Content.Load<Texture2D>("balloon");
             wandTexture = Content.Load<Texture2D>("wand");
             floorTexture = Content.Load<Texture2D>("floorTile");
+            slimeSprites = Content.Load<Texture2D>("slimeSprites");
+            rainbowVuvuzelaTexture = Content.Load<Texture2D>("rainbowVuvuzelaScaled");
+            wizardTexture = Content.Load<Texture2D>("wizard");
             // TODO: use this.Content to load your game content here
         }
 
@@ -183,6 +173,7 @@ namespace Game3
 
             if (!started)
             {
+                TileHandler.GenerateTiles();
                 SpawnCharacter();
                 character = objectHandler.SearchFirst<Character>();
                 currentDoorTexture = doorTexture;
@@ -191,9 +182,6 @@ namespace Game3
                 Minimap.MinimapDebug();
                 RoomShower.StartingThing();
                 RoomShower.SpawnRoom();
-                TileHandler.GenerateTiles();
-                objectHandler.AddObject(new Wand());
-                
                 //character.GenerateBrackets();
                 //AddHeart(2, 3);
                 started = true;
@@ -208,8 +196,8 @@ namespace Game3
             }
             MagicMissile.maxMissiles = objectHandler.SearchFirst<Character>().level + 3;
             //attackCooldown = 0.25f / (characters[0].level + 1);
-            Goblin goblin = objectHandler.SearchFirst<Goblin>();
-            if (goblin == null)
+            Slime slime = objectHandler.SearchFirst<Slime>();
+            if (slime == null)
             {
                 currentDoorTexture = doorTexture;
             }
@@ -226,7 +214,11 @@ namespace Game3
             if (mouseOneTap.IsLeftPressed())
             {
                 Weapon currentWeapon = objectHandler.SearchFirst<Weapon>();
-                currentWeapon.OnClick();
+                if (currentWeapon != null)
+                {
+                    currentWeapon.OnClick();
+                }
+                
             }
 
             if (mouseOneTap.IsRightPressed())
@@ -247,12 +239,17 @@ namespace Game3
 
             if (Key.IsPressed(Keys.O))
             {
-                objectHandler.AddObject(new Goblin(1, 1, 1, enemyTexture, new Rectangle(mouseState.Position, Point.Zero), new Rectangle(mouseState.Position, Point.Zero)));
+                weaponHandler.ChangeWeapon(new RainbowVuvuzela());
             }
 
             if (Key.IsPressed(Keys.Tab))
             {
                 showMiniMap = !showMiniMap;
+            }
+
+            if (Key.IsPressed(Keys.LeftAlt))
+            {
+                debugStats = !debugStats;
             }
 
             //if (Key.IsPressed(Keys.I))
@@ -273,6 +270,7 @@ namespace Game3
             // TODO: Add your update logic here
             objectHandler.Update(gameTime);
             heartManager.Update(gameTime);
+            weaponHandler.Update(gameTime);
 
             foreach (MinimapRoom miniRoom in minirooms)
             {
@@ -280,28 +278,28 @@ namespace Game3
             }
 
 
-            //for (var i = 0; i < goblins.Count; i++)
+            //for (var i = 0; i < slimes.Count; i++)
             //{
-            //    goblins[i].Update(gameTime);
+            //    slimes[i].Update(gameTime);
             //    for (int w = 0; w < walls.Count; w++)
             //    {
-            //        if (collision.CollisionCheck(goblins[i].bounds, walls[w].bounds, "goblin", "wall"))
+            //        if (collision.CollisionCheck(slimes[i].bounds, walls[w].bounds, "slime", "wall"))
             //        {
-            //            if (goblins[i].aggroed)
+            //            if (slimes[i].aggroed)
             //            {
-            //                goblins[i].bounds.Location -= goblins[i].vector.ToPoint();
+            //                slimes[i].bounds.Location -= slimes[i].vector.ToPoint();
             //            }
             //            else
-            //                goblins[i].bounds.Location -= goblins[i].roamingVector.ToPoint();
+            //                slimes[i].bounds.Location -= slimes[i].roamingVector.ToPoint();
 
             //            break;
             //        }
             //    }
             //    for (int c = 0; c < characters.Count; c++)
             //    {
-            //        if (collision.CollisionCheck(goblins[i].bounds, characters[c].bounds, "goblin", "character"))
+            //        if (collision.CollisionCheck(slimes[i].bounds, characters[c].bounds, "slime", "character"))
             //        {
-            //            DamagePlayer(goblins[i].power);
+            //            DamagePlayer(slimes[i].power);
             //            break;
             //        }
             //    }
@@ -359,20 +357,20 @@ namespace Game3
 
             //for (var i = 0; i < missiles.Count; i++)
             //{
-            //    for (int g = 0; g < goblins.Count; g++)
+            //    for (int g = 0; g < slimes.Count; g++)
             //    {
-            //        if (collision.CollisionCheck(missiles[i].bounds, goblins[g].bounds, "missile", "goblin"))
+            //        if (collision.CollisionCheck(missiles[i].bounds, slimes[g].bounds, "missile", "slime"))
             //        {
             //            RemoveMissile(i);
-            //            goblins[g].health -= 1;
-            //            if (!goblins[g].aggroed)
+            //            slimes[g].health -= 1;
+            //            if (!slimes[g].aggroed)
             //            {
-            //                goblins[g].aggroed = true;
+            //                slimes[g].aggroed = true;
             //            }
-            //            if (goblins[g].health <= 0)
+            //            if (slimes[g].health <= 0)
             //            {
-            //                CreateCoin(random.Next(2, 6), new Rectangle(goblins[g].bounds.Location.X, goblins[g].bounds.Location.Y, 0, 0));
-            //                RemoveGoblin(g);
+            //                CreateCoin(random.Next(2, 6), new Rectangle(slimes[g].bounds.Location.X, slimes[g].bounds.Location.Y, 0, 0));
+            //                RemoveSlime(g);
 
             //                GiveXP(400);
             //            }
@@ -451,10 +449,10 @@ namespace Game3
             //            {
 
 
-            //                ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = goblins;
-            //                foreach (Goblin goblin in goblins)
+            //                ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = slimes;
+            //                foreach (Slime slime in slimes)
             //                {
-            //                    Console.WriteLine("theres a goblin in goblins");
+            //                    Console.WriteLine("theres a slime in slimes");
             //                }
             //                if (doors[d].direction == 2)
             //                {
@@ -503,38 +501,39 @@ namespace Game3
         protected override void Draw(GameTime gameTime)
         {
             var mouseState = Mouse.GetState();
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(new Color(0, 0, 30));
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp);
+            spriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
             string coinCounterVal = "Coins: " + coinCount.ToString();
             string instructions = "WASD to move\nClick to shoot\nPress Tab to toggle Minimap";
             string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
 
-            if (!showMiniMap)
-            {
-                objectHandler.Draw(spriteBatch);
-            }
-            
+
+            objectHandler.Draw(spriteBatch);
+
+
             heartManager.Draw(spriteBatch);
 
             //GMIUOPDERJGU9IPERGU9PRWEHU9PREHGU9EWRHUGPERWHUGWREUOGWUPOGHWRUGWHUGHUOWGHUOREGUOPWEHGUPOEHGUOIPW4RGUJOPWNJOGNPOWJ[UIGFNPUOENFUGOPJNIOJ[VNWPOUJVNWIESOVN[OEWNV[
             if (showMiniMap)
             {
-                spriteBatch.Draw(whitePixelTexture, destinationRectangle: new Rectangle(0, 0, 10000, 100000), color: Color.Gray,layerDepth: 1);
+                //spriteBatch.Draw(whitePixelTexture, destinationRectangle: new Rectangle(0, 0, 10000, 100000), color: Color.Gray,layerDepth: 1);
                 foreach (MinimapRoom miniroom in minirooms)
                 {
                     miniroom.Draw(spriteBatch);
                 }
             }
-            spriteBatch.DrawString(debugTextFont, coinCounterVal + "\n" + instructions + "\n" + (1f / gameTime.ElapsedGameTime.TotalSeconds), new Vector2(0, 150), Color.White);
-            spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + objectHandler.SearchFirst<Character>().bounds.X + "y:" + objectHandler.SearchFirst<Character>().bounds.Y + "\n" + nodeTrackerVal + "\n" + Character.totalXP + "\n" + objectHandler.SearchFirst<Wand>().direction, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
-
+            spriteBatch.DrawString(debugTextFont, coinCounterVal + "\n" + instructions + "\n" + "FPS: " + Math.Round(1f / gameTime.ElapsedGameTime.TotalSeconds), new Vector2(0, 150), Color.White);
+            if (debugStats)
+            {
+                spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + objectHandler.SearchFirst<Character>().bounds.X + "y:" + objectHandler.SearchFirst<Character>().bounds.Y + "\n" + nodeTrackerVal + "\n" + Character.totalXP, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
+            }
 
 
             if (gameOver && playPressed)
             {
-                spriteBatch.Draw(wallTexture, new Rectangle(0, 0, 5000, 5000), Color.Black);
+                spriteBatch.Draw(whitePixelTexture, new Rectangle(0, 0, 5000, 5000), Color.Black);
                 spriteBatch.DrawString(debugTextFont, "Game Over", new Vector2(500, 350), Color.Red, 0f, new Vector2(0, 0), 3f, SpriteEffects.None, 0f);
             }
             if (!playPressed)

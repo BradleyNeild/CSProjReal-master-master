@@ -10,12 +10,12 @@ namespace Game3
     class TileMovingAI : BaseAI
     {
         Point NextTile, PreviousTile;
-        Timer MoveTimer = new Timer(0.5f);
+        Timer MoveTimer = new Timer(0.3f);
 
         public TileMovingAI(Point start, Point end)
         {
             PreviousTile = start;
-            NextTile = end;
+            NextTile = new Point(end.X + Game1.random.Next(-20, 20), end.Y + Game1.random.Next(-20, 20));
         }
 
 

@@ -34,7 +34,7 @@ namespace Game3
                 textureColor = Color.White;
             }
 
-            if (ProcGen2.roomNodes[rPosX, rPosY].objectsContained.Count > 0 || !ProcGen2.roomNodes[rPosX, rPosY].isExplored)
+            if (ProcGen2.roomNodes[rPosX, rPosY].objectsContained.Count > 0 && !ProcGen2.roomNodes[rPosX, rPosY].isExplored)
             {
                 overlay = Game1.questionTexture;
                 overlayColor = Color.White;
@@ -48,7 +48,7 @@ namespace Game3
             else if (ProcGen2.roomNodes[rPosX, rPosY].isBoss)
             {
                 overlay = Game1.skullTexture;
-                overlaySize = new Vector2(16, 16);
+                overlaySize = new Vector2 (16, 16);
                 overlayColor = Color.White;
             }
             else

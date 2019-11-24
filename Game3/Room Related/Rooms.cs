@@ -21,7 +21,7 @@ namespace Game3
         public bool isBoss = false;
         public Room[] neighbors = new Room[4];
 
-        public Room(int roomPosX, int roomPosY, bool roomDoorN, bool roomDoorE, bool roomDoorS, bool roomDoorW, bool roomFullNeighbors, List<Goblin> roomGoblinsContained, bool roomIsShop)
+        public Room(int roomPosX, int roomPosY, bool roomDoorN, bool roomDoorE, bool roomDoorS, bool roomDoorW, bool roomFullNeighbors, List<Slime> roomGoblinsContained, bool roomIsShop)
         {
             posX = roomPosX;
             posY = roomPosY;

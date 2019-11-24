@@ -236,12 +236,12 @@ namespace Game3
 
         static void AddRoom(int addPosX, int addPosY, bool enemies)
         {
-            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, new List<Goblin>(), false);
+            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, new List<Slime>(), false);
             if (enemies)
             {
-                List<Goblin> goblins = new List<Goblin>();
-                goblins = RoomFeatures.GenerateGoblins(Game1.random.Next(3));
-                roomToAdd.objectsContained.AddRange(goblins);
+                List<Slime> slimes = new List<Slime>();
+                slimes = RoomFeatures.GenerateSlimes();
+                roomToAdd.objectsContained.AddRange(slimes);
             }
 
 
