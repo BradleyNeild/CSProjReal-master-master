@@ -19,5 +19,7 @@ namespace Game3
 
         public abstract void OnRightClick();
 
+        public abstract void OnHold();
+
     }
 }

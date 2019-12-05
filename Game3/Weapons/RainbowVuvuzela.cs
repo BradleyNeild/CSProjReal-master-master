@@ -67,5 +67,9 @@ namespace Game3
             direction = (float)Math.Atan2(vector.Y, vector.X);
             bounds.Location = character.bounds.Center;
         }
+
+        public override void OnHold()
+        {
+        }
     }
 }

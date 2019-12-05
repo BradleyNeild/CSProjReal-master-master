@@ -46,10 +46,10 @@ namespace Game3
                     PreviousTile = parent.slave.bounds.Location;
 
 
-                    int offsetSize = (45 - parent.slave.bounds.Width) / 2;
+                    int offsetSize = (Walls.wallSize - parent.slave.bounds.Width) / 2;
 
 
-                    NextTile = (movingTo.ToVector2() * 45).ToPoint() + new Point(RoomShower.roomOffset) + new Point(offsetSize);
+                    NextTile = (movingTo.ToVector2() * Walls.wallSize).ToPoint() + new Point(RoomShower.roomOffset) + new Point(offsetSize);
 
                     parent.Push(new TileMovingAI(PreviousTile, NextTile));
                 }

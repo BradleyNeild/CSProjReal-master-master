@@ -134,6 +134,13 @@ namespace Game3
 
                 YOff = BounceVelocity * (-MathHelper.Lerp(-3, BounceHeight, LerpValue));
             }
+            Character character = Game1.objectHandler.SearchFirst<Character>();
+            Vector2 magnetismVector;
+            magnetismVector = new Vector2(character.bounds.Location.X - bounds.Location.X, character.bounds.Location.Y - bounds.Location.Y);
+            magnetismVector.Normalize();
+            magnetismVector *= 2;
+            bounds.X += (int)magnetismVector.X;
+            bounds.Y += (int)magnetismVector.Y;
         }
         public override void OnCreate()
         {

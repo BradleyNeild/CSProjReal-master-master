@@ -40,7 +40,7 @@ namespace Game3
                 overlayColor = Color.White;
             }
             else if (ProcGen2.roomNodes[rPosX, rPosY].isShop)
-                {
+            {
                 overlay = Game1.coinTexture;
                 overlaySize = new Vector2(11, 16);
                 overlayColor = Color.White;
@@ -48,7 +48,7 @@ namespace Game3
             else if (ProcGen2.roomNodes[rPosX, rPosY].isBoss)
             {
                 overlay = Game1.skullTexture;
-                overlaySize = new Vector2 (16, 16);
+                overlaySize = new Vector2(16, 16);
                 overlayColor = Color.White;
             }
             else
@@ -59,8 +59,8 @@ namespace Game3
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, destinationRectangle: new Rectangle(posX * 16 + offsetX, posY * 16 + 250, 16, 16), color: textureColor, layerDepth: 0.1f);
-            spriteBatch.Draw(overlay, destinationRectangle: new Rectangle(posX * 16 + offsetX, posY * 16 + 250, (int)overlaySize.X, (int)overlaySize.Y), color: overlayColor, layerDepth: 0f);
+            spriteBatch.Draw(texture, destinationRectangle: new Rectangle(posX * 16, posY * 16, 16, 16), color: textureColor, layerDepth: 0.1f);
+            spriteBatch.Draw(overlay, destinationRectangle: new Rectangle(posX * 16, posY * 16, (int)overlaySize.X, (int)overlaySize.Y), color: overlayColor, layerDepth: 0f);
         }
 
 

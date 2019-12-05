@@ -8,11 +8,12 @@ namespace Game3
 {
     public class Character : BaseObject
     {
+        bool wPressed, aPressed, dPressed, sPressed;
         SpriteEffects spriteEffect = SpriteEffects.None;
         public bool flipSprite = false;
         public Timer iFrames = new Timer(1f);
         public static int life = 6, maxHearts = 3;
-        public int moveSpeed = 4;
+        public float moveSpeed = 4.6f;
         private Texture2D texture = Game1.wizardTexture;
         public static Weapon weaponHeld;
         public int level;
@@ -23,12 +24,18 @@ namespace Game3
 
         public void Damage(int damage)
         {
-            //Console.WriteLine("jerwighuoergnjpoerngoehup9otnjkdtgihpejgip");
-            if (iFrames.Triggered)
+            if (life > 0)
             {
-                life -= damage;
-                iFrames.ResetTimer();
+                int oldLife = life;
+                //Console.WriteLine("jerwighuoergnjpoerngoehup9otnjkdtgihpejgip");
+                if (iFrames.Triggered)
+                {
+                    life -= damage;
+                    iFrames.ResetTimer();
+                    Game1.hurtSfx.Play(1, 0, 0);
+                }
             }
+            
         }
 
         public void Heal(int heal)
@@ -61,7 +68,7 @@ namespace Game3
 
         public Character()
         {
-            bounds = new Rectangle(475, 330, 28, 48);
+            bounds = new Rectangle(7*Walls.wallSize + 13, 4*Walls.wallSize, 28, 48);
         }
 
         public override void OnInteract(BaseObject caller)
@@ -93,25 +100,25 @@ namespace Game3
                     if (((Doors)caller).direction == 2)
                     {
                         RoomShower.playerRoomY -= 1;
-                        bounds = new Rectangle(475, 458, bounds.Width, bounds.Height);
+                        bounds = new Rectangle(7 * Walls.wallSize + 13, 7 * Walls.wallSize, bounds.Width, bounds.Height);
 
                     }
                     if (((Doors)caller).direction == 3)
                     {
                         RoomShower.playerRoomX += 1;
-                        bounds = new Rectangle(200, 330, bounds.Width, bounds.Height);
+                        bounds = new Rectangle(1 * Walls.wallSize + 5, 4 * Walls.wallSize, bounds.Width, bounds.Height);
 
                     }
                     if (((Doors)caller).direction == 4)
                     {
                         RoomShower.playerRoomY += 1;
-                        bounds = new Rectangle(475, 200, bounds.Width, bounds.Height);
+                        bounds = new Rectangle(7 * Walls.wallSize + 13, 1 * Walls.wallSize + 5, bounds.Width, bounds.Height);
 
                     }
                     if (((Doors)caller).direction == 5)
                     {
                         RoomShower.playerRoomX -= 1;
-                        bounds = new Rectangle(744, 330, bounds.Width, bounds.Height);
+                        bounds = new Rectangle(13 * Walls.wallSize + 20, 4 * Walls.wallSize, bounds.Width, bounds.Height);
                     }
 
                     RoomShower.SpawnRoom();
@@ -131,6 +138,11 @@ namespace Game3
                 caller.destroy = true;
                 Game1.coinCount++;
                 totalXP += 200;
+                Game1.coinPickupSfx.Play(0.5f, 0, 0);
+            }
+            else if (caller is TrapDoor)
+            {
+                ((TrapDoor)caller).EnterTrapDoor();
             }
         }
 
@@ -160,7 +172,7 @@ namespace Game3
             {
                 LevelUp();
             }
-        }
+        }  
 
         public void LevelUp()
         {
@@ -173,8 +185,6 @@ namespace Game3
 
         public override void Update(GameTime gameTime)
         {
-
-
             iFrames.Update(gameTime);
             if (DateTime.Now > showTime.AddSeconds(3))
             {
@@ -183,37 +193,91 @@ namespace Game3
             else
                 showLevelUp = true;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            if (Keyboard.GetState().IsKeyDown(Keys.W) || Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                vector.Y = -1;
+                wPressed = true;
+            }
+            else
+            {
+                wPressed = false;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            if (Keyboard.GetState().IsKeyDown(Keys.S) || Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                vector.Y = 1;
+                sPressed = true;
+            }
+            else
+            {
+                sPressed = false;
             }
 
-            if (!Keyboard.GetState().IsKeyDown(Keys.S) && !Keyboard.GetState().IsKeyDown(Keys.W))
+            if (Keyboard.GetState().IsKeyDown(Keys.A) || Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                vector.Y = 0;
+                aPressed = true;
+            }
+            else
+            {
+                aPressed = false;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D) || Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                dPressed = true;
+            }
+            else
+            {
+                dPressed = false;
+            }
+
+            //sprite flipping
+            if (aPressed)
+            {
+                
+            }
+            else if (dPressed)
+            {
+                flipSprite = false;
+            }
+
+            //X movement
+            if (aPressed && dPressed)
+            {
+                vector.X = 0;
+            }
+            else if (aPressed)
             {
                 vector.X = -1;
                 flipSprite = true;
             }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            else if (dPressed)
             {
                 vector.X = 1;
                 flipSprite = false;
             }
-
-            if (!Keyboard.GetState().IsKeyDown(Keys.A) && !Keyboard.GetState().IsKeyDown(Keys.D))
+            else
             {
                 vector.X = 0;
             }
+
+            if (wPressed && sPressed)
+            {
+                vector.Y = 0;
+            }
+            else if (wPressed)
+            {
+                vector.Y = -1;
+            }
+            else if (sPressed)
+            {
+                vector.Y = 1;
+            }
+            else
+            {
+                vector.Y = 0;
+            }
+
+
 
             if (vector != Vector2.Zero)
             {
@@ -232,6 +296,7 @@ namespace Game3
                 spriteEffect = SpriteEffects.None;
             }
 
+         
         }
     }
 }

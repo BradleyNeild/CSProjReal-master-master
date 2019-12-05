@@ -13,18 +13,18 @@ namespace Game3
     {
         public static void GenerateTiles()
         {
-            int x = 45 + RoomShower.roomOffset;
-            int y = 45 + RoomShower.roomOffset;
+            int x = Walls.wallSize + RoomShower.roomOffset;
+            int y = Walls.wallSize + RoomShower.roomOffset;
             for (int i = 0; i < RoomShower.wall2DArray.GetUpperBound(0)-1; i++)
             {
                 for (int j = 0; j < RoomShower.wall2DArray.GetUpperBound(1) - 1; j++)
                 {
-                    Game1.objectHandler.AddObject(new FloorTile(new Rectangle(x, y, 45, 45)));
-                    x += 45;
+                    Game1.objectHandler.AddObject(new FloorTile(new Rectangle(x, y, Walls.wallSize, Walls.wallSize)));
+                    x += Walls.wallSize;
                     
                 }
-                x = 45 + RoomShower.roomOffset;
-                y += 45;
+                x = Walls.wallSize + RoomShower.roomOffset;
+                y += Walls.wallSize;
             }
         }
     }

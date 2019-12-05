@@ -13,7 +13,7 @@ namespace Game3
 
         public static Point ConvertThing(Point input)
         {
-            Point output = new Point((int)Math.Floor((float)(input.X - RoomShower.roomOffset)/45), (int)Math.Floor((float)(input.Y - RoomShower.roomOffset)/45));
+            Point output = new Point((int)Math.Floor((float)(input.X - RoomShower.roomOffset)/ Walls.wallSize), (int)Math.Floor((float)(input.Y - RoomShower.roomOffset)/ Walls.wallSize));
             return output;
         }
 

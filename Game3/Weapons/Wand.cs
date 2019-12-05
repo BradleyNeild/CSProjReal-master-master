@@ -24,7 +24,7 @@ namespace Game3
                 }
                 cooldown.ResetTimer();
             }
-            
+
         }
 
         public override void OnCreate()
@@ -39,12 +39,24 @@ namespace Game3
 
         public override void OnDestroy()
         {
-            
+
+        }
+
+        public override void OnHold()
+        {
+            if (cooldown.Triggered)
+            {
+                if (MagicMissile.noMissiles < MagicMissile.maxMissiles)
+                {
+                    Game1.objectHandler.AddObject(new MagicMissile(new Rectangle(character.bounds.Center, Point.Zero), 1));
+                }
+                cooldown.ResetTimer();
+            }
         }
 
         public override void OnInteract(BaseObject caller)
         {
-            
+
         }
 
         public override void OnRightClick()

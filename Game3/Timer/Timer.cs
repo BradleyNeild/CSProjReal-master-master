@@ -26,7 +26,7 @@ namespace Game3
             }
             set
             {
-
+                
             }
         }
         

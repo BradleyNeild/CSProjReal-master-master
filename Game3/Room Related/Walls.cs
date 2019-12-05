@@ -11,13 +11,14 @@ namespace Game3
 {
     public class Walls:BaseObject
     {
+        public static int wallSize = 64;
         public Texture2D texture;
 
         public Walls(Rectangle wallBounds, Texture2D wallTexture)
         {
             bounds = wallBounds;
-            bounds.Width = 45;
-            bounds.Height = 45;
+            bounds.Width = wallSize;
+            bounds.Height = wallSize;
             texture = wallTexture;
         }
         public override void Draw(SpriteBatch spriteBatch)

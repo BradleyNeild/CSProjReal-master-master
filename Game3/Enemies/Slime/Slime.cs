@@ -119,7 +119,7 @@ namespace Game3
 
         public override void OnDestroy()
         {
-
+            Game1.hurt2Sfx.Play();
             for (int i = 0; i < numSplitoffs; i++)
             {
                 Game1.objectHandler.AddObject(new Slime(splitSlime.life, splitSlime.maxLife, splitSlime.damage, new Rectangle(bounds.X, bounds.Y, splitSlime.bounds.Width, splitSlime.bounds.Height), bounds.Location, splitSlime.numSplitoffs, splitSlime.splitSlime, false));
@@ -130,11 +130,11 @@ namespace Game3
                 int num = Game1.random.Next(0, 2);
                 if (num == 0)
                 {
-                    Game1.particleHandler.CreateParticles(1, 1, bounds.Center, new Color(66, 65, 49), 1f);
+                    Game1.particleHandler.CreateParticles(1, 1, bounds.Center, new Color(66, 65, 49), 1f, 30);
                 }
                 else
                 {
-                    Game1.particleHandler.CreateParticles(1, 1, bounds.Center, new Color(87, 86, 66), 1f);
+                    Game1.particleHandler.CreateParticles(1, 1, bounds.Center, new Color(87, 86, 66), 1f, 30);
                 }
 
             }

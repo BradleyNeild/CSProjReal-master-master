@@ -49,6 +49,12 @@
 /processorParam:TextureFormat=Color
 /build:Coin.png
 
+#begin coinPickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:coinPickup.wav
+
 #begin currentRoom.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -72,6 +78,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:cursedheart.png
+
+#begin death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:death.wav
+
+#begin defaultdance.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:defaultdance.mp3
 
 #begin door.png
 /importer:TextureImporter
@@ -313,6 +331,18 @@
 /processorParam:TextureFormat=Color
 /build:Health6.png
 
+#begin hurt.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:hurt.wav
+
+#begin hurt2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:hurt2.wav
+
 #begin MagicMissile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -397,6 +427,18 @@
 /processorParam:TextureFormat=Color
 /build:okghost.png
 
+#begin pistol.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pistol.png
+
 #begin prettyDoor.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -457,6 +499,24 @@
 /processorParam:TextureFormat=Color
 /build:rainbowVuvuzelaScaled.png
 
+#begin reload.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:reload.wav
+
+#begin reload1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:reload1.wav
+
+#begin reload2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:reload2.wav
+
 #begin shadow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -468,6 +528,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:shadow.png
+
+#begin shoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:shoot.wav
 
 #begin skull.png
 /importer:TextureImporter
@@ -511,6 +577,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Stick.png
+
+#begin TrapdoorSprites.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TrapdoorSprites.png
 
 #begin Wall.png
 /importer:TextureImporter

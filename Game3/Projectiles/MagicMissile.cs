@@ -45,9 +45,7 @@ namespace Game3
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            spriteBatch.Draw(texture, destinationRectangle: new Rectangle(bounds.X, bounds.Y, 36, 9), color: Color.White, rotation: direction, origin: new Vector2(texture.Width / 2, texture.Height / 2));
-#pragma warning restore CS0618 // Type or member is obsolete
+            spriteBatch.Draw(texture, destinationRectangle: new Rectangle(bounds.X, bounds.Y, 36, 9), color: Color.HotPink, rotation: direction, origin: new Vector2(texture.Width / 2, texture.Height / 2));
         }
 
 

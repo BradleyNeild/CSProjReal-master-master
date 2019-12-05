@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
+
 
 namespace Game3
 {
@@ -11,33 +14,38 @@ namespace Game3
     /// </summary>
     public class Game1 : Game
     {
+        public static bool win = false;
+        string weaponrotation = "";
+        Vector2 cameraPosition = Vector2.Zero;
+        Song fortnite;
+        public static SoundEffect hurtSfx, reloadSfx, reload1Sfx, reload2Sfx, shootSfx, hurt2Sfx, coinPickupSfx;
+        public static bool greyTiles = false;
         bool debugStats = false;
         public static int coinCount = 0;
         bool showMiniMap = false;
-        public const int screenX = 1400, screenY = 787;
+        public const int screenX = 15 * 64, screenY = 9 * 64;
         bool gameOver = false;
         Timer hitTimer = new Timer(1f);
         public static Random random = new Random();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Texture2D wizardTexture, rainbowVuvuzelaTexture, slimeSprites, floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
+        public static Texture2D pistolTexture, trapDoorTexture,wizardTexture, rainbowVuvuzelaTexture, slimeSprites, floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
         public static SpriteFont debugTextFont, roomNodeFont;
-        KeyboardOneTap Key;
+        public static KeyboardOneTap Key;
         Collision collision = new Collision();
-        MouseOneTap mouseOneTap = new MouseOneTap();
+        public static MouseOneTap mouseOneTap = new MouseOneTap();
         public static ObjectHandler objectHandler = new ObjectHandler();
         public static ParticleHandler particleHandler = new ParticleHandler();
         public static HeartManager heartManager = new HeartManager();
         public static WeaponHandler weaponHandler = new WeaponHandler();
+        public static Camera camera;
         Character character;
         public static List<MinimapRoom> minirooms = new List<MinimapRoom>();
         Array input = Keyboard.GetState().GetPressedKeys();
         public static Doors previousDoor;
-        //DateTime hitTime;
-        //private int coinCount = 0, missileCount = 0, life, maxlife = 6, heartContainers, sortTemp, totalFullness, maxMissiles;
         public static int cursorTileX, cursorTileY;
         bool started = false;
-        bool playPressed = true;
+        bool playPressed = false;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -78,6 +86,11 @@ namespace Game3
             objectHandler.RemoveObject(coin);
         }
 
+        public static void PlayDeathSound()
+        {
+            hurtSfx.Play();
+        }
+
         private void RemoveMissile(MagicMissile missile)
         {
             objectHandler.RemoveObject(missile);
@@ -103,7 +116,6 @@ namespace Game3
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             IsMouseVisible = true;
             Key = new KeyboardOneTap();
             base.Initialize();
@@ -119,8 +131,11 @@ namespace Game3
             spriteBatch = new SpriteBatch(GraphicsDevice);
             graphics.PreferredBackBufferWidth = screenX;
             graphics.PreferredBackBufferHeight = screenY;
+
+            camera = new Camera(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+            MediaPlayer.IsRepeating = true;
             wallTexture = Content.Load<Texture2D>("prettyWall");
             enemyTexture = Content.Load<Texture2D>("Baddie");
             heartTextureFull = Content.Load<Texture2D>("fullheartv2");
@@ -147,7 +162,16 @@ namespace Game3
             slimeSprites = Content.Load<Texture2D>("slimeSprites");
             rainbowVuvuzelaTexture = Content.Load<Texture2D>("rainbowVuvuzelaScaled");
             wizardTexture = Content.Load<Texture2D>("wizard");
-            // TODO: use this.Content to load your game content here
+            trapDoorTexture = Content.Load<Texture2D>("TrapdoorSprites");
+            fortnite = Content.Load<Song>("defaultdance");
+            hurtSfx = Content.Load<SoundEffect>("hurt");
+            reloadSfx = Content.Load<SoundEffect>("reload");
+            reload2Sfx = Content.Load<SoundEffect>("reload2");
+            reload1Sfx = Content.Load<SoundEffect>("reload1");
+            hurt2Sfx = Content.Load<SoundEffect>("hurt2");
+            pistolTexture = Content.Load<Texture2D>("pistol");
+            shootSfx = Content.Load<SoundEffect>("shoot");
+            coinPickupSfx = Content.Load<SoundEffect>("coinPickup");
         }
 
         /// <summary>
@@ -182,8 +206,7 @@ namespace Game3
                 Minimap.MinimapDebug();
                 RoomShower.StartingThing();
                 RoomShower.SpawnRoom();
-                //character.GenerateBrackets();
-                //AddHeart(2, 3);
+                objectHandler.AddObject(new ReloadIndicator());
                 started = true;
             }
             if (Character.life <= 0)
@@ -195,7 +218,6 @@ namespace Game3
                 gameOver = false;
             }
             MagicMissile.maxMissiles = objectHandler.SearchFirst<Character>().level + 3;
-            //attackCooldown = 0.25f / (characters[0].level + 1);
             Slime slime = objectHandler.SearchFirst<Slime>();
             if (slime == null)
             {
@@ -211,15 +233,7 @@ namespace Game3
             Key.Update(gameTime);
             mouseOneTap.Update(gameTime);
 
-            if (mouseOneTap.IsLeftPressed())
-            {
-                Weapon currentWeapon = objectHandler.SearchFirst<Weapon>();
-                if (currentWeapon != null)
-                {
-                    currentWeapon.OnClick();
-                }
-                
-            }
+
 
             if (mouseOneTap.IsRightPressed())
             {
@@ -231,6 +245,13 @@ namespace Game3
                 objectHandler.SearchFirst<Character>().Heal(1);
             }
 
+            if (Key.IsPressed(Keys.R))
+            {
+                if (objectHandler.SearchFirst<Pistol>() != null)
+                {
+                    objectHandler.SearchFirst<Pistol>().Reload();
+                        }
+            }
 
             if (Key.IsPressed(Keys.P))
             {
@@ -239,7 +260,12 @@ namespace Game3
 
             if (Key.IsPressed(Keys.O))
             {
-                weaponHandler.ChangeWeapon(new RainbowVuvuzela());
+                weaponHandler.ChangeWeapon(new Pistol());
+            }
+
+            if (Key.IsPressed(Keys.I))
+            {
+                weaponHandler.ChangeWeapon(new Wand());
             }
 
             if (Key.IsPressed(Keys.Tab))
@@ -252,11 +278,19 @@ namespace Game3
                 debugStats = !debugStats;
             }
 
-            //if (Key.IsPressed(Keys.I))
-            //{
-            //    SpawnCharacter(new Rectangle(mouseState.X, mouseState.Y, 0, 0));
-            //    Console.WriteLine("Spawned!");
-            //}
+            if (Key.IsPressed(Keys.RightAlt))
+            {
+                greyTiles = !greyTiles;
+                if (greyTiles == true)
+                {
+                    MediaPlayer.Play(fortnite);
+                }
+                else
+                {
+                    MediaPlayer.Stop();
+                }
+                
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.U) && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
@@ -276,221 +310,6 @@ namespace Game3
             {
                 miniRoom.Update(gameTime);
             }
-
-
-            //for (var i = 0; i < slimes.Count; i++)
-            //{
-            //    slimes[i].Update(gameTime);
-            //    for (int w = 0; w < walls.Count; w++)
-            //    {
-            //        if (collision.CollisionCheck(slimes[i].bounds, walls[w].bounds, "slime", "wall"))
-            //        {
-            //            if (slimes[i].aggroed)
-            //            {
-            //                slimes[i].bounds.Location -= slimes[i].vector.ToPoint();
-            //            }
-            //            else
-            //                slimes[i].bounds.Location -= slimes[i].roamingVector.ToPoint();
-
-            //            break;
-            //        }
-            //    }
-            //    for (int c = 0; c < characters.Count; c++)
-            //    {
-            //        if (collision.CollisionCheck(slimes[i].bounds, characters[c].bounds, "slime", "character"))
-            //        {
-            //            DamagePlayer(slimes[i].power);
-            //            break;
-            //        }
-            //    }
-
-            //}
-
-
-
-            //for (var i = 0; i < missiles.Count; i++)
-            //{
-            //    missiles[i].Update(gameTime);
-            //    if (DateTime.Now > missiles[i].spawnTime.AddSeconds(3))
-            //    {
-            //        RemoveMissile(i);
-            //    }
-            //}
-            //for (var i = 0; i < missiles.Count; i++)
-            //{
-            //    for (int w = 0; w < walls.Count; w++)
-            //    {
-            //        if (collision.CollisionCheck(missiles[i].bounds, walls[w].bounds, "missile", "wall"))
-            //        {
-            //            RemoveMissile(i);
-            //            break;
-            //        }
-            //    }
-            //}
-            //for (var i = 0; i < missiles.Count; i++)
-            //{
-
-            //    for (int d = 0; d < doors.Count; d++)
-            //    {
-            //        if (collision.CollisionCheck(missiles[i].bounds, doors[d].bounds, "missile", "door"))
-            //        {
-            //            RemoveMissile(i);
-            //            break;
-            //        }
-            //    }
-            //}
-            //for (var i = 0; i < missiles.Count; i++)
-            //{
-
-            //    for (int m = 0; m < missiles.Count; m++)
-            //    {
-            //        if (collision.CollisionCheck(missiles[i].bounds, missiles[m].bounds, "missile", "missile"))
-            //        {
-            //            if (missiles[m].ID > missiles[i].ID)
-            //            {
-            //                RemoveMissile(i);
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
-
-            //for (var i = 0; i < missiles.Count; i++)
-            //{
-            //    for (int g = 0; g < slimes.Count; g++)
-            //    {
-            //        if (collision.CollisionCheck(missiles[i].bounds, slimes[g].bounds, "missile", "slime"))
-            //        {
-            //            RemoveMissile(i);
-            //            slimes[g].health -= 1;
-            //            if (!slimes[g].aggroed)
-            //            {
-            //                slimes[g].aggroed = true;
-            //            }
-            //            if (slimes[g].health <= 0)
-            //            {
-            //                CreateCoin(random.Next(2, 6), new Rectangle(slimes[g].bounds.Location.X, slimes[g].bounds.Location.Y, 0, 0));
-            //                RemoveSlime(g);
-
-            //                GiveXP(400);
-            //            }
-            //            break;
-            //        }
-            //    }
-
-
-
-            //}
-
-            //for (var i = 0; i < characters.Count; i++)
-            //{
-            //    characters[i].Update(gameTime);
-
-            //    foreach (Pickup pickup in pickups)
-            //    {
-            //        if (collision.CollisionCheck(characters[i].bounds, pickup.bounds, "character", "pickup"))
-            //        {
-            //            Pickup.Effect(pickup.effID);
-            //            pickups.Remove(pickup);
-            //            break;
-            //        }
-            //    }
-
-            //    for (var c = 0; c < coins.Count; c++)
-            //    {
-            //        if (collision.CollisionCheck(characters[i].bounds, coins[c].bounds, "character", "coin"))
-            //        {
-            //            RemoveCoin(c);
-            //            coinCount++;
-            //            GiveXP(100);
-            //        }
-            //    }
-            //    //for (int m = 0; m < missiles.Count; m++)
-            //    //{
-            //    //    if (collision.CollisionCheck(characters[i].bounds, missiles[m].bounds, "character", "missile"))
-            //    //    {
-            //    //        RemoveMissile(m);
-            //    //        DamagePlayer(1);
-            //    //    }
-            //    //}
-            //    for (int w = 0; w < walls.Count; w++)
-            //    {
-            //        if (collision.CollisionCheck(characters[i].bounds, walls[w].bounds, "character", "walls"))
-            //        {
-            //            characters[i].bounds.Location -= characters[i].vector.ToPoint();
-            //            break;
-            //        }
-            //        foreach (Coin coin in coins)
-            //        {
-            //            if (collision.CollisionCheck(coin.bounds, walls[w].bounds, "coin", "walls"))
-            //            {
-            //                coin.bounds.Location -= coin.vector.ToPoint();
-            //            }
-
-            //        }
-            //    }
-
-
-
-            //    for (int d = 0; d < doors.Count; d++)
-            //    {
-            //        foreach (Coin coin in coins)
-            //        {
-            //            if (collision.CollisionCheck(coin.bounds, doors[d].bounds, "coin", "door"))
-            //            {
-            //                coin.bounds.Location -= coin.vector.ToPoint();
-            //            }
-            //        }
-
-            //        //if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained.Count == 0)
-            //        if (collision.CollisionCheck(characters[i].bounds, doors[d].bounds, "character", "doors"))
-            //        {
-            //            if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained.Count == 0)
-            //            {
-
-
-            //                ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].gobinsContained = slimes;
-            //                foreach (Slime slime in slimes)
-            //                {
-            //                    Console.WriteLine("theres a slime in slimes");
-            //                }
-            //                if (doors[d].direction == 2)
-            //                {
-            //                    RoomShower.playerRoomY -= 1;
-            //                    characters[0].bounds = new Rectangle(475, 475, characters[0].bounds.Width, characters[0].bounds.Height);
-
-            //                }
-            //                if (doors[d].direction == 3)
-            //                {
-            //                    RoomShower.playerRoomX += 1;
-            //                    characters[0].bounds = new Rectangle(200, 330, characters[0].bounds.Width, characters[0].bounds.Height);
-
-            //                }
-            //                if (doors[d].direction == 4)
-            //                {
-            //                    RoomShower.playerRoomY += 1;
-            //                    characters[0].bounds = new Rectangle(475, 200, characters[0].bounds.Width, characters[0].bounds.Height);
-
-            //                }
-            //                if (doors[d].direction == 5)
-            //                {
-            //                    RoomShower.playerRoomX -= 1;
-            //                    characters[0].bounds = new Rectangle(744, 330, characters[0].bounds.Width, characters[0].bounds.Height);
-            //                }
-
-            //                RoomShower.SpawnRoom();
-            //                missiles.Clear();
-            //                coins.Clear();
-            //                break;
-            //            }
-            //            else
-            //            {
-            //                characters[i].bounds.Location -= characters[i].vector.ToPoint();
-            //                break;
-            //            }
-            //        }
-            //    }
-            //}
             base.Update(gameTime);
         }
 
@@ -504,9 +323,9 @@ namespace Game3
             GraphicsDevice.Clear(new Color(0, 0, 30));
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
+            spriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: camera.WorldMatrix);
             string coinCounterVal = "Coins: " + coinCount.ToString();
-            string instructions = "WASD to move\nClick to shoot\nPress Tab to toggle Minimap";
+            string instructions = "WASD or Arrows to move\nHold Click or Space to shoot\nTab to toggle Minimap";
             string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
 
 
@@ -515,34 +334,44 @@ namespace Game3
 
             heartManager.Draw(spriteBatch);
 
-            //GMIUOPDERJGU9IPERGU9PRWEHU9PREHGU9EWRHUGPERWHUGWREUOGWUPOGHWRUGWHUGHUOWGHUOREGUOPWEHGUPOEHGUOIPW4RGUJOPWNJOGNPOWJ[UIGFNPUOENFUGOPJNIOJ[VNWPOUJVNWIESOVN[OEWNV[
             if (showMiniMap)
             {
-                //spriteBatch.Draw(whitePixelTexture, destinationRectangle: new Rectangle(0, 0, 10000, 100000), color: Color.Gray,layerDepth: 1);
                 foreach (MinimapRoom miniroom in minirooms)
                 {
                     miniroom.Draw(spriteBatch);
                 }
             }
             spriteBatch.DrawString(debugTextFont, coinCounterVal + "\n" + instructions + "\n" + "FPS: " + Math.Round(1f / gameTime.ElapsedGameTime.TotalSeconds), new Vector2(0, 150), Color.White);
+            if (objectHandler.SearchFirst<Weapon>() != null)
+            {
+                weaponrotation = objectHandler.SearchFirst<Weapon>().direction.ToString();
+            }
             if (debugStats)
             {
-                spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + objectHandler.SearchFirst<Character>().bounds.X + "y:" + objectHandler.SearchFirst<Character>().bounds.Y + "\n" + nodeTrackerVal + "\n" + Character.totalXP, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
+                spriteBatch.DrawString(debugTextFont, "x: " + mouseState.X + " y: " + mouseState.Y + "\n x:" + objectHandler.SearchFirst<Character>().bounds.X + "y:" + objectHandler.SearchFirst<Character>().bounds.Y + "\n" + nodeTrackerVal + "\n" + Character.totalXP + "\n" + "X: " + mouseState.X / 64 + "Y: " + mouseState.Y / 64 + "\n" + weaponrotation, new Vector2(mouseState.X + 20, mouseState.Y - 10), color: Color.White);
+            }
+            if (win)
+            {
+                spriteBatch.DrawString(debugTextFont, "You Win!", new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), Color.Magenta, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
             }
 
 
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
             if (gameOver && playPressed)
             {
                 spriteBatch.Draw(whitePixelTexture, new Rectangle(0, 0, 5000, 5000), Color.Black);
-                spriteBatch.DrawString(debugTextFont, "Game Over", new Vector2(500, 350), Color.Red, 0f, new Vector2(0, 0), 3f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(debugTextFont, "Game Over", new Vector2(500, 350), Color.Red, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
             }
             if (!playPressed)
             {
                 spriteBatch.Draw(mainmenuTexture, new Rectangle(0, 0, screenX, screenY), Color.White);
-                spriteBatch.DrawString(debugTextFont, "Press Enter to Start", new Vector2(500, 350), Color.Green, 0f, new Vector2(0, 0), 3f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(debugTextFont, "Press Enter to Start", new Vector2(300, 350), Color.Green, 0f, new Vector2(0, 0), 3f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(debugTextFont, instructions, new Vector2(300, 200), Color.Yellow, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
+
             }
             spriteBatch.End();
-
 
 
 

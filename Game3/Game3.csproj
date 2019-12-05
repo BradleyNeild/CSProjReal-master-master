@@ -44,6 +44,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Camera\Camera.cs" />
     <Compile Include="Enemies\AI\AIHandler.cs" />
     <Compile Include="Enemies\AI\BaseAI.cs" />
     <Compile Include="Enemies\AI\MeleeAttack.cs" />
@@ -58,9 +59,13 @@
     <Compile Include="Objects_Misc\Character.cs" />
     <Compile Include="Objects_Misc\Coin.cs" />
     <Compile Include="Object Handlers\WeaponHandler.cs" />
+    <Compile Include="Objects_Misc\ReloadIndicator.cs" />
+    <Compile Include="Projectiles\Bullet.cs" />
     <Compile Include="Projectiles\Confetti.cs" />
     <Compile Include="Projectiles\Projectile.cs" />
+    <Compile Include="Room Related\TrapDoor.cs" />
     <Compile Include="Weapons\RainbowVuvuzela.cs" />
+    <Compile Include="Weapons\Pistol.cs" />
     <Compile Include="Weapons\Wand.cs" />
     <Compile Include="Weapons\Weapon.cs" />
     <Compile Include="UI\Heart.cs" />
@@ -101,9 +106,7 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Enemies\Ogre\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

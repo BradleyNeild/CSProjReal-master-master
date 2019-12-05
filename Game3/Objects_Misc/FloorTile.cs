@@ -11,21 +11,37 @@ namespace Game3
 {
     public class FloorTile:BaseObject
     {
-        Texture2D texture = Game1.floorTexture;
+        public static Color color = new Color(0, 0, 0);
+        Color thisColor;
+        Texture2D texture = Game1.whitePixelTexture;
         public FloorTile(Rectangle tileBounds)
         {
             bounds = tileBounds;
+            color.R += 2;
+            color.G += 2;
+            color.B += 2;
+            thisColor = color;
         }
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, destinationRectangle: bounds, layerDepth: 1f);
+            if (Game1.greyTiles)
+            {
+                sb.Draw(texture, destinationRectangle: bounds, color: new Color(Game1.random.Next(255), Game1.random.Next(255), Game1.random.Next(255)));
+
+            }
+            else
+            {
+
+                sb.Draw(texture, destinationRectangle: bounds, color: Color.MediumPurple);
+            }
+            
         }
 
         public override void OnCreate()
         {
-            bounds.Width = 45;
-            bounds.Height = 45;
+            bounds.Width = Walls.wallSize;
+            bounds.Height = Walls.wallSize;
         }
 
         public override void OnDestroy()

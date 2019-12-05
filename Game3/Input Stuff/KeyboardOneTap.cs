@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game3
 {
-    class KeyboardOneTap
+    public class KeyboardOneTap
     {
         KeyboardState lastKey;
         KeyboardState currentKey;

@@ -17,14 +17,16 @@ namespace Game3
         public Doors(Rectangle doorBounds, int doorDirection)
         {
             bounds = doorBounds;
-            bounds.Width = 49;
-            bounds.Height = 49;
+            bounds.X -= 2;
+            bounds.Y -= 2;
+            bounds.Width = Walls.wallSize + 6;
+            bounds.Height = Walls.wallSize + 6;
             texture = Game1.doorTexture;
             direction = doorDirection;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Game1.currentDoorTexture, destinationRectangle: new Rectangle(bounds.X+3, bounds.Y+3, 45, 45), color: Color.White);
+            spriteBatch.Draw(Game1.currentDoorTexture, destinationRectangle: new Rectangle(bounds.X+5, bounds.Y+5, Walls.wallSize, Walls.wallSize), color: Color.White);
         }
 
         public override void OnCreate()

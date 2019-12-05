@@ -16,7 +16,7 @@ namespace Game3
         Timer lifeTime;
         float gravity;
         int yFloor;
-        public Particle(Texture2D particleTexture, Color particleColor, Rectangle particleBounds, Vector2 particleVector, Timer particleLifeTime, float particleGravity)
+        public Particle(Texture2D particleTexture, Color particleColor, Rectangle particleBounds, Vector2 particleVector, Timer particleLifeTime, float particleGravity, int particleYFloor)
         {
             texture = particleTexture;
             color = particleColor;
@@ -26,8 +26,8 @@ namespace Game3
             bounds.Height = randSize;
             vector = particleVector;
             lifeTime = particleLifeTime;
-            yFloor = bounds.Y + 30;
             gravity = particleGravity;
+            yFloor = bounds.Y + particleYFloor;
         }
         public override void Draw(SpriteBatch sb)
         {

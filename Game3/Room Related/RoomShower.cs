@@ -11,7 +11,7 @@ namespace Game3
 {
     class RoomShower
     {
-        public static int roomOffset = 150;
+        public static int roomOffset = 0;
         public static Room playerRoom;
         public static int playerRoomX = 50, playerRoomY = 50;
         public static int nextRoomX = 50, nextRoomY = 50;
@@ -39,12 +39,12 @@ namespace Game3
 
         public static void CreateWall(int wallPosX, int wallPosY)
         {
-            Game1.objectHandler.AddObject(new Walls(new Rectangle(wallPosY * 45 + roomOffset, wallPosX * 45 + roomOffset, 0, 0), Game1.wallTexture));
+            Game1.objectHandler.AddObject(new Walls(new Rectangle(wallPosY * Walls.wallSize + roomOffset, wallPosX * Walls.wallSize + roomOffset, 0, 0), Game1.wallTexture));
         }
 
         public static void CreateDoor(int wallPosX, int wallPosY, int doorDirection)
         {
-            Game1.objectHandler.AddObject(new Doors(new Rectangle(wallPosY * 45 + roomOffset - 3, wallPosX * 45 + roomOffset - 3, 0, 0), doorDirection));
+            Game1.objectHandler.AddObject(new Doors(new Rectangle(wallPosY * Walls.wallSize + roomOffset - 3, wallPosX * Walls.wallSize + roomOffset - 3, 0, 0), doorDirection));
             //Console.Write("Door created");
         }
 
