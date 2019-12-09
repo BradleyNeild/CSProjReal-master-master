@@ -8,31 +8,80 @@ namespace Game3
 {
     public class Pickup:BaseObject
     {
-        string name;
+        public string name;
         public int effID;
-        Texture2D texture;
-
-        public Pickup(string pickupName, int effectID, Texture2D pickupTexture, Point pickupPosition)
+        public Texture2D texture;
+        List<Texture2D> textures = new List<Texture2D>()
         {
-            name = pickupName;
+            Game1.heartTextureEmpty,
+            Game1.kiteTexture,
+            Game1.medkitTexture,
+            Game1.magazineTexture,
+            Game1.rapidTexture,
+            Game1.diamondTexture
+        };
+
+        public static List<string> names = new List<string>()
+        {
+            "Heart Container",
+            "Kite",
+            "Medkit",
+            "Extended Mag",
+            "Rapid Fire",
+            "Diamond"
+        };
+
+        public Pickup(int effectID, Point pickupPosition, Room pickupRoom)
+        {
+            name = names[effectID];
+            room = pickupRoom;
             effID = effectID;
-            texture = pickupTexture;
+            texture = textures[effectID];
             bounds.Location = pickupPosition;
-            bounds.Width = 40;
-            bounds.Height = 40;
+            bounds.Width = 32;
+            bounds.Height = 32;
         }
 
         public void Effect(int effectID)
         {
-            if (effectID == 0)
+            switch (effectID)
             {
-                Character.maxHearts++;
+                case 0:
+                    //heart container
+                    Character.maxHearts++;
+                    break;
+                case 1:
+                    //kite
+                    Character.moveSpeed += 0.3f;
+                    break;
+                case 2:
+                    //medkit
+                    Character.life += 2;
+                    break;
+                case 3:
+                    //extended mag
+                    Character.persistentEffects.Add(3);
+                    break;
+                case 4:
+                    //rapid fire
+                    Character.persistentEffects.Add(4);
+                    break;
+                case 5:
+                    //diamond
+                    Game1.coinCount += 50;
+                    break;
+                default:
+                    break;
             }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White);
+            if (enabled)
+            {
+                spriteBatch.Draw(texture, destinationRectangle: bounds, color: Color.White);
+            }
+            
         }
 
         public override void OnCreate()
@@ -47,16 +96,31 @@ namespace Game3
 
         public override void OnInteract(BaseObject caller)
         {
-            if (caller is Character)
+            if (enabled)
             {
-                Effect(effID);
-                destroy = true;
+                if (caller is Character)
+                {
+                    Effect(effID);
+                    destroy = true;
+                }
             }
+            
         }
 
         public override void Update(GameTime gt)
         {
+            if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY] == room)
+            {
+                enabled = true;
+            }
+            else
+            {
+                enabled = false;
+            }
+            if (enabled)
+            {
 
+            }
         }
     }
 }

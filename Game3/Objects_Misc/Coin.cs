@@ -36,13 +36,14 @@ namespace Game3
         {
             for (int i = 0; i < amount; i++)
             {
-                objectHandler.AddObject(new Coin(new Rectangle(position, Point.Zero)));
+                objectHandler.AddObject(new Coin(new Rectangle(position, Point.Zero), RoomShower.playerRoom));
             }
             
         }
 
-        public Coin(Rectangle coinBounds)
+        public Coin(Rectangle coinBounds, Room coinRoom)
         {
+            room = coinRoom;
             bounds = coinBounds;
             bounds.Width = 16;
             bounds.Height = 22;
@@ -92,55 +93,74 @@ namespace Game3
             Point DrawPos = bounds.Location + new Point(0, (int)YOff);
             Point DrawBounds = bounds.Size;
 
-            spriteBatch.Draw(texture, destinationRectangle: new Rectangle(DrawPos, DrawBounds), Color.White);
+            if (enabled)
+            {
+                spriteBatch.Draw(texture, destinationRectangle: new Rectangle(DrawPos, DrawBounds), Color.White);
+            }
+            
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (!FinishedBounce)
+
+            if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY] == room)
             {
-                bounds.Location += vector.ToPoint();
-
-                if (Bounce)
-                {
-                    LerpValue += (BounceHeight != 0) ? 1 / BounceHeight : 0.1f;
-                }
-                else
-                {
-                    LerpValue -= (BounceHeight != 0) ? 1 / (BounceHeight / (2 * (float)Game1.random.NextDouble())) : 0.1f;
-                }
-
-                if (LerpValue >= 1)
-                {
-                    Bounce = false;
-                }
-
-                if (LerpValue < 0)
-                {
-                    Bounce = true;
-                    BounceHeight -= 1;
-                    Bounces -= 1;
-                    if (BounceHeight <= 0)
-                    {
-                        BounceHeight = 0;
-                    }
-
-                    if (Bounces <= 0)
-                    {
-                        FinishedBounce = true;
-                    }
-                    LerpValue = 0;
-                }
-
-                YOff = BounceVelocity * (-MathHelper.Lerp(-3, BounceHeight, LerpValue));
+                enabled = true;
             }
-            Character character = Game1.objectHandler.SearchFirst<Character>();
-            Vector2 magnetismVector;
-            magnetismVector = new Vector2(character.bounds.Location.X - bounds.Location.X, character.bounds.Location.Y - bounds.Location.Y);
-            magnetismVector.Normalize();
-            magnetismVector *= 2;
-            bounds.X += (int)magnetismVector.X;
-            bounds.Y += (int)magnetismVector.Y;
+            else
+            {
+                enabled = false;
+            }
+
+            if (enabled)
+            {
+
+
+                if (!FinishedBounce)
+                {
+                    bounds.Location += vector.ToPoint();
+
+                    if (Bounce)
+                    {
+                        LerpValue += (BounceHeight != 0) ? 1 / BounceHeight : 0.1f;
+                    }
+                    else
+                    {
+                        LerpValue -= (BounceHeight != 0) ? 1 / (BounceHeight / (2 * (float)Game1.random.NextDouble())) : 0.1f;
+                    }
+
+                    if (LerpValue >= 1)
+                    {
+                        Bounce = false;
+                    }
+
+                    if (LerpValue < 0)
+                    {
+                        Bounce = true;
+                        BounceHeight -= 1;
+                        Bounces -= 1;
+                        if (BounceHeight <= 0)
+                        {
+                            BounceHeight = 0;
+                        }
+
+                        if (Bounces <= 0)
+                        {
+                            FinishedBounce = true;
+                        }
+                        LerpValue = 0;
+                    }
+
+                    YOff = BounceVelocity * (-MathHelper.Lerp(-3, BounceHeight, LerpValue));
+                }
+                Character character = Game1.objectHandler.SearchFirst<Character>();
+                Vector2 magnetismVector;
+                magnetismVector = new Vector2(character.bounds.Location.X - bounds.Location.X, character.bounds.Location.Y - bounds.Location.Y);
+                magnetismVector.Normalize();
+                magnetismVector *= 2;
+                bounds.X += (int)magnetismVector.X;
+                bounds.Y += (int)magnetismVector.Y;
+            }
         }
         public override void OnCreate()
         {

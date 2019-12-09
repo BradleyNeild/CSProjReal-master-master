@@ -11,6 +11,21 @@ namespace Game3
         float TargetTime = 0.0f;
         float CurrentTime = 0.0f;
         public bool Triggered = false;
+
+        public float Target
+        {
+            get
+            {
+
+                return TargetTime;
+            }
+            set
+            {
+                TargetTime = value;
+                CurrentTime = 0;
+            }
+        }
+
         public float PercentageDone
         {
             get

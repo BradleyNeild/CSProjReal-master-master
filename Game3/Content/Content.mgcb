@@ -91,6 +91,18 @@
 /processorParam:Quality=Best
 /build:defaultdance.mp3
 
+#begin diamond.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:diamond.png
+
 #begin door.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -343,6 +355,30 @@
 /processorParam:Quality=Best
 /build:hurt2.wav
 
+#begin kite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:kite.png
+
+#begin magazine.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:magazine.png
+
 #begin MagicMissile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -378,6 +414,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:mainmenutemp.png
+
+#begin medkit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:medkit.png
 
 #begin minimapcurrentroom.png
 /importer:TextureImporter
@@ -498,6 +546,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:rainbowVuvuzelaScaled.png
+
+#begin rapid.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:rapid.png
 
 #begin reload.wav
 /importer:WavImporter

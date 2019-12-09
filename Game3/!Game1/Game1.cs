@@ -14,6 +14,7 @@ namespace Game3
     /// </summary>
     public class Game1 : Game
     {
+        int debugI = 0;
         public static bool win = false;
         string weaponrotation = "";
         Vector2 cameraPosition = Vector2.Zero;
@@ -29,7 +30,7 @@ namespace Game3
         public static Random random = new Random();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Texture2D pistolTexture, trapDoorTexture,wizardTexture, rainbowVuvuzelaTexture, slimeSprites, floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
+        public static Texture2D diamondTexture, magazineTexture, medkitTexture, rapidTexture, kiteTexture, pistolTexture, trapDoorTexture, wizardTexture, rainbowVuvuzelaTexture, slimeSprites, floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
         public static SpriteFont debugTextFont, roomNodeFont;
         public static KeyboardOneTap Key;
         Collision collision = new Collision();
@@ -170,6 +171,11 @@ namespace Game3
             reload1Sfx = Content.Load<SoundEffect>("reload1");
             hurt2Sfx = Content.Load<SoundEffect>("hurt2");
             pistolTexture = Content.Load<Texture2D>("pistol");
+            kiteTexture = Content.Load<Texture2D>("kite");
+            magazineTexture = Content.Load<Texture2D>("magazine");
+            rapidTexture = Content.Load<Texture2D>("rapid");
+            medkitTexture = Content.Load<Texture2D>("medkit");
+            diamondTexture = Content.Load<Texture2D>("diamond");
             shootSfx = Content.Load<SoundEffect>("shoot");
             coinPickupSfx = Content.Load<SoundEffect>("coinPickup");
         }
@@ -190,8 +196,22 @@ namespace Game3
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (Key.IsPressed(Keys.Enter))
+            if (Key.IsPressed(Keys.D1))
             {
+                if (!playPressed)
+                {
+                    weaponHandler.ChangeWeapon(new Wand());
+                }
+                playPressed = true;
+
+
+            }
+            else if (Key.IsPressed(Keys.D2))
+            {
+                if (!playPressed)
+                {
+                    weaponHandler.ChangeWeapon(new Pistol());
+                }
                 playPressed = true;
             }
 
@@ -240,6 +260,25 @@ namespace Game3
                 Character.maxHearts++;
             }
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                Coin.CreateCoin(Game1.objectHandler, mouseState.Position, 10);
+            }
+
+            if (Key.IsPressed(Keys.N) || (Keyboard.GetState().IsKeyDown(Keys.N) && Keyboard.GetState().IsKeyDown(Keys.LeftShift)))
+            {
+                try
+                {
+                    objectHandler.AddObject(new Pickup(debugI, mouseState.Position, RoomShower.playerRoom));
+                }
+                catch (Exception)
+                {
+                    debugI = -1;
+                }
+                
+                debugI++;
+            }
+
             if (Key.IsPressed(Keys.J))
             {
                 objectHandler.SearchFirst<Character>().Heal(1);
@@ -250,12 +289,7 @@ namespace Game3
                 if (objectHandler.SearchFirst<Pistol>() != null)
                 {
                     objectHandler.SearchFirst<Pistol>().Reload();
-                        }
-            }
-
-            if (Key.IsPressed(Keys.P))
-            {
-                Balloon.CreateBalloon(mouseState.Position);
+                }
             }
 
             if (Key.IsPressed(Keys.O))
@@ -289,7 +323,7 @@ namespace Game3
                 {
                     MediaPlayer.Stop();
                 }
-                
+
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.U) && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
@@ -325,7 +359,8 @@ namespace Game3
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: camera.WorldMatrix);
             string coinCounterVal = "Coins: " + coinCount.ToString();
-            string instructions = "WASD or Arrows to move\nHold Click or Space to shoot\nTab to toggle Minimap";
+            string shortInstructions = "WASD or Arrows to move\nHold Click or Space to shoot\nTab to toggle Minimap";
+            string instructions = "WASD or Arrows to move\nHold Click or Space to shoot\nR to Reload\nE to purchase item\nTab to toggle Minimap";
             string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
 
 
@@ -340,6 +375,12 @@ namespace Game3
                 {
                     miniroom.Draw(spriteBatch);
                 }
+            }
+            if (objectHandler.SearchFirst<Pistol>() != null)
+            {
+                Pistol pistol = objectHandler.SearchFirst<Pistol>();
+                spriteBatch.DrawString(debugTextFont, pistol.ammo + "/" + pistol.maxAmmo, new Point(0, screenY - 100).ToVector2(), Color.White, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+
             }
             spriteBatch.DrawString(debugTextFont, coinCounterVal + "\n" + instructions + "\n" + "FPS: " + Math.Round(1f / gameTime.ElapsedGameTime.TotalSeconds), new Vector2(0, 150), Color.White);
             if (objectHandler.SearchFirst<Weapon>() != null)
@@ -367,9 +408,10 @@ namespace Game3
             if (!playPressed)
             {
                 spriteBatch.Draw(mainmenuTexture, new Rectangle(0, 0, screenX, screenY), Color.White);
-                spriteBatch.DrawString(debugTextFont, "Press Enter to Start", new Vector2(300, 350), Color.Green, 0f, new Vector2(0, 0), 3f, SpriteEffects.None, 0f);
-                spriteBatch.DrawString(debugTextFont, instructions, new Vector2(300, 200), Color.Yellow, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
-
+                spriteBatch.DrawString(debugTextFont, "Press 1 to choose the Wand\nPress 2 to choose the Pistol", new Vector2(300, 350), Color.LimeGreen, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(debugTextFont, shortInstructions, new Vector2(300, 200), Color.Yellow, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(pistolTexture, new Rectangle(700, 395, 26, 17), Color.White);
+                spriteBatch.Draw(wandTexture, new Rectangle(700, 355, 6, 32), Color.White);
             }
             spriteBatch.End();
 

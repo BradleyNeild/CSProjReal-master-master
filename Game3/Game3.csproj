@@ -59,6 +59,7 @@
     <Compile Include="Objects_Misc\Character.cs" />
     <Compile Include="Objects_Misc\Coin.cs" />
     <Compile Include="Object Handlers\WeaponHandler.cs" />
+    <Compile Include="Objects_Misc\Purchasable.cs" />
     <Compile Include="Objects_Misc\ReloadIndicator.cs" />
     <Compile Include="Projectiles\Bullet.cs" />
     <Compile Include="Projectiles\Confetti.cs" />
@@ -73,7 +74,7 @@
     <Compile Include="Room Related\Doors.cs" />
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="!Game1\Game1.cs" />
-    <Compile Include="Enemies\Ghost.cs" />
+    <Compile Include="Useless\Ghost.cs" />
     <Compile Include="Enemies\Slime\Slime.cs" />
     <Compile Include="Input Stuff\KeyboardOneTap.cs" />
     <Compile Include="UI\HeartManager.cs" />

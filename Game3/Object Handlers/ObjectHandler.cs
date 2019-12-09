@@ -113,7 +113,11 @@ namespace Game3
                         {
                             if (objects[i].bounds.Intersects(objects[x].bounds))
                             {
-                                objects[i].OnInteract(objects[x]);
+                                if (objects[i].enabled && objects[x].enabled)
+                                {
+                                    objects[i].OnInteract(objects[x]);
+                                }
+                                
                             }
                         }
                     }

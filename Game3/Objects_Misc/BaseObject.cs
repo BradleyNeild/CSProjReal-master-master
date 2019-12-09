@@ -10,6 +10,8 @@ namespace Game3
         public Rectangle bounds;
         public Vector2 vector;
         public ObjectHandler parent;
+        public Room room;
+        public bool enabled = true;
         public bool destroy = false;
         public abstract void Update(GameTime gt);
         public abstract void Draw(SpriteBatch sb);

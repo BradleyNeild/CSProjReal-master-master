@@ -13,13 +13,14 @@ namespace Game3
         public bool flipSprite = false;
         public Timer iFrames = new Timer(1f);
         public static int life = 6, maxHearts = 3;
-        public float moveSpeed = 4.6f;
+        public static float moveSpeed = 4.6f;
         private Texture2D texture = Game1.wizardTexture;
         public static Weapon weaponHeld;
         public int level;
         public static float totalXP;
         bool showLevelUp = false;
         DateTime showTime;
+        public static List<int> persistentEffects = new List<int>();
 
 
         public void Damage(int damage)
@@ -87,11 +88,6 @@ namespace Game3
                 Slime goblinQuestionmark = parent.SearchFirst<Slime>();
                 if (goblinQuestionmark == null)
                 {
-                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Slime>());
-                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Coin>());
-                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Balloon>());
-                    ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.AddRange(parent.SearchArray<Pickup>());
-
 
                     foreach (Slime goblin in parent.SearchArray<Slime>())
                     {
@@ -121,12 +117,12 @@ namespace Game3
                         bounds = new Rectangle(13 * Walls.wallSize + 20, 4 * Walls.wallSize, bounds.Width, bounds.Height);
                     }
 
-                    RoomShower.SpawnRoom();
                     parent.RemoveObject<Projectile>();
-                    parent.RemoveObject<Pickup>();
-                    parent.RemoveObject<Coin>();
                     parent.RemoveObject<Particle>();
                     parent.RemoveObject<Balloon>();
+
+                    RoomShower.SpawnRoom();
+                    
                 }
                 else
                 {
@@ -143,6 +139,16 @@ namespace Game3
             else if (caller is TrapDoor)
             {
                 ((TrapDoor)caller).EnterTrapDoor();
+            }
+            else if (caller is Purchasable)
+            {
+                if (Game1.coinCount >= ((Purchasable)caller).price && Game1.Key.IsPressed(Keys.E))
+                {
+                    Game1.coinCount -= ((Purchasable)caller).price;
+                    ((Purchasable)caller).pickup.Effect(((Purchasable)caller).pickup.effID);
+                    caller.destroy = true;
+                }
+                
             }
         }
 

@@ -14,8 +14,9 @@ namespace Game3
         Texture2D texture;
         public bool opened = false;
         Rectangle srcRectangle;
-        public TrapDoor(Rectangle trapDoorBounds)
+        public TrapDoor(Rectangle trapDoorBounds, Room trapDoorRoom)
         {
+            room = trapDoorRoom;
             bounds = trapDoorBounds;
             bounds.Width = 64;
             bounds.Height = 128;
@@ -23,7 +24,10 @@ namespace Game3
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, bounds, srcRectangle, color: Color.White);
+            if (enabled)
+            {
+                sb.Draw(texture, bounds, srcRectangle, color: Color.White);
+            }
 
         }
 
@@ -54,22 +58,34 @@ namespace Game3
 
         public override void Update(GameTime gt)
         {
-            if (Game1.objectHandler.SearchFirst<Enemy>() == null)
+            if (room == RoomShower.playerRoom)
             {
-                opened = true;
+                enabled = true;
             }
             else
             {
-                opened = false;
+                enabled = false;
             }
-            if (!opened)
+            if (enabled)
             {
-                srcRectangle = new Rectangle(0, 0, 32, 64);
+                if (Game1.objectHandler.SearchFirst<Enemy>() == null)
+                {
+                    opened = true;
+                }
+                else
+                {
+                    opened = false;
+                }
+                if (!opened)
+                {
+                    srcRectangle = new Rectangle(0, 0, 32, 64);
+                }
+                else
+                {
+                    srcRectangle = new Rectangle(32, 0, 32, 64);
+                }
             }
-            else
-            {
-                srcRectangle = new Rectangle(32, 0, 32, 64);
-            }
+            
         }
     }
 }

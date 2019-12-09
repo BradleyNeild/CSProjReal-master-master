@@ -40,12 +40,12 @@ namespace Game3
                     }
                 }
             }
-            Room randomRoom = validRooms[Game1.random.Next(validRooms.Count)];
+            Room randomRoom = validRooms[Game1.random.Next(validRooms.Count - 1)];
             roomNodes[randomRoom.posX, randomRoom.posY].objectsContained.Clear();
             roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
             roomNodes[randomRoom.posX, randomRoom.posY].isBoss = true;
             roomNodes[randomRoom.posX, randomRoom.posY].objectsContained.Add(new Slime(12, 12, 2, new Rectangle(Walls.wallSize * 7, Walls.wallSize * 4, 128, 128), new Point(Walls.wallSize * 7, Walls.wallSize * 4), 4, new Slime(6, 6, 1, new Rectangle(0, 0, 64, 64), Point.Zero, 4, new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), Point.Zero, 0, null, false), false), true));
-            roomNodes[randomRoom.posX, randomRoom.posY].objectsContained.Add(new TrapDoor(new Rectangle(Walls.wallSize * 7, Walls.wallSize * 4, 32, 64)));
+            roomNodes[randomRoom.posX, randomRoom.posY].objectsContained.Add(new TrapDoor(new Rectangle(Walls.wallSize * 7, Walls.wallSize * 4, 32, 64), randomRoom));
             //Console.WriteLine("jigjpigjegjepige");
         }
 
@@ -77,9 +77,14 @@ namespace Game3
                 }
             }
             Room randomRoom = validRooms[Game1.random.Next(validRooms.Count)];
-            roomNodes[randomRoom.posX, randomRoom.posY].objectsContained.Clear();
-            roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
-            roomNodes[randomRoom.posX, randomRoom.posY].isShop = true;
+            randomRoom.objectsContained.Clear();
+            Game1.objectHandler.AddObject(new Purchasable(50, new Pickup(Game1.random.Next(Pickup.names.Count), new Point(Walls.wallSize * 6, Walls.wallSize * 4), randomRoom), randomRoom));
+            Game1.objectHandler.AddObject(new Purchasable(50, new Pickup(Game1.random.Next(Pickup.names.Count), new Point(Walls.wallSize * 7, Walls.wallSize * 4), randomRoom), randomRoom));
+            Game1.objectHandler.AddObject(new Purchasable(50, new Pickup(Game1.random.Next(Pickup.names.Count), new Point(Walls.wallSize * 8, Walls.wallSize * 4), randomRoom), randomRoom));
+
+
+            randomRoom.isExplored = true;
+            randomRoom.isShop = true;
             //Console.WriteLine("jigjpigjegjepige");
 
         }
@@ -261,7 +266,7 @@ namespace Game3
             bool maxroomsOK = false;
             do
             {
-                maxRooms = 4000;
+                maxRooms = 16;
                 //maxRooms = Game1.random.Next(40, 60);
                 if (maxRooms % 4 == 0)
                 {

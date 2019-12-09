@@ -12,15 +12,16 @@ namespace Game3
     public class Pistol : Weapon
     {
         bool reloading = false;
-        int ammo = 8, maxAmmo = 8;
+        public int ammo = 8, maxAmmo = 8;
         public Timer reloadTimer = new Timer(1f);
         Vector2 mousePos;
+        int currentRapidFires = 0;
         SpriteEffects spriteEffect = SpriteEffects.None;
         public override void Draw(SpriteBatch sb)
         {
-            Vector2 HoldPos = new Vector2(0,texture.Height/2);
+            Vector2 HoldPos = new Vector2(0, texture.Height / 2);
             spriteEffect = SpriteEffects.None;
-            if (direction > MathHelper.PiOver2 || direction < -MathHelper.PiOver2) 
+            if (direction > MathHelper.PiOver2 || direction < -MathHelper.PiOver2)
             {
                 //HoldPos = new Vector2(texture.Width,texture.Height/2);
                 spriteEffect = SpriteEffects.FlipVertically;
@@ -32,11 +33,14 @@ namespace Game3
         {
             if (ammo < maxAmmo)
             {
-                Game1.reloadSfx.Play();
-                reloading = true;
-                reloadTimer.ResetTimer();
+                if (!reloading)
+                {
+                    Game1.reloadSfx.Play();
+                    reloading = true;
+                    reloadTimer.ResetTimer();
+                }
             }
-            
+
         }
 
         public override void OnClick()
@@ -46,6 +50,19 @@ namespace Game3
                 if (cooldown.Triggered)
                 {
                     Game1.shootSfx.Play();
+                    int rapidFires = 0;
+                    foreach (int effect in Character.persistentEffects)
+                    {
+                        if (effect == 4)
+                        {
+                            rapidFires+= 1;
+                        }
+                    }
+                    if (currentRapidFires != rapidFires && rapidFires != 0)
+                    {
+                        cooldown.Target = 0.2f / (rapidFires + 1);
+                        currentRapidFires = rapidFires;
+                    }
                     cooldown.ResetTimer();
                     var mouseState = Mouse.GetState();
                     mousePos = new Vector2(mouseState.X, mouseState.Y);
@@ -55,22 +72,22 @@ namespace Game3
             }
             else if (!reloading && cooldown.Triggered)
             {
-                
+
                 Reload();
             }
-            
+
         }
 
         public override void OnCreate()
         {
-            
+
             cooldown = new Timer(0.2f);
             texture = Game1.pistolTexture;
             bounds.Width = 26;
             bounds.Height = 17;
         }
 
-        
+
 
         public override void OnDestroy()
         {
@@ -94,6 +111,16 @@ namespace Game3
 
         public override void Update(GameTime gt)
         {
+
+            int extendedMags = 0;
+            foreach (int effect in Character.persistentEffects)
+            {
+                if (effect == 3)
+                {
+                    extendedMags++;
+                }
+            }
+            maxAmmo = (8 + extendedMags * 4);// - (currentRapidFires * 2);
             cooldown.Update(gt);
             reloadTimer.Update(gt);
             MouseState mouseState = Mouse.GetState();

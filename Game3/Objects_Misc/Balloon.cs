@@ -38,7 +38,7 @@ namespace Game3
         public override void OnDestroy()
         {
             Game1.particleHandler.CreateRainbowParticles(40, 3, bounds.Center, 0.2f);
-            Game1.objectHandler.AddObject(new Pickup("Heart Container", 0, Game1.heartTextureEmpty, bounds.Location));
+            //Game1.objectHandler.AddObject(new Pickup("Heart Container", 0, bounds.Location));
             //ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.Remove(this);
         }
 
