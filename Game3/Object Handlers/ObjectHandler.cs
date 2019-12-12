@@ -45,6 +45,18 @@ namespace Game3
             return null;
         }
 
+        public T SearchFirstEnabled<T>() where T : BaseObject
+        {
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] is T && objects[i].enabled)
+                {
+                    return objects[i] as T;
+                }
+            }
+            return null;
+        }
+
         public List<T> SearchArray<T>() where T:BaseObject
         {
             List<T> outList = new List<T>();
@@ -53,6 +65,19 @@ namespace Game3
                 if (objects[i] is T)
                 {
                         outList.Add(objects[i] as T); 
+                }
+            }
+            return outList;
+        }
+
+        public List<T> SearchArrayEnabled<T>() where T : BaseObject
+        {
+            List<T> outList = new List<T>();
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] is T && objects[i].enabled)
+                {
+                    outList.Add(objects[i] as T);
                 }
             }
             return outList;

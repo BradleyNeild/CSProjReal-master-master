@@ -13,6 +13,7 @@ namespace Game3
     {
         public Texture2D texture;
         public int direction;
+        public bool enterable;
 
         public Doors(Rectangle doorBounds, int doorDirection)
         {
@@ -26,7 +27,7 @@ namespace Game3
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Game1.currentDoorTexture, destinationRectangle: new Rectangle(bounds.X+5, bounds.Y+5, Walls.wallSize, Walls.wallSize), color: Color.White);
+            spriteBatch.Draw(texture, destinationRectangle: new Rectangle(bounds.X+5, bounds.Y+5, Walls.wallSize, Walls.wallSize), color: Color.White);
         }
 
         public override void OnCreate()
@@ -46,7 +47,16 @@ namespace Game3
 
         public override void Update(GameTime gt)
         {
-
+            if (Game1.objectHandler.SearchFirstEnabled<Slime>() != null)
+            {
+                texture = Game1.wallTexture;
+                enterable = false;
+            }
+            else
+            {
+                texture = Game1.doorTexture;
+                enterable = true;
+            }
         }
     }
 }

@@ -101,17 +101,12 @@ namespace Game3
                     }
                 }
             }
-            Game1.objectHandler.AddObjects(ProcGen2.roomNodes[playerRoomX, playerRoomY].objectsContained);
             
             if (playerRoom.isShop)
             {
 
             }
-            if (Ghost.currentRoom == ProcGen2.roomNodes[playerRoomX, playerRoomY])
-            {
-                Game1.objectHandler.AddObject(new Ghost(Game1.ghostTexture, 0, 5, 5));
-            }
-            Minimap.MinimapDebug();
+            //Minimap.MinimapDebug();
             Game1.ResetSlimes();
             doorNums.Clear();
         }

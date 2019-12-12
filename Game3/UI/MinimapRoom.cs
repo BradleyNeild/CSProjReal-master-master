@@ -15,6 +15,7 @@ namespace Game3
         Color textureColor = Color.White;
         Color overlayColor = Color.Transparent;
         Vector2 overlaySize = new Vector2(16, 16);
+        List<Slime> slimes;
         public MinimapRoom(int miniPosX, int miniPosY, int miniRPosX, int miniRPosY)
         {
             posX = miniPosX;
@@ -23,23 +24,25 @@ namespace Game3
             rPosY = miniRPosY;
         }
 
-        public void Update(GameTime gameTime)
-        {
-            if (RoomShower.playerRoomX == rPosX && RoomShower.playerRoomY == rPosY)
-            {
-                textureColor = Color.Lime;
-            }
-            else
-            {
-                textureColor = Color.White;
-            }
 
-            if (ProcGen2.roomNodes[rPosX, rPosY].objectsContained.Count > 0 && !ProcGen2.roomNodes[rPosX, rPosY].isExplored)
+        public void CheckStatus()
+        {
+            slimes = Game1.objectHandler.SearchArray<Slime>();
+            foreach (Slime slime in slimes)
             {
-                overlay = Game1.questionTexture;
-                overlayColor = Color.White;
+                if (slime.room == ProcGen2.roomNodes[rPosX, rPosY])
+                {
+                    overlay = Game1.questionTexture;
+                    overlayColor = Color.White;
+                    break;
+                }
+                else
+                {
+                    overlayColor = Color.Transparent;
+                }
+
             }
-            else if (ProcGen2.roomNodes[rPosX, rPosY].isShop)
+            if (ProcGen2.roomNodes[rPosX, rPosY].isShop)
             {
                 overlay = Game1.coinTexture;
                 overlaySize = new Vector2(11, 16);
@@ -51,10 +54,25 @@ namespace Game3
                 overlaySize = new Vector2(16, 16);
                 overlayColor = Color.White;
             }
+
+            if (RoomShower.playerRoomX == rPosX && RoomShower.playerRoomY == rPosY)
+            {
+                textureColor = Color.Lime;
+            }
             else
             {
-                overlayColor = Color.Transparent;
+                textureColor = Color.White;
             }
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            
+                CheckStatus();
+            
+
+
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)

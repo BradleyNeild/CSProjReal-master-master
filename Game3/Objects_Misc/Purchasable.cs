@@ -11,16 +11,18 @@ namespace Game3
 {
     public class Purchasable : BaseObject
     {
+        public Timer cooldown = new Timer(0.5f);
         Character character = Game1.objectHandler.SearchFirst<Character>();
         Texture2D texture;
         public int price;
         public Pickup pickup;
+        public bool bought = false;
 
-        public Purchasable(int purchPrice, Pickup purchPickup, Room purchRoom)
+        public Purchasable(Pickup purchPickup, Room purchRoom)
         {
             bounds = purchPickup.bounds;
             texture = purchPickup.texture;
-            price = purchPrice;
+            price = purchPickup.price;
             room = purchRoom;
             pickup = purchPickup;
         }
@@ -57,6 +59,7 @@ namespace Game3
 
         public override void Update(GameTime gt)
         {
+            cooldown.Update(gt);
             if (room == RoomShower.playerRoom)
             {
                 enabled = true;

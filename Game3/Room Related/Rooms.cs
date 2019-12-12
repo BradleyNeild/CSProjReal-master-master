@@ -12,11 +12,9 @@ namespace Game3
     
     public class Room
     {
-        public int type, posX, posY;
+        public int posX, posY;
         public bool fullNeighbors, doorN, doorE, doorS, doorW;
         public bool isShop;
-        public List<BaseObject> objectsContained = new List<BaseObject>();
-        public bool dijsktraVisited = false;
         public bool isExplored = false;
         public bool isBoss = false;
         public Room[] neighbors = new Room[4];
@@ -30,7 +28,6 @@ namespace Game3
             doorS = roomDoorS;
             doorW = roomDoorW;
             fullNeighbors = roomFullNeighbors;
-            objectsContained.AddRange(roomGoblinsContained);
             isShop = roomIsShop;
         }
     }

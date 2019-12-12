@@ -30,7 +30,7 @@ namespace Game3
         public static Random random = new Random();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Texture2D diamondTexture, magazineTexture, medkitTexture, rapidTexture, kiteTexture, pistolTexture, trapDoorTexture, wizardTexture, rainbowVuvuzelaTexture, slimeSprites, floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
+        public static Texture2D rerollerTexture, diamondTexture, magazineTexture, medkitTexture, rapidTexture, kiteTexture, pistolTexture, trapDoorTexture, wizardTexture, rainbowVuvuzelaTexture, slimeSprites, floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
         public static SpriteFont debugTextFont, roomNodeFont;
         public static KeyboardOneTap Key;
         Collision collision = new Collision();
@@ -176,6 +176,7 @@ namespace Game3
             rapidTexture = Content.Load<Texture2D>("rapid");
             medkitTexture = Content.Load<Texture2D>("medkit");
             diamondTexture = Content.Load<Texture2D>("diamond");
+            rerollerTexture = Content.Load<Texture2D>("reroll");
             shootSfx = Content.Load<SoundEffect>("shoot");
             coinPickupSfx = Content.Load<SoundEffect>("coinPickup");
         }
@@ -238,13 +239,10 @@ namespace Game3
                 gameOver = false;
             }
             MagicMissile.maxMissiles = objectHandler.SearchFirst<Character>().level + 3;
-            Slime slime = objectHandler.SearchFirst<Slime>();
-            if (slime == null)
-            {
-                currentDoorTexture = doorTexture;
-            }
-            else
-                currentDoorTexture = wallTexture;
+            List<Slime> slimes = objectHandler.SearchArray<Slime>();
+            bool activeSlimeFound = false;
+            
+            
 
 
 
@@ -257,7 +255,9 @@ namespace Game3
 
             if (mouseOneTap.IsRightPressed())
             {
-                Character.maxHearts++;
+                Console.WriteLine(objectHandler.SearchArray<Slime>().Count);
+                Console.WriteLine(ProcGen2.bossSlime.enabled);
+
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
@@ -269,13 +269,13 @@ namespace Game3
             {
                 try
                 {
-                    objectHandler.AddObject(new Pickup(debugI, mouseState.Position, RoomShower.playerRoom));
+                    Pickup.CreatePickup(debugI, mouseState.Position, RoomShower.playerRoom);
                 }
                 catch (Exception)
                 {
                     debugI = -1;
                 }
-                
+
                 debugI++;
             }
 

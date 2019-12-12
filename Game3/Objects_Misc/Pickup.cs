@@ -8,36 +8,40 @@ namespace Game3
 {
     public class Pickup:BaseObject
     {
+        public bool shoppable;
+        public bool randomDroppable;
+        public int price;
         public string name;
         public int effID;
         public Texture2D texture;
-        List<Texture2D> textures = new List<Texture2D>()
+        static int rerollerprice = 10;
+
+        public static List<Pickup> pickups = new List<Pickup>()
         {
-            Game1.heartTextureEmpty,
-            Game1.kiteTexture,
-            Game1.medkitTexture,
-            Game1.magazineTexture,
-            Game1.rapidTexture,
-            Game1.diamondTexture
+            new Pickup("Heart Container", 0, 30, Game1.heartTextureEmpty, true, true),
+            new Pickup("Kite", 1, 40, Game1.kiteTexture, true, true),
+            new Pickup("Medkit", 2, 20, Game1.medkitTexture, true, true),
+            new Pickup("Extended Mag", 3, 40, Game1.magazineTexture, true, true),
+            new Pickup("Rapid Fire", 4, 40, Game1.rapidTexture, true, true),
+            new Pickup("Diamond", 5, 0, Game1.diamondTexture, false, true),
+            new Pickup("Reroller", 6, rerollerprice, Game1.rerollerTexture, false, false)
         };
 
-        public static List<string> names = new List<string>()
+        public static void CreatePickup(int i, Point position, Room room)
         {
-            "Heart Container",
-            "Kite",
-            "Medkit",
-            "Extended Mag",
-            "Rapid Fire",
-            "Diamond"
-        };
+            Pickup newPickup = new Pickup(pickups[i].name, pickups[i].effID, pickups[i].price, pickups[i].texture, pickups[i].shoppable, pickups[i].randomDroppable);
+            newPickup.bounds.Location = position;
+            newPickup.room = room;
+            Game1.objectHandler.AddObject(newPickup);
+        }
 
-        public Pickup(int effectID, Point pickupPosition, Room pickupRoom)
+        public Pickup(string pickupName, int effectID, int pickupPrice, Texture2D pickupTexture, bool pickupShoppable, bool randomDroppable)
         {
-            name = names[effectID];
-            room = pickupRoom;
+            price = pickupPrice;
+            shoppable = pickupShoppable;
+            name = pickupName;
             effID = effectID;
-            texture = textures[effectID];
-            bounds.Location = pickupPosition;
+            texture = pickupTexture;
             bounds.Width = 32;
             bounds.Height = 32;
         }
@@ -49,26 +53,36 @@ namespace Game3
                 case 0:
                     //heart container
                     Character.maxHearts++;
+                    destroy = true;
                     break;
                 case 1:
                     //kite
                     Character.moveSpeed += 0.3f;
+                    destroy = true;
                     break;
                 case 2:
                     //medkit
-                    Character.life += 2;
+                    Game1.objectHandler.SearchFirst<Character>().Heal(2);
+                    destroy = true;
                     break;
                 case 3:
                     //extended mag
                     Character.persistentEffects.Add(3);
+                    destroy = true;
                     break;
                 case 4:
                     //rapid fire
                     Character.persistentEffects.Add(4);
+                    destroy = true;
                     break;
                 case 5:
                     //diamond
                     Game1.coinCount += 50;
+                    destroy = true;
+                    break;
+                case 6:
+                    //reroller
+                    ProcGen2.GeneratePurchasables(true);
                     break;
                 default:
                     break;

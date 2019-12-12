@@ -64,6 +64,8 @@
     <Compile Include="Projectiles\Bullet.cs" />
     <Compile Include="Projectiles\Confetti.cs" />
     <Compile Include="Projectiles\Projectile.cs" />
+    <Compile Include="Room Related\ProcGen3.cs" />
+    <Compile Include="Room Related\RoomPointer.cs" />
     <Compile Include="Room Related\TrapDoor.cs" />
     <Compile Include="Weapons\RainbowVuvuzela.cs" />
     <Compile Include="Weapons\Pistol.cs" />

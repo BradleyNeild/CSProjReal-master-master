@@ -36,7 +36,7 @@ namespace Game3
                     Game1.hurtSfx.Play(1, 0, 0);
                 }
             }
-            
+
         }
 
         public void Heal(int heal)
@@ -69,7 +69,7 @@ namespace Game3
 
         public Character()
         {
-            bounds = new Rectangle(7*Walls.wallSize + 13, 4*Walls.wallSize, 28, 48);
+            bounds = new Rectangle(7 * Walls.wallSize + 13, 4 * Walls.wallSize, 28, 48);
         }
 
         public override void OnInteract(BaseObject caller)
@@ -86,7 +86,7 @@ namespace Game3
             else if (caller is Doors)
             {
                 Slime goblinQuestionmark = parent.SearchFirst<Slime>();
-                if (goblinQuestionmark == null)
+                if (((Doors)caller).enterable == true)
                 {
 
                     foreach (Slime goblin in parent.SearchArray<Slime>())
@@ -122,7 +122,7 @@ namespace Game3
                     parent.RemoveObject<Balloon>();
 
                     RoomShower.SpawnRoom();
-                    
+
                 }
                 else
                 {
@@ -142,13 +142,18 @@ namespace Game3
             }
             else if (caller is Purchasable)
             {
-                if (Game1.coinCount >= ((Purchasable)caller).price && Game1.Key.IsPressed(Keys.E))
+                if (Game1.coinCount >= ((Purchasable)caller).price && Game1.Key.IsPressed(Keys.E) && ((Purchasable)caller).cooldown.Triggered)
                 {
                     Game1.coinCount -= ((Purchasable)caller).price;
+                    ((Purchasable)caller).cooldown.ResetTimer();
                     ((Purchasable)caller).pickup.Effect(((Purchasable)caller).pickup.effID);
-                    caller.destroy = true;
+                    if (((Purchasable)caller).pickup.name != "Reroller")
+                    {
+                        caller.destroy = true;
+                    }
+                    
                 }
-                
+
             }
         }
 
@@ -178,7 +183,7 @@ namespace Game3
             {
                 LevelUp();
             }
-        }  
+        }
 
         public void LevelUp()
         {
@@ -239,7 +244,7 @@ namespace Game3
             //sprite flipping
             if (aPressed)
             {
-                
+
             }
             else if (dPressed)
             {
@@ -302,7 +307,7 @@ namespace Game3
                 spriteEffect = SpriteEffects.None;
             }
 
-         
+
         }
     }
 }

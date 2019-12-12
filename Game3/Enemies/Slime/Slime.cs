@@ -19,7 +19,7 @@ namespace Game3
         public int numSplitoffs = 0;
         public Slime splitSlime;
         public bool spawnFrozen = true;
-        public Slime(float enemyLife, float enemyMaxLife, int enemyDamage, Rectangle enemyBounds, Point enemySpawnPoint, int enemySplitOffs, Slime enemySplitSlime, bool slimeSpawnFrozen)
+        public Slime(float enemyLife, float enemyMaxLife, int enemyDamage, Rectangle enemyBounds, Point enemySpawnPoint, int enemySplitOffs, bool slimeSpawnFrozen, Room slimeRoom, Slime enemySplitSlime)
         {
             bounds = enemyBounds;
             life = enemyLife;
@@ -30,6 +30,7 @@ namespace Game3
             numSplitoffs = enemySplitOffs;
             splitSlime = enemySplitSlime;
             spawnFrozen = slimeSpawnFrozen;
+            room = slimeRoom;
         }
 
         private bool AggrosUnderMax()
@@ -70,41 +71,58 @@ namespace Game3
 
         public override void Update(GameTime gameTime)
         {
-            freezeTime.Update(gameTime);
-            animTimer.Update(gameTime);
-            if (animTimer.Triggered)
+            if (room == RoomShower.playerRoom)
             {
-                animTimer.ResetTimer();
-                if (animFrame == 2)
+                enabled = true;
+            }
+            else
+            {
+                enabled = false;
+            }
+            if (enabled)
+            {
+                freezeTime.Update(gameTime);
+                animTimer.Update(gameTime);
+                if (animTimer.Triggered)
                 {
-                    frameIncrement = -1;
-                }
-                else if (animFrame == 0)
-                {
-                    frameIncrement = 1;
-                }
-                animFrame += frameIncrement;
+                    animTimer.ResetTimer();
+                    if (animFrame == 2)
+                    {
+                        frameIncrement = -1;
+                    }
+                    else if (animFrame == 0)
+                    {
+                        frameIncrement = 1;
+                    }
+                    animFrame += frameIncrement;
 
-                srcRectangle = new Rectangle(animFrame * 16, 0, 16, 16);
-            }
-            if (freezeTime.Triggered || !spawnFrozen)
-            {
-                
-                ai.Update(gameTime);
-                if (life <= 0)
-                {
-                    destroy = true;
+                    srcRectangle = new Rectangle(animFrame * 16, 0, 16, 16);
                 }
-                if (AggrosUnderMax() && !aggroed)
+                if (freezeTime.Triggered || !spawnFrozen)
                 {
-                    Aggro();
+
+                    ai.Update(gameTime);
+                    if (life <= 0)
+                    {
+                        destroy = true;
+                    }
+                    if (AggrosUnderMax() && !aggroed)
+                    {
+                        Aggro();
+                    }
                 }
             }
-            
+
+
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, bounds, srcRectangle, color: color);
+            if (enabled)
+            {
+
+
+                spriteBatch.Draw(texture, bounds, srcRectangle, color: color);
+            }
         }
 
         public override void OnCreate()
@@ -122,7 +140,7 @@ namespace Game3
             Game1.hurt2Sfx.Play();
             for (int i = 0; i < numSplitoffs; i++)
             {
-                Game1.objectHandler.AddObject(new Slime(splitSlime.life, splitSlime.maxLife, splitSlime.damage, new Rectangle(bounds.X, bounds.Y, splitSlime.bounds.Width, splitSlime.bounds.Height), bounds.Location, splitSlime.numSplitoffs, splitSlime.splitSlime, false));
+                Game1.objectHandler.AddObject(new Slime(splitSlime.life, splitSlime.maxLife, splitSlime.damage, new Rectangle(bounds.X, bounds.Y, splitSlime.bounds.Width, splitSlime.bounds.Height), bounds.Location, splitSlime.numSplitoffs, false, room, splitSlime.splitSlime));
             }
 
             for (int i = 0; i < 20; i++)
@@ -140,8 +158,11 @@ namespace Game3
             }
 
             Coin.CreateCoin(parent, bounds.Location, Game1.random.Next(2, 4));
+            if (Game1.random.Next(100) > 95)
+            {
+                Pickup.CreatePickup(5, bounds.Location, RoomShower.playerRoom);
+            }
             Character.totalXP += 300;
-            ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY].objectsContained.Remove(this);
         }
 
         public override void OnInteract(BaseObject caller)
