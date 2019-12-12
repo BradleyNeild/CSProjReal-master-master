@@ -15,7 +15,7 @@ namespace Game3
         public TileMovingAI(Point start, Point end)
         {
             PreviousTile = start;
-            NextTile = new Point(end.X + Game1.random.Next(-20, 20), end.Y + Game1.random.Next(-20, 20));
+            NextTile = new Point(end.X + Game1.random.Next(-10, 10), end.Y + Game1.random.Next(-10, 10));
         }
 
 

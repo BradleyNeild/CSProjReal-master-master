@@ -38,7 +38,7 @@ namespace Game3
 
                 Game1.win = true;
             }
-            
+
         }
 
         public override void OnCreate()
@@ -48,12 +48,12 @@ namespace Game3
 
         public override void OnDestroy()
         {
-            
+
         }
 
         public override void OnInteract(BaseObject caller)
         {
-            
+
         }
 
         public override void Update(GameTime gt)
@@ -68,7 +68,7 @@ namespace Game3
             }
             if (enabled)
             {
-                if (Game1.objectHandler.SearchFirst<Enemy>() == null)
+                if (Game1.objectHandler.SearchFirstEnabled<Slime>() == null)
                 {
                     opened = true;
                 }
@@ -85,7 +85,7 @@ namespace Game3
                     srcRectangle = new Rectangle(32, 0, 32, 64);
                 }
             }
-            
+
         }
     }
 }

@@ -27,7 +27,16 @@ namespace Game3
                 foreach(Enemy i in Enemys)
                 {
                     Point TilePos = ConvertThing(i.bounds.Center);
-                    Weights[TilePos.Y, TilePos.X] = 1;
+                    try //because of extremely random -33m, -33m
+                    {
+                        Weights[TilePos.Y, TilePos.X] = 1;
+                    }
+                    catch (Exception)
+                    {
+                        break;
+                        throw;
+                    }
+                    
                 }
 
 

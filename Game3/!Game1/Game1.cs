@@ -240,7 +240,6 @@ namespace Game3
             }
             MagicMissile.maxMissiles = objectHandler.SearchFirst<Character>().level + 3;
             List<Slime> slimes = objectHandler.SearchArray<Slime>();
-            bool activeSlimeFound = false;
             
             
 

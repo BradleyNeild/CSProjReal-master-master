@@ -60,10 +60,20 @@ namespace Game3
             roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
             roomNodes[randomRoom.posX, randomRoom.posY].isBoss = true;
             Console.WriteLine("boss generated");
+            foreach (Slime slime in Game1.objectHandler.SearchArray<Slime>())
+            {
+                if (slime.room == randomRoom)
+                {
+                    slime.room = null;
+                }
+            }
+            Game1.objectHandler.AddObject(new TrapDoor(new Rectangle(Walls.wallSize * 7, Walls.wallSize * 4, 64, 128), randomRoom));
+
             bossSlime = new Slime(12, 12, 2, new Rectangle(Walls.wallSize * 7, Walls.wallSize * 4, 128, 128), new Point(Walls.wallSize * 7, Walls.wallSize * 4), 4, true, randomRoom, new Slime(5, 5, 1, new Rectangle(0, 0, 64, 64), Point.Zero, 4, false, randomRoom, new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), Point.Zero, 0, false, randomRoom, null)));
             Console.WriteLine(bossSlime.room.posX + ", " + bossSlime.room.posY);
             Game1.objectHandler.AddObject(bossSlime);
-            Game1.objectHandler.AddObject(new TrapDoor(new Rectangle(Walls.wallSize * 7, Walls.wallSize * 4, 64, 128), randomRoom));
+
+
         }
 
         public static void SpawnShop()
@@ -93,10 +103,19 @@ namespace Game3
                     }
                 }
             }
+
             Room randomRoom = validRooms[Game1.random.Next(validRooms.Count - 1)];
+            foreach (Slime slime in Game1.objectHandler.SearchArray<Slime>())
+            {
+                if (slime.room == randomRoom)
+                {
+                    slime.room = null;
+                }
+            }
 
-
+            
             shopRoom = randomRoom;
+
             GeneratePurchasables(false);
 
 

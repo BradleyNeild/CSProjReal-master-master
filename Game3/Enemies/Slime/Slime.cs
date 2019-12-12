@@ -15,6 +15,7 @@ namespace Game3
         public bool aggroed = false;
         Timer freezeTime = new Timer(0.8f);
         public static int numAggroed = 0;
+        public bool disableForever = false;
         public const int maxAggroed = 3;
         public int numSplitoffs = 0;
         public Slime splitSlime;
@@ -79,6 +80,7 @@ namespace Game3
             {
                 enabled = false;
             }
+                
             if (enabled)
             {
                 freezeTime.Update(gameTime);
