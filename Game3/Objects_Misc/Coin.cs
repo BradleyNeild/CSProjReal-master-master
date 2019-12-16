@@ -103,7 +103,7 @@ namespace Game3
         public override void Update(GameTime gameTime)
         {
 
-            if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY] == room)
+            if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY, Game1.currentFloor] == room)
             {
                 enabled = true;
             }

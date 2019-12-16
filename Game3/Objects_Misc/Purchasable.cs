@@ -25,6 +25,7 @@ namespace Game3
             price = purchPickup.price;
             room = purchRoom;
             pickup = purchPickup;
+            floor = pickup.floor;
         }
 
         public override void Draw(SpriteBatch sb)
@@ -60,7 +61,7 @@ namespace Game3
         public override void Update(GameTime gt)
         {
             cooldown.Update(gt);
-            if (room == RoomShower.playerRoom)
+            if (room == RoomShower.playerRoom && floor == Game1.currentFloor)
             {
                 enabled = true;
             }

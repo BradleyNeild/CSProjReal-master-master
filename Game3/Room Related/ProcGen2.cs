@@ -9,35 +9,22 @@ namespace Game3
 
     public class ProcGen2
     {
-        public static Room[,] roomNodes = new Room[100, 100];
+        public static int genFloor = 0;
+        public static Room[,,] roomNodes = new Room[100, 100, 10];
         public static List<Room> roomList = new List<Room>();
         public static Room shopRoom;
         public static Slime bossSlime;
 
         static int numRooms = 1;
 
-        public static void ClearDungeon()
-        {
-            foreach (Room room in roomNodes)
-            {
-                if (room.posX == 50 && room.posY == 50)
-                {
-                    roomNodes[room.posX, room.posY] = null;
-                }
-            }
-            roomList.Clear();
-            shopRoom = null;
-            numRooms = 1;
-            GenerateDungeon();
-        }
-
+        
         public static void SpawnBossRoom()
         {
             List<Room> validRooms = new List<Room>();
             foreach (Room room in roomNodes)
             {
                 int doorCount = 0;
-                if (room != null)
+                if (room != null && room.floor == genFloor)
                 {
                     if (room.posX != 50 && room.posY != 50 && !room.isShop)
                     {
@@ -57,8 +44,8 @@ namespace Game3
                 }
             }
             Room randomRoom = validRooms[Game1.random.Next((validRooms.Count - 1))];
-            roomNodes[randomRoom.posX, randomRoom.posY].isExplored = true;
-            roomNodes[randomRoom.posX, randomRoom.posY].isBoss = true;
+            roomNodes[randomRoom.posX, randomRoom.posY, genFloor].isExplored = true;
+            roomNodes[randomRoom.posX, randomRoom.posY, genFloor].isBoss = true;
             Console.WriteLine("boss generated");
             foreach (Slime slime in Game1.objectHandler.SearchArray<Slime>())
             {
@@ -113,7 +100,7 @@ namespace Game3
                 }
             }
 
-            
+
             shopRoom = randomRoom;
 
             GeneratePurchasables(false);
@@ -168,7 +155,7 @@ namespace Game3
                 {
                     if (room.posY - 1 >= 0)
                     {
-                        if (roomNodes[room.posX, room.posY - 1] != null)
+                        if (roomNodes[room.posX, room.posY - 1, genFloor] != null)
                         {
                             room.doorN = true;
                         }
@@ -180,7 +167,7 @@ namespace Game3
 
                     if (room.posY + 1 <= roomNodes.GetUpperBound(1))
                     {
-                        if (roomNodes[room.posX, room.posY + 1] != null)
+                        if (roomNodes[room.posX, room.posY + 1, genFloor] != null)
                         {
                             room.doorS = true;
                         }
@@ -192,7 +179,7 @@ namespace Game3
 
                     if (room.posX - 1 >= 0)
                     {
-                        if (roomNodes[room.posX - 1, room.posY] != null)
+                        if (roomNodes[room.posX - 1, room.posY, genFloor] != null)
                         {
                             room.doorW = true;
                         }
@@ -204,7 +191,7 @@ namespace Game3
 
                     if (room.posX + 1 <= roomNodes.GetUpperBound(0))
                     {
-                        if (roomNodes[room.posX + 1, room.posY] != null)
+                        if (roomNodes[room.posX + 1, room.posY, genFloor] != null)
                         {
                             room.doorE = true;
                         }
@@ -231,7 +218,7 @@ namespace Game3
         {
             if (checkedRoom.posY - 1 >= 0)
             {
-                if (roomNodes[checkedRoom.posX, checkedRoom.posY - 1] != null)
+                if (roomNodes[checkedRoom.posX, checkedRoom.posY - 1, genFloor] != null)
                 {
                     checkedRoom.doorN = true;
                 }
@@ -243,7 +230,7 @@ namespace Game3
 
             if (checkedRoom.posY + 1 >= roomNodes.GetUpperBound(1))
             {
-                if (roomNodes[checkedRoom.posX, checkedRoom.posY + 1] != null)
+                if (roomNodes[checkedRoom.posX, checkedRoom.posY + 1, genFloor] != null)
                 {
                     checkedRoom.doorS = true;
                 }
@@ -255,7 +242,7 @@ namespace Game3
 
             if (checkedRoom.posX - 1 >= 0)
             {
-                if (roomNodes[checkedRoom.posX, checkedRoom.posX - 1] != null)
+                if (roomNodes[checkedRoom.posX, checkedRoom.posX - 1, genFloor] != null)
                 {
                     checkedRoom.doorW = true;
                 }
@@ -267,7 +254,7 @@ namespace Game3
 
             if (checkedRoom.posX + 1 >= roomNodes.GetUpperBound(0))
             {
-                if (roomNodes[checkedRoom.posX, checkedRoom.posX + 1] != null)
+                if (roomNodes[checkedRoom.posX, checkedRoom.posX + 1, genFloor] != null)
                 {
                     checkedRoom.doorE = true;
                 }
@@ -289,7 +276,7 @@ namespace Game3
 
         static bool CheckRoomIsNull(int x, int y)
         {
-            if (roomNodes[x, y] == null)
+            if (roomNodes[x, y, genFloor] == null)
             {
                 return true;
             }
@@ -299,9 +286,17 @@ namespace Game3
 
         static Room FindRandomRoom()
         {
-            int randRoom = Game1.random.Next(roomList.Count);
-            Room tempRoom = roomList[randRoom];
-            return roomNodes[tempRoom.posX, tempRoom.posY];
+            List<Room> currentFloorRooms = new List<Room>();
+            foreach (Room room in roomList)
+            {
+                if (room.floor == genFloor)
+                {
+                    currentFloorRooms.Add(room);
+                }
+            }
+            int randRoom = Game1.random.Next(currentFloorRooms.Count);
+            Room tempRoom = currentFloorRooms[randRoom];
+            return roomNodes[tempRoom.posX, tempRoom.posY, genFloor];
         }
 
         public static void DebugMap(int playerPosX, int playerPosY)
@@ -313,7 +308,7 @@ namespace Game3
 
         static void AddRoom(int addPosX, int addPosY, bool enemies)
         {
-            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, new List<Slime>(), false);
+            Room roomToAdd = new Room(addPosX, addPosY, false, false, false, false, false, new List<Slime>(), false, genFloor);
             if (enemies)
             {
                 List<Slime> slimes = new List<Slime>();
@@ -324,7 +319,7 @@ namespace Game3
 
 
 
-            roomNodes[addPosX, addPosY] = roomToAdd;
+            roomNodes[addPosX, addPosY, genFloor] = roomToAdd;
             roomList.Add(roomToAdd);
             //Console.WriteLine("Added Room at " + addPosX + "," + addPosY);
             numRooms += 1;
@@ -337,7 +332,7 @@ namespace Game3
             bool maxroomsOK = false;
             do
             {
-                maxRooms = 20;
+                maxRooms = 100;
                 //maxRooms = Game1.random.Next(40, 60);
                 if (maxRooms % 4 == 0)
                 {
@@ -369,7 +364,7 @@ namespace Game3
             pointer1Y = roomPointer1.posY;
             for (int i = 0; i < 4; i++)
             {
-                roomPointer1 = roomNodes[fourPaths[i].posX, fourPaths[i].posY];
+                roomPointer1 = roomNodes[fourPaths[i].posX, fourPaths[i].posY, genFloor];
                 for (int x = 0; x < roomsPerPath; x++)
                 {
                     goodRandom = false;
@@ -454,12 +449,13 @@ namespace Game3
                         }
                     }
                     AddRoom(newRoomX, newRoomY, true);
-                    roomPointer1 = roomNodes[newRoomX, newRoomY];
+                    roomPointer1 = roomNodes[newRoomX, newRoomY, genFloor];
                     CheckRooms();
                 }
             }
             SpawnShop();
             SpawnBossRoom();
+            genFloor++;
         }
     }
 }

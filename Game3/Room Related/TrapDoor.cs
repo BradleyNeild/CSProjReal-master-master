@@ -17,6 +17,7 @@ namespace Game3
         public TrapDoor(Rectangle trapDoorBounds, Room trapDoorRoom)
         {
             room = trapDoorRoom;
+            floor = trapDoorRoom.floor;
             bounds = trapDoorBounds;
             bounds.Width = 64;
             bounds.Height = 128;
@@ -58,7 +59,7 @@ namespace Game3
 
         public override void Update(GameTime gt)
         {
-            if (room == RoomShower.playerRoom)
+            if (room == RoomShower.playerRoom && floor == Game1.currentFloor)
             {
                 enabled = true;
             }

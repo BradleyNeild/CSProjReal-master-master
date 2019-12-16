@@ -32,6 +32,7 @@ namespace Game3
             splitSlime = enemySplitSlime;
             spawnFrozen = slimeSpawnFrozen;
             room = slimeRoom;
+            floor = room.floor;
         }
 
         private bool AggrosUnderMax()
@@ -72,7 +73,7 @@ namespace Game3
 
         public override void Update(GameTime gameTime)
         {
-            if (room == RoomShower.playerRoom)
+            if (room == RoomShower.playerRoom && floor == Game1.currentFloor)
             {
                 enabled = true;
             }

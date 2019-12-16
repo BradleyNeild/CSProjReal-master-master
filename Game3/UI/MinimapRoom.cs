@@ -16,12 +16,15 @@ namespace Game3
         Color overlayColor = Color.Transparent;
         Vector2 overlaySize = new Vector2(16, 16);
         List<Slime> slimes;
-        public MinimapRoom(int miniPosX, int miniPosY, int miniRPosX, int miniRPosY)
+        bool enabled = false;
+        int floor = 0;
+        public MinimapRoom(int miniPosX, int miniPosY, int miniRPosX, int miniRPosY, int miniFloor)
         {
             posX = miniPosX;
             posY = miniPosY;
             rPosX = miniRPosX;
             rPosY = miniRPosY;
+            floor = miniFloor;
         }
 
 
@@ -30,7 +33,7 @@ namespace Game3
             slimes = Game1.objectHandler.SearchArray<Slime>();
             foreach (Slime slime in slimes)
             {
-                if (slime.room == ProcGen2.roomNodes[rPosX, rPosY])
+                if (slime.room == ProcGen2.roomNodes[rPosX, rPosY, Game1.currentFloor])
                 {
                     overlay = Game1.questionTexture;
                     overlayColor = Color.White;
@@ -42,43 +45,63 @@ namespace Game3
                 }
 
             }
-            if (ProcGen2.roomNodes[rPosX, rPosY].isShop)
+            if (ProcGen2.roomNodes[rPosX, rPosY, floor] != null)
             {
-                overlay = Game1.coinTexture;
-                overlaySize = new Vector2(11, 16);
-                overlayColor = Color.White;
-            }
-            else if (ProcGen2.roomNodes[rPosX, rPosY].isBoss)
-            {
-                overlay = Game1.skullTexture;
-                overlaySize = new Vector2(16, 16);
-                overlayColor = Color.White;
-            }
+                if (ProcGen2.roomNodes[rPosX, rPosY, floor].isShop)
+                {
+                    overlay = Game1.coinTexture;
+                    overlaySize = new Vector2(11, 16);
+                    overlayColor = Color.White;
+                }
+                else if (ProcGen2.roomNodes[rPosX, rPosY, floor].isBoss)
+                {
+                    overlay = Game1.skullTexture;
+                    overlaySize = new Vector2(16, 16);
+                    overlayColor = Color.White;
+                }
 
-            if (RoomShower.playerRoomX == rPosX && RoomShower.playerRoomY == rPosY)
-            {
-                textureColor = Color.Lime;
+                if (RoomShower.playerRoomX == rPosX && RoomShower.playerRoomY == rPosY && Game1.currentFloor == floor)
+                {
+                    textureColor = Color.Lime;
+                }
+                else
+                {
+                    textureColor = Color.White;
+                }
             }
-            else
-            {
-                textureColor = Color.White;
-            }
+            
         }
 
         public void Update(GameTime gameTime)
         {
-            
+            if (floor == Game1.currentFloor)
+            {
+                enabled = true;
+            }
+            else
+            {
+                enabled = false;
+
+            }
+            if (enabled)
+            {
                 CheckStatus();
-            
+
+            }
 
 
-            
+
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, destinationRectangle: new Rectangle(posX * 16, posY * 16, 16, 16), color: textureColor, layerDepth: 0.1f);
-            spriteBatch.Draw(overlay, destinationRectangle: new Rectangle(posX * 16, posY * 16, (int)overlaySize.X, (int)overlaySize.Y), color: overlayColor, layerDepth: 0f);
+            if (enabled)
+            {
+                spriteBatch.Draw(texture, destinationRectangle: new Rectangle(posX * 16, posY * 16, 16, 16), color: textureColor, layerDepth: 0.1f);
+                spriteBatch.Draw(overlay, destinationRectangle: new Rectangle(posX * 16, posY * 16, (int)overlaySize.X, (int)overlaySize.Y), color: overlayColor, layerDepth: 0f);
+
+            }
         }
 
 

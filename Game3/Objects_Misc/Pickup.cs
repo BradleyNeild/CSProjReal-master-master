@@ -30,6 +30,7 @@ namespace Game3
         public static void CreatePickup(int i, Point position, Room room)
         {
             Pickup newPickup = new Pickup(pickups[i].name, pickups[i].effID, pickups[i].price, pickups[i].texture, pickups[i].shoppable, pickups[i].randomDroppable);
+            newPickup.floor = room.floor;
             newPickup.bounds.Location = position;
             newPickup.room = room;
             Game1.objectHandler.AddObject(newPickup);
@@ -123,7 +124,7 @@ namespace Game3
 
         public override void Update(GameTime gt)
         {
-            if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY] == room)
+            if (ProcGen2.roomNodes[RoomShower.playerRoomX, RoomShower.playerRoomY, Game1.currentFloor] == room)
             {
                 enabled = true;
             }

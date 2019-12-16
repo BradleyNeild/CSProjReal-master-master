@@ -49,7 +49,7 @@ namespace Game3
         {
             for (int i = 0; i < objects.Count; i++)
             {
-                if (objects[i] is T && objects[i].enabled)
+                if (objects[i] is T && objects[i].enabled && objects[i].floor == Game1.currentFloor)
                 {
                     return objects[i] as T;
                 }
@@ -75,7 +75,7 @@ namespace Game3
             List<T> outList = new List<T>();
             for (int i = 0; i < objects.Count; i++)
             {
-                if (objects[i] is T && objects[i].enabled)
+                if (objects[i] is T && objects[i].enabled && objects[i].floor == Game1.currentFloor)
                 {
                     outList.Add(objects[i] as T);
                 }

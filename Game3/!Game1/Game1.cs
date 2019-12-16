@@ -14,6 +14,7 @@ namespace Game3
     /// </summary>
     public class Game1 : Game
     {
+        public static int currentFloor;
         int debugI = 0;
         public static bool win = false;
         string weaponrotation = "";
@@ -222,8 +223,10 @@ namespace Game3
                 SpawnCharacter();
                 character = objectHandler.SearchFirst<Character>();
                 currentDoorTexture = doorTexture;
+
                 ProcGen2.GenerateDungeon();
                 Minimap.GenerateMinimap();
+
                 Minimap.MinimapDebug();
                 RoomShower.StartingThing();
                 RoomShower.SpawnRoom();
@@ -240,8 +243,8 @@ namespace Game3
             }
             MagicMissile.maxMissiles = objectHandler.SearchFirst<Character>().level + 3;
             List<Slime> slimes = objectHandler.SearchArray<Slime>();
-            
-            
+
+
 
 
 
@@ -250,13 +253,25 @@ namespace Game3
             Key.Update(gameTime);
             mouseOneTap.Update(gameTime);
 
-
-
             if (mouseOneTap.IsRightPressed())
             {
-                Console.WriteLine(objectHandler.SearchArray<Slime>().Count);
-                Console.WriteLine(ProcGen2.bossSlime.enabled);
 
+                ProcGen2.GenerateDungeon();
+                Minimap.GenerateMinimap();
+                Minimap.MinimapDebug();
+                Console.WriteLine(ProcGen2.roomList.Count);
+                currentFloor++;
+                Console.WriteLine("floor = " + currentFloor);
+                Console.WriteLine("active objects = " + objectHandler.SearchArrayEnabled<BaseObject>().Count);
+            }
+
+            if (Key.IsPressed(Keys.OemPeriod) && Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+            {
+                currentFloor++;
+            }
+            if (Key.IsPressed(Keys.OemComma) && Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+            {
+                currentFloor--;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
@@ -265,7 +280,7 @@ namespace Game3
             }
 
             if (Key.IsPressed(Keys.N) || (Keyboard.GetState().IsKeyDown(Keys.N) && Keyboard.GetState().IsKeyDown(Keys.LeftShift)))
-            {
+           {
                 try
                 {
                     Pickup.CreatePickup(debugI, mouseState.Position, RoomShower.playerRoom);

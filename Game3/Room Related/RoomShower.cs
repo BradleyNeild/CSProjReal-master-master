@@ -50,30 +50,30 @@ namespace Game3
 
         public static void StartingThing()
         {
-            Room playerRoom = ProcGen2.roomNodes[50,50];
+            Room playerRoom = ProcGen2.roomNodes[50,50, 0];
             
         }
 
         public static void SpawnRoom()
         {
             //Console.WriteLine(playerRoomX.ToString() + playerRoomY.ToString());
-            playerRoom = ProcGen2.roomNodes[playerRoomX, playerRoomY];
-            ProcGen2.roomNodes[playerRoomX, playerRoomY].isExplored = true;
+            playerRoom = ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor];
+            ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor].isExplored = true;
             //Console.WriteLine(playerRoom.doorN.ToString() + playerRoom.doorE.ToString() + playerRoom.doorS.ToString() + playerRoom.doorW.ToString());
             ClearRoom();
-            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorN)
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor].doorN)
             {
                 doorNums.Add(2);
             }
-            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorE)
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor].doorE)
             {
                 doorNums.Add(3);
             }
-            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorS)
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor].doorS)
             {
                 doorNums.Add(4);
             }
-            if (ProcGen2.roomNodes[playerRoomX, playerRoomY].doorW)
+            if (ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor].doorW)
             {
                 doorNums.Add(5);
             }

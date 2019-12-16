@@ -15,26 +15,27 @@ namespace Game3
 
         public static void MinimapDebug()
         {
+            minimapRooms.Clear();
             minimaproomint = 0;
             string debugRoomStr = "";
             for (int y = lowestY; y <= highestY; y++)
             {
                 for (int x = lowestX; x <= highestX; x++)
                 {
-                    if (ProcGen2.roomNodes[x, y] == null)
+                    if (ProcGen2.roomNodes[x, y, Game1.currentFloor] == null)
                     {
                         debugRoomStr += " ";
                     }
                     else if (x == RoomShower.playerRoomX && y == RoomShower.playerRoomY)
                     {
                         debugRoomStr += "X";
-                        minimapRooms.Add(new MinimapRoom(x - lowestX, y - lowestY, x, y));
+                        minimapRooms.Add(new MinimapRoom(x - lowestX, y - lowestY, x, y, ProcGen2.genFloor-1));
                         minimaproomint++;
                     }
                     else
                     {
                         debugRoomStr += "#";
-                        minimapRooms.Add(new MinimapRoom(x - lowestX, y - lowestY, x, y));
+                        minimapRooms.Add(new MinimapRoom(x - lowestX, y - lowestY, x, y, ProcGen2.genFloor-1));
                         minimaproomint++;
                     }
                     
@@ -42,16 +43,16 @@ namespace Game3
                 }
                 debugRoomStr += "\n";
             }
-            Game1.minirooms = minimapRooms;
+            Game1.minirooms.AddRange( minimapRooms);
             //Console.WriteLine("minirooms " + minimaproomint);
             //Console.WriteLine(debugRoomStr);
         }
         public static void GenerateMinimap()
         {
-
+            
             foreach (Room room in ProcGen2.roomNodes)
             {
-                if (room != null)
+                if (room != null && room.floor == ProcGen2.genFloor-1)
                 {
                     if (room.posX > highestX)
                         highestX = room.posX;
