@@ -10,7 +10,7 @@ namespace Game3
     public class ProcGen2
     {
         public static int genFloor = 0;
-        public static Room[,,] roomNodes = new Room[100, 100, 10];
+        public static Room[,,] roomNodes = new Room[100, 100, 1];
         public static List<Room> roomList = new List<Room>();
         public static Room shopRoom;
         public static Slime bossSlime;
@@ -332,7 +332,7 @@ namespace Game3
             bool maxroomsOK = false;
             do
             {
-                maxRooms = 100;
+                maxRooms = 60;
                 //maxRooms = Game1.random.Next(40, 60);
                 if (maxRooms % 4 == 0)
                 {

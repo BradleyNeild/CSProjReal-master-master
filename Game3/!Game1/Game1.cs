@@ -14,6 +14,7 @@ namespace Game3
     /// </summary>
     public class Game1 : Game
     {
+        public Timer debugTimer = new Timer(0.3f);
         public static int currentFloor;
         int debugI = 0;
         public static bool win = false;
@@ -279,6 +280,8 @@ namespace Game3
                 Coin.CreateCoin(Game1.objectHandler, mouseState.Position, 10);
             }
 
+
+            
             if (Key.IsPressed(Keys.N) || (Keyboard.GetState().IsKeyDown(Keys.N) && Keyboard.GetState().IsKeyDown(Keys.LeftShift)))
            {
                 try
@@ -340,9 +343,10 @@ namespace Game3
 
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.U) && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
+            if (Keyboard.GetState().IsKeyDown(Keys.U) && debugTimer.Triggered)
             {
-                Coin.CreateCoin(objectHandler, mouseState.Position, 10);
+                Console.WriteLine(objectHandler.SearchArrayEnabled<BaseObject>().Count);
+                debugTimer.ResetTimer();
             }
 
 
@@ -352,6 +356,7 @@ namespace Game3
             // TODO: Add your update logic here
             objectHandler.Update(gameTime);
             heartManager.Update(gameTime);
+            debugTimer.Update(gameTime);
             weaponHandler.Update(gameTime);
 
             foreach (MinimapRoom miniRoom in minirooms)

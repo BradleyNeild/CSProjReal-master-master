@@ -33,7 +33,7 @@ namespace Game3
             }
         }
 
-        public T SearchFirst<T>() where T:BaseObject
+        public T SearchFirst<T>() where T : BaseObject
         {
             for (int i = 0; i < objects.Count; i++)
             {
@@ -44,7 +44,6 @@ namespace Game3
             }
             return null;
         }
-
         public T SearchFirstEnabled<T>() where T : BaseObject
         {
             for (int i = 0; i < objects.Count; i++)
@@ -56,15 +55,14 @@ namespace Game3
             }
             return null;
         }
-
-        public List<T> SearchArray<T>() where T:BaseObject
+        public List<T> SearchArray<T>() where T : BaseObject
         {
             List<T> outList = new List<T>();
             for (int i = 0; i < objects.Count; i++)
             {
                 if (objects[i] is T)
                 {
-                        outList.Add(objects[i] as T); 
+                    outList.Add(objects[i] as T);
                 }
             }
             return outList;
@@ -91,11 +89,11 @@ namespace Game3
                 inObject.parent = this;
                 inObject.OnCreate();
                 objects.Add(inObject);
-                
+
             }
         }
 
-        public void AddObjects<T>(List<T> inObjects) where T:BaseObject
+        public void AddObjects<T>(List<T> inObjects) where T : BaseObject
         {
             if (inObjects != null)
             {
@@ -105,7 +103,7 @@ namespace Game3
                     inObjects[i].OnCreate();
                     objects.Add(inObjects[i]);
                 }
-                
+
             }
         }
 
@@ -132,17 +130,18 @@ namespace Game3
             {
                 for (int x = 0; x < objects.Count; x++)
                 {
-                    if (!objects[i].destroy && !objects[x].destroy)
-                    {
-                        if (i != x)
+                    if (objects[i].enabled && objects[x].enabled)
                         {
-                            if (objects[i].bounds.Intersects(objects[x].bounds))
+                        if (!objects[i].destroy && !objects[x].destroy)
+                        {
+                            if (i != x)
                             {
-                                if (objects[i].enabled && objects[x].enabled)
+                                if (objects[i].bounds.Intersects(objects[x].bounds))
                                 {
+
                                     objects[i].OnInteract(objects[x]);
                                 }
-                                
+
                             }
                         }
                     }
@@ -157,6 +156,6 @@ namespace Game3
                 }
             }
         }
-        
+
     }
 }

@@ -146,7 +146,7 @@ namespace Game3
                 Game1.objectHandler.AddObject(new Slime(splitSlime.life, splitSlime.maxLife, splitSlime.damage, new Rectangle(bounds.X, bounds.Y, splitSlime.bounds.Width, splitSlime.bounds.Height), bounds.Location, splitSlime.numSplitoffs, false, room, splitSlime.splitSlime));
             }
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
                 int num = Game1.random.Next(0, 2);
                 if (num == 0)
