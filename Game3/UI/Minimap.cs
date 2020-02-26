@@ -44,8 +44,6 @@ namespace Game3
                 debugRoomStr += "\n";
             }
             Game1.minirooms.AddRange( minimapRooms);
-            //Console.WriteLine("minirooms " + minimaproomint);
-            //Console.WriteLine(debugRoomStr);
         }
         public static void GenerateMinimap()
         {
@@ -65,7 +63,6 @@ namespace Game3
                 }
             }
             string debugString = "Highest X = " + highestX.ToString() + " Lowest X = " + lowestX.ToString() + " Highest Y = " + highestY.ToString() + " Lowest Y = " + lowestY.ToString();
-            //Console.WriteLine(debugString);
         }
         public void Draw(SpriteBatch spriteBatch)
         {

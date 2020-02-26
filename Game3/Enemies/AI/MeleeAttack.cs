@@ -26,10 +26,10 @@ namespace Game3
         {
             Character character = Game1.objectHandler.SearchFirst<Character>();
             
-            if (PathFinding.ConvertThing(character.bounds.Center) != CurrentTargetTile)
+            if (PathFinding.ConvertToTile(character.bounds.Center) != CurrentTargetTile)
             {
-                CurrentTargetTile = PathFinding.ConvertThing(character.bounds.Center);
-                Point boundLocationTile = PathFinding.ConvertThing(parent.slave.bounds.Center);
+                CurrentTargetTile = PathFinding.ConvertToTile(character.bounds.Center);
+                Point boundLocationTile = PathFinding.ConvertToTile(parent.slave.bounds.Center);
                 path = PathFinding.FindPath(boundLocationTile, CurrentTargetTile);
             }
             else

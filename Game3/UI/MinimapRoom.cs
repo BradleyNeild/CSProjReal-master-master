@@ -8,7 +8,6 @@ namespace Game3
 {
     public class MinimapRoom
     {
-        int offsetX = 300;
         Texture2D texture = Game1.miniRoomTexture;
         Texture2D overlay = Game1.questionTexture;
         int posX, posY, rPosX, rPosY;

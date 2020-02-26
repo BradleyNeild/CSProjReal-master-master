@@ -11,7 +11,7 @@ namespace Game3
 
 
 
-        public static Point ConvertThing(Point input)
+        public static Point ConvertToTile(Point input)
         {
             Point output = new Point((int)Math.Floor((float)(input.X - RoomShower.roomOffset)/ Walls.wallSize), (int)Math.Floor((float)(input.Y - RoomShower.roomOffset)/ Walls.wallSize));
             return output;
@@ -26,7 +26,7 @@ namespace Game3
                 List<Enemy> Enemys = Game1.objectHandler.SearchArray<Enemy>();
                 foreach(Enemy i in Enemys)
                 {
-                    Point TilePos = ConvertThing(i.bounds.Center);
+                    Point TilePos = ConvertToTile(i.bounds.Center);
                     try //because of extremely random -33m, -33m
                     {
                         Weights[TilePos.Y, TilePos.X] = 1;
@@ -71,7 +71,6 @@ namespace Game3
                             {
                                 openList[i].heuristic = node.heuristic;
                                 openList[i].parent = node.parent;
-                                //Console.WriteLine("Updated Node");
                             }
                             break;
                         }
@@ -86,7 +85,6 @@ namespace Game3
                             {
                                 closedList[i].heuristic = node.heuristic;
                                 closedList[i].parent = node.parent;
-                                //Console.WriteLine("Updated Node");
                             }
                             break;
                         }
@@ -102,18 +100,14 @@ namespace Game3
 
                 void CreateNode(Point nodeLocation, float nodeHeuristic, Node nodeParent)
                 {
-                    //Console.WriteLine("New Node");
-                    //Console.WriteLine(nodeLocation);
                     if ((nodeLocation.X >= 0) && (nodeLocation.X < 15) && (nodeLocation.Y >= 0) && (nodeLocation.Y < 9))
                     {
-                        //Console.WriteLine(RoomShower.wall2DArray[nodeLocation.Y, nodeLocation.X]);
                         if (RoomShower.wall2DArray[nodeLocation.Y, nodeLocation.X] == 0)
                         {
                             Node newNode = new Node(nodeLocation, nodeHeuristic, nodeParent);
                             if (!CheckNodeLists(newNode))
                             {
                                 openList.Add(newNode);
-                                //Console.WriteLine("Created Node");
                             }
                         }
                     }

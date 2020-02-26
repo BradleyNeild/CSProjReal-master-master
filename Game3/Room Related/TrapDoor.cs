@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Game3
 {
     public class TrapDoor : BaseObject
     {
+        bool won = false;
         Texture2D texture;
         public bool opened = false;
         Rectangle srcRectangle;
@@ -36,10 +38,12 @@ namespace Game3
         {
             if (opened)
             {
-
-                Game1.win = true;
+                
+                if (Game1.win == false)
+                {
+                    Game1.win = true;
+                }
             }
-
         }
 
         public override void OnCreate()

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+using System.IO;
 
 
 namespace Game3
@@ -16,11 +17,9 @@ namespace Game3
     {
         public Timer debugTimer = new Timer(0.3f);
         public static int currentFloor;
-        int debugI = 0;
         public static bool win = false;
         string weaponrotation = "";
         Vector2 cameraPosition = Vector2.Zero;
-        Song fortnite;
         public static SoundEffect hurtSfx, reloadSfx, reload1Sfx, reload2Sfx, shootSfx, hurt2Sfx, coinPickupSfx;
         public static bool greyTiles = false;
         bool debugStats = false;
@@ -35,7 +34,6 @@ namespace Game3
         public static Texture2D rerollerTexture, diamondTexture, magazineTexture, medkitTexture, rapidTexture, kiteTexture, pistolTexture, trapDoorTexture, wizardTexture, rainbowVuvuzelaTexture, slimeSprites, floorTexture, wandTexture, balloonTexture, whitePixelTexture, shadowTexture, mainmenuTexture, miniRoomTexture, skullTexture, questionTexture, cursedHeartTexture, sadGhostTexture, happyGhostTexture, ghostTexture, currentDoorTexture, playerTexture, heartTextureFull, heartTextureHalf, heartTextureEmpty, coinTexture, missileTexture, wallTexture, doorTexture, enemyTexture;
         public static SpriteFont debugTextFont, roomNodeFont;
         public static KeyboardOneTap Key;
-        Collision collision = new Collision();
         public static MouseOneTap mouseOneTap = new MouseOneTap();
         public static ObjectHandler objectHandler = new ObjectHandler();
         public static ParticleHandler particleHandler = new ParticleHandler();
@@ -62,8 +60,6 @@ namespace Game3
             Character.totalXP += amount;
             character.CheckLevel();
         }
-
-
 
         private void SpawnCharacter()
         {
@@ -105,12 +101,6 @@ namespace Game3
             objectHandler.RemoveObject(slime);
         }
 
-
-
-
-
-
-
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -149,9 +139,6 @@ namespace Game3
             debugTextFont = Content.Load<SpriteFont>("spritefont1");
             missileTexture = Content.Load<Texture2D>("magicmissile2");
             doorTexture = Content.Load<Texture2D>("prettyDoor");
-            ghostTexture = Content.Load<Texture2D>("ghost");
-            happyGhostTexture = Content.Load<Texture2D>("happyghost");
-            sadGhostTexture = Content.Load<Texture2D>("ghost");
             cursedHeartTexture = Content.Load<Texture2D>("cursedheart");
             miniRoomTexture = Content.Load<Texture2D>("minimapRoom2");
             skullTexture = Content.Load<Texture2D>("skull");
@@ -159,14 +146,11 @@ namespace Game3
             mainmenuTexture = Content.Load<Texture2D>("mainmenutemp");
             shadowTexture = Content.Load<Texture2D>("shadow");
             whitePixelTexture = Content.Load<Texture2D>("whitepixel");
-            balloonTexture = Content.Load<Texture2D>("balloon");
             wandTexture = Content.Load<Texture2D>("wand");
             floorTexture = Content.Load<Texture2D>("floorTile");
             slimeSprites = Content.Load<Texture2D>("slimeSprites");
-            rainbowVuvuzelaTexture = Content.Load<Texture2D>("rainbowVuvuzelaScaled");
             wizardTexture = Content.Load<Texture2D>("wizard");
             trapDoorTexture = Content.Load<Texture2D>("TrapdoorSprites");
-            fortnite = Content.Load<Song>("defaultdance");
             hurtSfx = Content.Load<SoundEffect>("hurt");
             reloadSfx = Content.Load<SoundEffect>("reload");
             reload2Sfx = Content.Load<SoundEffect>("reload2");
@@ -201,21 +185,19 @@ namespace Game3
         {
             if (Key.IsPressed(Keys.D1))
             {
-                if (!playPressed)
-                {
-                    weaponHandler.ChangeWeapon(new Wand());
-                }
+                weaponHandler.ChangeWeapon(new Wand());
                 playPressed = true;
-
-
             }
             else if (Key.IsPressed(Keys.D2))
             {
-                if (!playPressed)
-                {
-                    weaponHandler.ChangeWeapon(new Pistol());
-                }
+                weaponHandler.ChangeWeapon(new Pistol());
                 playPressed = true;
+            }
+
+
+            if (Key.IsPressed(Keys.Back))
+            {
+                Exit();
             }
 
             if (!started)
@@ -232,6 +214,11 @@ namespace Game3
                 RoomShower.StartingThing();
                 RoomShower.SpawnRoom();
                 objectHandler.AddObject(new ReloadIndicator());
+                if (!File.Exists("scores.txt"))
+                {
+                    File.Create("scores.txt");
+                    Console.WriteLine("score file created");
+                }
                 started = true;
             }
             if (Character.life <= 0)
@@ -245,113 +232,14 @@ namespace Game3
             MagicMissile.maxMissiles = objectHandler.SearchFirst<Character>().level + 3;
             List<Slime> slimes = objectHandler.SearchArray<Slime>();
 
-
-
-
-
             //input
             var mouseState = Mouse.GetState();
             Key.Update(gameTime);
             mouseOneTap.Update(gameTime);
-
-            if (mouseOneTap.IsRightPressed())
-            {
-
-                ProcGen2.GenerateDungeon();
-                Minimap.GenerateMinimap();
-                Minimap.MinimapDebug();
-                Console.WriteLine(ProcGen2.roomList.Count);
-                currentFloor++;
-                Console.WriteLine("floor = " + currentFloor);
-                Console.WriteLine("active objects = " + objectHandler.SearchArrayEnabled<BaseObject>().Count);
-            }
-
-            if (Key.IsPressed(Keys.OemPeriod) && Keyboard.GetState().IsKeyDown(Keys.LeftShift))
-            {
-                currentFloor++;
-            }
-            if (Key.IsPressed(Keys.OemComma) && Keyboard.GetState().IsKeyDown(Keys.LeftShift))
-            {
-                currentFloor--;
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-            {
-                Coin.CreateCoin(Game1.objectHandler, mouseState.Position, 10);
-            }
-
-
-            
-            if (Key.IsPressed(Keys.N) || (Keyboard.GetState().IsKeyDown(Keys.N) && Keyboard.GetState().IsKeyDown(Keys.LeftShift)))
-           {
-                try
-                {
-                    Pickup.CreatePickup(debugI, mouseState.Position, RoomShower.playerRoom);
-                }
-                catch (Exception)
-                {
-                    debugI = -1;
-                }
-
-                debugI++;
-            }
-
-            if (Key.IsPressed(Keys.J))
-            {
-                objectHandler.SearchFirst<Character>().Heal(1);
-            }
-
-            if (Key.IsPressed(Keys.R))
-            {
-                if (objectHandler.SearchFirst<Pistol>() != null)
-                {
-                    objectHandler.SearchFirst<Pistol>().Reload();
-                }
-            }
-
-            if (Key.IsPressed(Keys.O))
-            {
-                weaponHandler.ChangeWeapon(new Pistol());
-            }
-
-            if (Key.IsPressed(Keys.I))
-            {
-                weaponHandler.ChangeWeapon(new Wand());
-            }
-
             if (Key.IsPressed(Keys.Tab))
             {
                 showMiniMap = !showMiniMap;
             }
-
-            if (Key.IsPressed(Keys.LeftAlt))
-            {
-                debugStats = !debugStats;
-            }
-
-            if (Key.IsPressed(Keys.RightAlt))
-            {
-                greyTiles = !greyTiles;
-                if (greyTiles == true)
-                {
-                    MediaPlayer.Play(fortnite);
-                }
-                else
-                {
-                    MediaPlayer.Stop();
-                }
-
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.U) && debugTimer.Triggered)
-            {
-                Console.WriteLine(objectHandler.SearchArrayEnabled<BaseObject>().Count);
-                debugTimer.ResetTimer();
-            }
-
-
-
-
 
             // TODO: Add your update logic here
             objectHandler.Update(gameTime);
@@ -378,16 +266,11 @@ namespace Game3
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp, transformMatrix: camera.WorldMatrix);
             string coinCounterVal = "Coins: " + coinCount.ToString();
-            string shortInstructions = "WASD or Arrows to move\nHold Click or Space to shoot\nTab to toggle Minimap";
-            string instructions = "WASD or Arrows to move\nHold Click or Space to shoot\nR to Reload\nE to purchase item\nTab to toggle Minimap";
+            string shortInstructions = "WASD or Arrows to move\nHold Click or Space to shoot\nTab to toggle Minimap\nBackspace to Quit";
+            string instructions = "WASD or Arrows to move\nHold Click or Space to shoot\nR to Reload\nE to purchase item\nTab to toggle Minimap\nBackspace to Quit";
             string nodeTrackerVal = RoomShower.playerRoomX.ToString() + ", " + RoomShower.playerRoomY.ToString();
-
-
             objectHandler.Draw(spriteBatch);
-
-
             heartManager.Draw(spriteBatch);
-
             if (showMiniMap)
             {
                 foreach (MinimapRoom miniroom in minirooms)
@@ -415,8 +298,6 @@ namespace Game3
                 spriteBatch.DrawString(debugTextFont, "You Win!", new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), Color.Magenta, 0f, Vector2.Zero, 4f, SpriteEffects.None, 0f);
             }
 
-
-
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.PointClamp);
             if (gameOver && playPressed)
@@ -427,15 +308,12 @@ namespace Game3
             if (!playPressed)
             {
                 spriteBatch.Draw(mainmenuTexture, new Rectangle(0, 0, screenX, screenY), Color.White);
-                spriteBatch.DrawString(debugTextFont, "Press 1 to choose the Wand\nPress 2 to choose the Pistol", new Vector2(300, 350), Color.LimeGreen, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(debugTextFont, "Press 1 to choose the Wand\nPress 2 to choose the Pistol\n(recommended)", new Vector2(300, 350), Color.LimeGreen, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
                 spriteBatch.DrawString(debugTextFont, shortInstructions, new Vector2(300, 200), Color.Yellow, 0f, new Vector2(0, 0), 2f, SpriteEffects.None, 0f);
                 spriteBatch.Draw(pistolTexture, new Rectangle(700, 395, 26, 17), Color.White);
                 spriteBatch.Draw(wandTexture, new Rectangle(700, 355, 6, 32), Color.White);
             }
             spriteBatch.End();
-
-
-
             base.Draw(gameTime);
         }
     }

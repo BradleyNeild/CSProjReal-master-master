@@ -43,10 +43,10 @@ namespace Game3
                     }
                 }
             }
-            Room randomRoom = validRooms[Game1.random.Next((validRooms.Count - 1))];
+            
+            Room randomRoom = validRooms[Game1.random.Next(validRooms.Count - 1)];
             roomNodes[randomRoom.posX, randomRoom.posY, genFloor].isExplored = true;
             roomNodes[randomRoom.posX, randomRoom.posY, genFloor].isBoss = true;
-            Console.WriteLine("boss generated");
             foreach (Slime slime in Game1.objectHandler.SearchArray<Slime>())
             {
                 if (slime.room == randomRoom)
@@ -57,7 +57,6 @@ namespace Game3
             Game1.objectHandler.AddObject(new TrapDoor(new Rectangle(Walls.wallSize * 7, Walls.wallSize * 4, 64, 128), randomRoom));
 
             bossSlime = new Slime(12, 12, 2, new Rectangle(Walls.wallSize * 7, Walls.wallSize * 4, 128, 128), new Point(Walls.wallSize * 7, Walls.wallSize * 4), 4, true, randomRoom, new Slime(5, 5, 1, new Rectangle(0, 0, 64, 64), Point.Zero, 4, false, randomRoom, new Slime(2, 2, 1, new Rectangle(0, 0, 32, 32), Point.Zero, 0, false, randomRoom, null)));
-            Console.WriteLine(bossSlime.room.posX + ", " + bossSlime.room.posY);
             Game1.objectHandler.AddObject(bossSlime);
 
 
@@ -111,7 +110,6 @@ namespace Game3
 
             randomRoom.isExplored = true;
             randomRoom.isShop = true;
-            //Console.WriteLine("jigjpigjegjepige");
 
         }
 
@@ -145,7 +143,6 @@ namespace Game3
 
             Game1.objectHandler.AddObjects(shopPurchasables);
         }
-
 
         static void CheckRooms()
         {
@@ -321,7 +318,6 @@ namespace Game3
 
             roomNodes[addPosX, addPosY, genFloor] = roomToAdd;
             roomList.Add(roomToAdd);
-            //Console.WriteLine("Added Room at " + addPosX + "," + addPosY);
             numRooms += 1;
             CheckRooms();
         }

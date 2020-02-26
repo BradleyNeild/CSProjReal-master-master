@@ -59,8 +59,6 @@ namespace Game3
             }
             var mouseState = Mouse.GetState();
             mousePos = new Vector2(mouseState.X, mouseState.Y);
-            //Console.WriteLine("mousepos = " + mousePos);
-            //Console.WriteLine("vector = " + vector);
             vector = new Vector2(mouseState.X, mouseState.Y) - bounds.Center.ToVector2();
 
             if (vector != Vector2.Zero)

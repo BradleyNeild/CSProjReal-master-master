@@ -19,13 +19,13 @@ namespace Game3
         public static int[,] wall2DArray = new int[9, 15]
         {
             {1,1,1,1,1,1,1,2,1,1,1,1,1,1,1},
+            {1,0,0,0,0,1,0,0,0,0,0,0,0,0,1},
+            {1,0,0,0,0,1,0,0,0,0,0,0,0,0,1},
+            {1,0,0,0,0,1,0,0,0,0,0,0,0,0,1},
+            {5,0,0,1,1,1,0,0,0,1,1,1,0,0,3},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {5,0,0,0,0,0,0,0,0,0,0,0,0,0,3},
-            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,0,0,0,0,0,0,1,0,0,1,0,0,1},
+            {1,0,0,0,0,0,0,0,1,0,0,1,0,0,1},
             {1,1,1,1,1,1,1,4,1,1,1,1,1,1,1},
         };
 
@@ -56,10 +56,8 @@ namespace Game3
 
         public static void SpawnRoom()
         {
-            //Console.WriteLine(playerRoomX.ToString() + playerRoomY.ToString());
             playerRoom = ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor];
             ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor].isExplored = true;
-            //Console.WriteLine(playerRoom.doorN.ToString() + playerRoom.doorE.ToString() + playerRoom.doorS.ToString() + playerRoom.doorW.ToString());
             ClearRoom();
             if (ProcGen2.roomNodes[playerRoomX, playerRoomY, Game1.currentFloor].doorN)
             {

@@ -27,7 +27,6 @@ namespace Game3
         public override void OnCreate()
         {
             vector.Normalize();
-            Console.WriteLine(vector);
             texture = Game1.whitePixelTexture;
         }
 

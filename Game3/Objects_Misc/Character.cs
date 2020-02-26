@@ -28,7 +28,6 @@ namespace Game3
             if (life > 0)
             {
                 int oldLife = life;
-                //Console.WriteLine("jerwighuoergnjpoerngoehup9otnjkdtgihpejgip");
                 if (iFrames.Triggered)
                 {
                     life -= damage;
@@ -76,23 +75,19 @@ namespace Game3
         {
             if (caller is Slime)
             {
-                Damage(1);
+                Damage(((Slime)caller).damage);
             }
             else if (caller is Walls)
             {
                 bounds.X += -(int)vector.X;
                 bounds.Y += -(int)vector.Y;
             }
+
             else if (caller is Doors)
             {
                 Slime goblinQuestionmark = parent.SearchFirst<Slime>();
                 if (((Doors)caller).enterable == true)
                 {
-
-                    foreach (Slime goblin in parent.SearchArray<Slime>())
-                    {
-                        //Console.WriteLine("theres a goblin in goblins");
-                    }
                     if (((Doors)caller).direction == 2)
                     {
                         RoomShower.playerRoomY -= 1;
@@ -151,7 +146,7 @@ namespace Game3
                     {
                         caller.destroy = true;
                     }
-                    
+
                 }
 
             }
@@ -205,88 +200,68 @@ namespace Game3
                 showLevelUp = true;
 
             if (Keyboard.GetState().IsKeyDown(Keys.W) || Keyboard.GetState().IsKeyDown(Keys.Up))
-            {
                 wPressed = true;
-            }
+
             else
-            {
                 wPressed = false;
-            }
+
 
             if (Keyboard.GetState().IsKeyDown(Keys.S) || Keyboard.GetState().IsKeyDown(Keys.Down))
-            {
                 sPressed = true;
-            }
+            
             else
-            {
                 sPressed = false;
-            }
+            
 
             if (Keyboard.GetState().IsKeyDown(Keys.A) || Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
                 aPressed = true;
-            }
+            
             else
-            {
                 aPressed = false;
-            }
+            
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.D) || Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
                 dPressed = true;
-            }
+            
             else
-            {
                 dPressed = false;
-            }
+            
 
             //sprite flipping
             if (aPressed)
-            {
-
-            }
+                flipSprite = true;
+            
             else if (dPressed)
-            {
                 flipSprite = false;
-            }
+            
 
             //X movement
             if (aPressed && dPressed)
-            {
                 vector.X = 0;
-            }
+            
             else if (aPressed)
-            {
                 vector.X = -1;
-                flipSprite = true;
-            }
+
             else if (dPressed)
-            {
                 vector.X = 1;
-                flipSprite = false;
-            }
+            
             else
-            {
                 vector.X = 0;
-            }
+            
 
             if (wPressed && sPressed)
-            {
                 vector.Y = 0;
-            }
+            
             else if (wPressed)
-            {
                 vector.Y = -1;
-            }
+            
             else if (sPressed)
-            {
                 vector.Y = 1;
-            }
+            
             else
-            {
                 vector.Y = 0;
-            }
+            
 
 
 

@@ -21,7 +21,7 @@ namespace Game3
         private void CheckPath()
         {
             Character character = Game1.objectHandler.SearchFirst<Character>();
-            if (PathFinding.FindPath(PathFinding.ConvertThing(parent.slave.bounds.Center), PathFinding.ConvertThing(character.bounds.Center)) != null)
+            if (PathFinding.FindPath(PathFinding.ConvertToTile(parent.slave.bounds.Center), PathFinding.ConvertToTile(character.bounds.Center)) != null)
             {
                 parent.Push(new MeleeAttack());
             }

@@ -55,7 +55,6 @@ namespace Game3
 
         public void Aggro()
         {
-            //Console.WriteLine("iowtruwhuowihiowio3jripogi0g");
             ai.Push(new MeleeAttack());
             numAggroed++;
             aggroed = true;
@@ -64,7 +63,6 @@ namespace Game3
 
         public void DeAggro()
         {
-            //Console.WriteLine("Deaggroed");
             aggroed = false;
             numAggroed--;
         }

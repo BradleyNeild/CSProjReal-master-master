@@ -11,6 +11,7 @@ namespace Game3
 {
     public class Pistol : Weapon
     {
+
         bool reloading = false;
         public int ammo = 8, maxAmmo = 8;
         public Timer reloadTimer = new Timer(1f);
@@ -45,7 +46,7 @@ namespace Game3
 
         public override void OnClick()
         {
-            if (ammo > 0)
+            if (ammo > 0 && !reloading)
             {
                 if (cooldown.Triggered)
                 {
@@ -111,7 +112,10 @@ namespace Game3
 
         public override void Update(GameTime gt)
         {
-
+            if (Game1.Key.IsPressed(Keys.R))
+            {
+                Reload();
+            }
             int extendedMags = 0;
             foreach (int effect in Character.persistentEffects)
             {

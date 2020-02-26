@@ -54,27 +54,23 @@ namespace Game3
             {
                 vectorXNextDouble = -(float)Game1.random.NextDouble();
                 vector.X = vectorXNextDouble;
-                ////Console.WriteLine(vectorXNextDouble);
 
             }
             else
             {
                 vectorXNextDouble = (float)Game1.random.NextDouble();
                 vector.X = vectorXNextDouble;
-                //Console.WriteLine(vectorXNextDouble);
             }
 
             if (Game1.random.Next(0, 2) == 0)
             {
                 vectorYNextDouble = -(float)Game1.random.NextDouble();
                 vector.Y = vectorYNextDouble;
-                //Console.WriteLine(vectorYNextDouble);
             }
             else
             {
                 vectorYNextDouble = (float)Game1.random.NextDouble();
                 vector.Y = vectorYNextDouble;
-                //Console.WriteLine(vectorYNextDouble);
             }
 
             vector.Normalize();
